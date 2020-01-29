@@ -1,0 +1,60 @@
+[user]
+	email = dev.matteini@gmail.com
+	name = devmatteini
+
+[color]
+	# Use colors in Git commands that are capable of colored output when
+	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+	ui = auto
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	meta = cyan bold reverse
+	frag = magenta bold # line info
+	old = red # deletions
+	new = green # additions
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[alias]
+	# View the current working tree status using the short format
+	s = status -s
+	
+	# Add all changes
+	a = add -A
+
+	# Commit with message
+	c = commit -m
+	
+	# Commit all changes
+	ca = !git add -A && git commit -avm
+
+	# Logs	
+	l = log --pretty=format:'%C(yellow)%h%Cred%d%Cblue %ad%n%Creset%s%Cgreen [%cn]%n' --date=format:'%Y-%m-%d %H:%M:%S' --decorate --graph -n 20
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cn]" --decorate --numstat
+    ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	
+	# Push
+	ph = push
+	
+	# Pull rebase
+	pl = pull --rebase
+	pr = pull --rebase
+	
+	# Diff
+	d = diff
+
+	# unstage staged files (or pass a filename)
+	unstage = reset HEAD --
+
+	# Switch to a branch, creating it if necessary
+	co = checkout
+
+	remotes = remote -v

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Make `vim` the default editor.
+export EDITOR="vim"
+
+# Ignore commands that start with spaces and duplicates.
+export HISTCONTROL=ignoreboth
+
+# Increase the maximum number of lines of history
+# persisted in the history file (default value is 500).
+export HISTFILESIZE=2000
+
+# Increase the maximum number of commands recorded
+# in the command history (default value is 500).
+export HISTSIZE=1000
+
+# Don't add certain commands to the history file.
+export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"

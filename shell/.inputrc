@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# If there are multiple matches for completion,
+# make TAB cycle through them.
+TAB: menu-complete
+
+# Use case-insensitive TAB autocompletion.
+set completion-ignore-case on
+
+# Perform partial completion on the first Tab press, and
+# only start cycling full results on the second Tab press.
+set menu-complete-display-prefix on
+
+# Display a list of the matching files
+set show-all-if-ambiguous on
