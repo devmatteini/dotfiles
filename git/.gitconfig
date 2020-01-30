@@ -27,9 +27,9 @@
 
 
 [color "status"]
-	added = yellow
-	changed = green
-	untracked = cyan
+	added = green
+	changed = yellow
+	untracked = red
 
 [alias]
 	# View the current working tree status using the short format
