@@ -16,10 +16,15 @@
 	remote = green
 
 [color "diff"]
-	meta = cyan bold reverse
-	frag = magenta bold # line info
-	old = red # deletions
-	new = green # additions
+	frag = magenta
+    meta = yellow
+
+    new = green
+    old = red
+
+    newMoved = cyan
+    oldMoved = blue
+
 
 [color "status"]
 	added = yellow
@@ -30,8 +35,11 @@
 	# View the current working tree status using the short format
 	s = status -s
 	
+	# Add one file
+	a = add
+
 	# Add all changes
-	a = add -A
+	aa = add -A
 
 	# Commit with message
 	c = commit -m
