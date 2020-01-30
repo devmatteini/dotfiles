@@ -9,7 +9,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # Load the shell dotfiles
-for file in ~/.{bash_aliases,bash_exports,bash_options,bash_prompt}; do
+for file in ~/.{bash_aliases,bash_exports,bash_options,bash_prompt,bash.local}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
