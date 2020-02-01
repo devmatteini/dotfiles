@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Execution permission
-chmod +x bin/create_symbolic_links.sh
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Create symlinks to your $HOME directory
-bin/create_symbolic_links.sh
+source bin/create_symbolic_links.sh $BASEDIR
