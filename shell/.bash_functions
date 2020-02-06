@@ -16,12 +16,12 @@ upgrade_terraform(){
     unzip -q terraform_"$version"_linux_amd64.zip
     echo -ne "\r\e[1;32m[✔] Unzip complete\e[0m\e[K\n"
     
-    echo -ne "\e[1;34m[-] Moving terraform to /usr/local/bin/...\e[0m"
+    echo -e "\e[1;35m[i] Move terraform to /usr/local/bin/\e[0m"
     sudo mv terraform /usr/local/bin/terraform
-    echo -ne "\r\e[1;32m[✔] Moving terraform to /usr/local/bin/ comlete\e[0m\e[K\n"
+    echo -ne "\r\e[1;32m[✔] Moved terraform to /usr/local/bin/\e[0m\e[K\n"
     
     # Cleanup
-    echo -e "\e[1;34m[i] Cleanup\e[0m\n"
+    echo -e "\e[1;35m[i] Cleanup\e[0m\n"
     rm terraform_"$version"_linux_amd64.zip
     
     terraform --version
