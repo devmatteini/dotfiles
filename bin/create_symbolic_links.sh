@@ -14,6 +14,7 @@ FILES=(
     "shell/.bash_options"
     "shell/.bash_profile"
     "shell/.bash_prompt"
+    "shell/.bash_functions"
     "shell/.bashrc"
     "shell/.inputrc"
     "git/.gitconfig"
