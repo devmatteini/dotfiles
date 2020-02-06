@@ -30,6 +30,7 @@ alias tri="terraform init"
 alias trp="terraform plan"
 alias tra="terraform apply"
 alias trd="terraform destroy"
+alias trv="terraform validate"
 
 # .NET CORE CLI
 alias dnb="dotnet build"
