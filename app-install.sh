@@ -85,3 +85,6 @@ sudo npm install -g tldr
 
 # Joplin
 wget -O - https://raw.githubusercontent.com/laurent22/joplin/master/Joplin_install_and_update.sh | bash
+
+# AWS cli
+pip3 install awscli --upgrade --user
