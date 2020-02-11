@@ -40,3 +40,9 @@ alias dnt="dotnet test"
 # Keychron K2 Level Battery
 alias k2i="upower --dump | grep keyboard -A 7"
 alias k2="upower --dump | grep keyboard -A 7 | grep percentage | sed -e 's/^[ \t]*//'"
+
+# Has | https://github.com/kdabir/has
+alias has="curl -sL https://git.io/_has | bash -s"
+
+# thefuck | https://github.com/nvbn/thefuck
+eval "$(thefuck --alias)"
