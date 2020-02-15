@@ -14,7 +14,6 @@ python3-dev \
 python3-setuptools \
 libsecret-1-0 \
 libsecret-1-dev \
-firefox \
 gnome-tweaks \
 
 # Cleanup

@@ -6,5 +6,4 @@ sudo snap install sublime-text --classic
 sudo snap install postman
 sudo snap install gimp
 sudo snap install communitheme
-sudo snap install chromium
 sudo snap install vlc
