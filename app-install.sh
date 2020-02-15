@@ -7,7 +7,6 @@ sudo apt update
 sudo apt install -y build-essential \
 curl \
 wget \
-vim \
 git \
 python3-pip \
 python3-dev \
