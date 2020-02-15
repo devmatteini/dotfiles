@@ -10,3 +10,6 @@ sudo dpkg -i packages-microsoft-prod.deb
 sudo apt install -y apt-transport-https
 sudo apt update
 sudo apt install -y dotnet-sdk-3.1 dotnet-sdk-2.2
+
+# Cleanup
+rm packages-microsoft-prod.deb
