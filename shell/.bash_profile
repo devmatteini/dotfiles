@@ -19,6 +19,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     source /etc/bash_completion
 fi
 
+# Add tab completion for git alias "g"
+if [ -f /usr/share/bash-completion/completions/git ]; then
+    source /usr/share/bash-completion/completions/git
+    __git_complete g _git
+fi
+
 # Source fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
