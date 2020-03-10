@@ -66,6 +66,9 @@
 	unstage = reset HEAD --
 
 	# Switch to a branch, creating it if necessary
+	cob = checkout -b
+
+	# Checkout
 	co = checkout
 
 	remotes = remote -v
