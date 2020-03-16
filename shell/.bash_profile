@@ -37,3 +37,6 @@ export NVM_DIR="$HOME/.nvm"
 if [ -f /home/$USER/.local/bin/aws_bash_completer  ];then
     source /home/$USER/.local/bin/aws_bash_completer
 fi
+
+# Enable docker buildkit
+export DOCKER_BUILDKIT=1
