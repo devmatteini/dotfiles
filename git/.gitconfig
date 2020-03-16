@@ -46,6 +46,7 @@
 	
 	# Commit all changes
 	ca = !git add -A && git commit -avm
+	can = !git add -A && git commit --amend --no-edit
 
 	# Logs	
 	l = log --pretty=format:'%C(yellow)%h%Cred%d%Cblue %ad%n%Creset%s%Cgreen [%cn]%n' --date=format:'%Y-%m-%d %H:%M:%S' --decorate --graph -n 20
