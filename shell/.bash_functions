@@ -1,5 +1,9 @@
 #!/bin/bash
 
+mkcd(){
+    mkdir -p "$1" && cd "$_"
+}
+
 upgrade_terraform(){
     if [ -z "$1" ];then
         echo "Usage: upgrade_terraform <version>"
