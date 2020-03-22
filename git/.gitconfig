@@ -17,13 +17,13 @@
 
 [color "diff"]
 	frag = magenta
-        meta = yellow
+	meta = yellow
 
-        new = green
-        old = red
+	new = green
+	old = red
 
-        newMoved = cyan
-        oldMoved = blue
+	newMoved = cyan
+	oldMoved = blue
 
 
 [color "status"]
@@ -51,7 +51,7 @@
 	# Logs	
 	l = log --pretty=format:'%C(yellow)%h%Cred%d%Cblue %ad%n%Creset%s%Cgreen [%cn]%n' --date=format:'%Y-%m-%d %H:%M:%S' --decorate --graph -n 20
 	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cn]" --decorate --numstat
-        ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
 	
 	# Push
 	ph = push
