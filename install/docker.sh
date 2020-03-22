@@ -11,7 +11,7 @@ sudo apt install -y docker-ce
 
 # User group for docker
 sudo groupadd docker
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 newgrp docker
 
 # Install docker-compose
