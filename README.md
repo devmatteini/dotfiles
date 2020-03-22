@@ -1,4 +1,5 @@
 # dotfiles
+
 :wrench: dotfiles for ubuntu
 
 ## Installation
@@ -11,9 +12,10 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source b
 
 ## Application
 
+Install basic dependencies:
+
 ```bash
-# Install basic dependencies
-source app-install.sh
+source install/dependencies.sh
 ```
 
 If you want to install other application:
