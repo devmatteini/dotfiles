@@ -52,6 +52,7 @@
 	l = log --pretty=format:'%C(yellow)%h%Cred%d%Cblue %ad%n%Creset%s%Cgreen [%cn]%n' --date=format:'%Y-%m-%d %H:%M:%S' --decorate --graph -n 20
 	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cn]" --decorate --numstat
 	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	tree = !git log --graph --decorate --all --oneline
 	
 	# Push
 	ph = push
