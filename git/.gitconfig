@@ -58,7 +58,6 @@
 	ph = push
 	
 	# Pull rebase
-	pl = pull --rebase
 	pr = pull --rebase
 	
 	# Diff
