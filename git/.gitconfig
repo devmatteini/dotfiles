@@ -49,6 +49,9 @@
 	can = !git add -A && git commit --amend --no-edit
 	cam = commit --amend -m
 
+	# undo last commit(s) and keep changes, with files unstaged
+	uncommit = reset HEAD^ --mixed
+
 	# Logs	
 	l = log --pretty=format:'%C(yellow)%h%Cred%d%Cblue %ad%n%Creset%s%Cgreen [%cn]%n' --date=format:'%Y-%m-%d %H:%M:%S' --decorate --graph -n 20
 	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cn]" --decorate --numstat
