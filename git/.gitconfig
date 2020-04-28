@@ -80,3 +80,7 @@
 
 	# Git reset hard
 	rh = reset --hard HEAD
+
+	# Stash
+	sl = stash list
+	sp = stash push -m
