@@ -35,11 +35,8 @@
 	# View the current working tree status using the short format
 	s = status -s
 	
-	# Add one file
+	# Add
 	a = add
-
-	# Add all changes
-	aa = add -A
 
 	# Commit with message
 	c = commit -m
