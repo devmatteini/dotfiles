@@ -64,6 +64,9 @@
 	# Diff
 	d = diff
 
+	# Diff staged files
+	ds = diff --staged
+
 	# unstage staged files (or pass a filename)
 	unstage = reset HEAD --
 
