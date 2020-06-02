@@ -15,13 +15,13 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source b
 Install basic dependencies:
 
 ```bash
-source install/dependencies.sh
+source apps/dependencies.sh
 ```
 
 If you want to install other application:
 
 ```bash
-source install/<name_of_the_file.sh>
+source apps/<name_of_the_file.sh>
 ```
 
 ### :clipboard: List of application script
