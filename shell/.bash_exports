@@ -12,7 +12,7 @@ export HISTFILESIZE=2000
 
 # Increase the maximum number of commands recorded
 # in the command history (default value is 500).
-export HISTSIZE=1000
+export HISTSIZE=3000
 
 # Don't add certain commands to the history file.
 export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
