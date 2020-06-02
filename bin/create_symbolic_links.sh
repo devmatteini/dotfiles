@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z $1 ];then
+if [ -z "$1" ];then
     echo "Usage: create_symbolic_links.sh <BASEDIR>"
     return 1
 fi
@@ -8,26 +8,26 @@ fi
 BASEDIR=$1
 
 FILES=(
-    "shell/.bash_aliases"
-    "shell/.bash_exports"
-    "shell/.bash_logout"
-    "shell/.bash_options"
-    "shell/.bash_profile"
-    "shell/.bash_prompt"
-    "shell/.bash_functions"
-    "shell/.bashrc"
-    "shell/.inputrc"
+    "bash/.bash_aliases"
+    "bash/.bash_exports"
+    "bash/.bash_logout"
+    "bash/.bash_options"
+    "bash/.bash_profile"
+    "bash/.bash_prompt"
+    "bash/.bash_functions"
+    "bash/.bashrc"
+    "bash/.inputrc"
     "git/.gitconfig"
     "vim/.vimrc"
 )
 
 echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
 
-for file in ${FILES[@]}; do
+for file in "${FILES[@]}"; do
     sourceFile="$BASEDIR/$file"
     targetFile="$HOME/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")"
     
-    ln -sfn $sourceFile $targetFile
+    ln -sfn "$sourceFile" "$targetFile"
 done;
 unset file;
 
