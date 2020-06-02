@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkcd(){
-    mkdir -p "$1" && cd "$_"
+    mkdir -p "$1" && cd "$_" || return 1
 }
 
 upgrade_terraform(){
@@ -16,7 +16,7 @@ upgrade_terraform(){
     wget -q https://releases.hashicorp.com/terraform/"$version"/terraform_"$version"_linux_amd64.zip
     echo -ne "\r\e[1;32m[✔] Download complete\e[0m\e[K\n"
     
-    echo -ne "\e[1;34m[-] Unzipping terraform_"$version"_linux_amd64.zip...\e[0m"
+    echo -ne "\e[1;34m[-] Unzipping terraform_${version}_linux_amd64.zip...\e[0m"
     unzip -q terraform_"$version"_linux_amd64.zip
     echo -ne "\r\e[1;32m[✔] Unzip complete\e[0m\e[K\n"
     
