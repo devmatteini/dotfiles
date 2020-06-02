@@ -28,7 +28,7 @@ source apps/<name_of_the_file.sh>
 
 - browsers (firefox, chromium)
 - docker (docker-ce, docker-compose)
-- dotnet (dotnet-sdk-3.1, dotnet-sdk-2.2)
+- dotnet (dotnet-sdk-3.1)
 - editors (vscode, rider, vim)
 - nvm (nvm, node-v12)
 - snap (postman, gimp, communitheme, vlc)
