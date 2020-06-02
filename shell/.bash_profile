@@ -1,9 +1,4 @@
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
@@ -32,11 +27,3 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Add tab completion for aws-cli
-if [ -f /home/$USER/.local/bin/aws_bash_completer  ];then
-    source /home/$USER/.local/bin/aws_bash_completer
-fi
-
-# Enable docker buildkit
-export DOCKER_BUILDKIT=1
