@@ -10,6 +10,13 @@
 git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source bootstrap.sh
 ```
 
+## Prompt
+
+Currently using [`starship`](https://github.com/starship/starship/) as bash prompt.
+You can customize it by editing [`config/starship.toml`](config/starship.toml)
+
+Alternatively you can use [`.bash_prompt`](bash/.bash_prompt) instead of `starship`.
+
 ## Application
 
 Install basic dependencies:
