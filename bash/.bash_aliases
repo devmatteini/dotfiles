@@ -20,7 +20,6 @@ alias dki="docker images"
 alias dkps="docker ps -a"
 
 # Terraform CLI
-alias tr="terraform"
 alias trp="terraform plan"
 alias tra="terraform apply"
 

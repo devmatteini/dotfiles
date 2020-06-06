@@ -1,0 +1,18 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+[directory]
+truncate_to_repo=false
+style="bold #5faf5f"
+
+[character]
+style_success="bold white"
+
+[git_branch]
+style="bold #5f5faf"
+
+[git_status]
+style="bold #afd7ff"
+
+[aws]
+disabled=true

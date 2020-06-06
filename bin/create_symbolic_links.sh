@@ -21,12 +21,24 @@ FILES=(
     "vim/.vimrc"
 )
 
-echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
+CONFIG_FILES=(
+    "config/starship.toml"
+)
 
+echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
 for file in "${FILES[@]}"; do
     sourceFile="$BASEDIR/$file"
     targetFile="$HOME/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")"
     
+    ln -sfn "$sourceFile" "$targetFile"
+done;
+unset file;
+
+echo -e "\e[1;34m[i] Creating symlinks in $HOME/.config/ ...\e[0m"
+for file in "${CONFIG_FILES[@]}"; do
+    sourceFile="$BASEDIR/$file"
+    targetFile="$HOME/.config/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")"
+
     ln -sfn "$sourceFile" "$targetFile"
 done;
 unset file;

@@ -4,7 +4,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # Load the shell dotfiles
-for file in ~/.{bash_aliases,bash_exports,bash_options,bash_prompt,bash_functions,bash.local}; do
+for file in ~/.{bash_exports,bash_aliases,bash_options,bash_functions,bash.local}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
@@ -27,3 +27,5 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+eval "$(starship init bash)"
