@@ -10,6 +10,10 @@
 git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source bootstrap.sh
 ```
 
+The [`bootstrap.sh`](bootstrap.sh) script does:
+- create symlinks for bash files inside [`bash/`](bash/) folder
+- if using `gnome-terminal`, it will load the [`gnome-terminal.dconf`](gnome-terminal.dconf) configuration file
+
 ## Prompt
 
 Currently using [`starship`](https://github.com/starship/starship/) as bash prompt.
