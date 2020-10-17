@@ -31,6 +31,16 @@
 	changed = yellow
 	untracked = red
 
+[core]
+	# https://github.com/dandavison/delta
+    pager = delta
+
+[delta]
+    syntax-theme = Monokai Extended Origin
+
+[interactive]
+    diffFilter = delta --color-only
+
 [alias]
 	# View the current working tree status using the short format
 	s = status -s
