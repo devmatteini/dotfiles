@@ -33,3 +33,7 @@ if which starship > /dev/null; then
 else
     source ~/.bash_prompt
 fi
+
+if which direnv > /dev/null; then
+    eval "$(direnv hook bash)"
+fi
