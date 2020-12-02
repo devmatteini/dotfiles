@@ -93,4 +93,5 @@
 
 	# Stash
 	sl = stash list
-	sp = stash push -m
+	# Stash all with message (including untracked files) 
+	sp = stash push -u -m
