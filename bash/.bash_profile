@@ -3,6 +3,9 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# Add cargo to path
+[ -d ~/.cargo/bin ] && PATH="~/.cargo/bin:$PATH"
+
 # Load the shell dotfiles
 for file in ~/.{bash_exports,bash_aliases,bash_options,bash_functions,bash.local}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
