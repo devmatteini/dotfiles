@@ -55,6 +55,7 @@
 	ca = !git add -A && git commit -avm
 	can = !git add -A && git commit --amend --no-edit
 	cam = commit --amend -m
+	cane = commit --amend --no-edit
 
 	# undo last commit(s) and keep changes, with files unstaged
 	uncommit = reset HEAD^ --mixed
