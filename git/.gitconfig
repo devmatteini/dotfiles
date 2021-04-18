@@ -41,6 +41,9 @@
 [interactive]
     diffFilter = delta --color-only
 
+[init]
+	defaultBranch = main
+
 [alias]
 	# View the current working tree status using the short format
 	s = status -s
