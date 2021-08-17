@@ -6,7 +6,7 @@ truncate_to_repo=false
 style="bold #5faf5f"
 
 [character]
-style_success="bold white"
+success_symbol="[❯](bold white)"
 
 [git_branch]
 style="bold #5f5faf"
