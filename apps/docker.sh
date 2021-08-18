@@ -1,13 +1,9 @@
 #!/bin/bash
 
-sudo apt update
-sudo apt install -y curl apt-transport-https ca-certificates software-properties-common
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-sudo apt update
-sudo apt install -y docker-ce
+# https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+rm get-docker.sh
 
 # User group for docker
 sudo groupadd docker
