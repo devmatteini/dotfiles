@@ -30,3 +30,19 @@ upgrade_terraform(){
     
     terraform --version
 }
+
+has_installed() {
+    local RESET="\e[0m"
+    local RED="\e[1;31m"
+    if ! which "$1" > /dev/null; then
+        echo -e "${RED}$1 is not installed${RESET}"
+        return 1
+    fi
+}
+
+download_yt_playlist_mp3() {
+    has_installed youtube-dl
+    has_installed ffmpeg
+
+    youtube-dl --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --output "%(title)s.%(ext)s" --yes-playlist "$1"
+}
