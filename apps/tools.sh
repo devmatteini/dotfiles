@@ -24,3 +24,9 @@ curl -fsSL -o bat.deb \
     https://github.com/sharkdp/bat/releases/download/v0.18.3/bat_0.18.3_amd64.deb
 sudo dpkg -i ./bat.deb
 rm ./bat.deb
+
+# https://github.com/BurntSushi/ripgrep
+curl -fsSL -o rg.deb \
+    https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
+sudo dpkg -i rg.deb
+rm ./rg.deb
