@@ -11,6 +11,7 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source b
 ```
 
 The [`bootstrap.sh`](bootstrap.sh) script does:
+
 - create symlinks for bash files inside [`bash/`](bash/) folder
 - if using `gnome-terminal`, it will load the [`gnome-terminal.dconf`](gnome-terminal.dconf) configuration file
 
@@ -26,13 +27,13 @@ Alternatively you can use [`.bash_prompt`](bash/.bash_prompt) instead of `starsh
 Install basic dependencies:
 
 ```bash
-source apps/dependencies.sh
+./apps/dependencies.sh
 ```
 
 If you want to install other application:
 
 ```bash
-source apps/<name_of_the_file.sh>
+./apps/<name_of_the_file.sh>
 ```
 
 ### :clipboard: List of application script
