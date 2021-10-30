@@ -18,3 +18,9 @@ npm install -g tldr
 
 # AWS cli
 pip3 install awscli --upgrade --user
+
+# https://github.com/sharkdp/bat
+curl -fsSL -o bat.deb \
+    https://github.com/sharkdp/bat/releases/download/v0.18.3/bat_0.18.3_amd64.deb
+sudo dpkg -i ./bat.deb
+rm ./bat.deb
