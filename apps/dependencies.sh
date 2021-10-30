@@ -11,9 +11,7 @@ git \
 python3-pip \
 python3-dev \
 python3-setuptools \
-libsecret-1-0 \
-libsecret-1-dev \
-gnome-tweaks \
+gnome-tweaks
 
 # Cleanup
 sudo apt autoremove
