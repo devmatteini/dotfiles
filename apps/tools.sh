@@ -4,6 +4,9 @@
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
+# https://github.com/koalaman/shellcheck
+sudo apt install shellcheck
+
 # thefuck https://github.com/nvbn/thefuck
 # pip3 install thefuck
 
