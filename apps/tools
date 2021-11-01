@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+from installer import Package, create_installer, join
+
+INSTALL_FZF = [
+    'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf',
+    '~/.fzf/install'
+]
+
+INSTALL_BAT = [
+    'curl -fsSL -o bat.deb https://github.com/sharkdp/bat/releases/download/v0.18.3/bat_0.18.3_amd64.deb',
+    'sudo dpkg -i ./bat.deb',
+    'rm ./bat.deb'
+]
+
+INSTALL_RIPGREP = [
+    'curl -fsSL -o rg.deb https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb',
+    'sudo dpkg -i rg.deb',
+    'rm ./rg.deb'
+]
+
+create_installer("tools", [
+    # https://github.com/junegunn/fzf
+    Package("fzf", join(INSTALL_FZF)),
+
+    # https://github.com/koalaman/shellcheck
+    Package("shellcheck", "sudo apt install -y shellcheck"),
+
+    # https://github.com/tldr-pages/tldr/
+    Package("tldr", "npm install -g tldr"),
+
+    Package("aws", "pip3 install awscli --upgrade --user"),
+
+    # https://github.com/sharkdp/bat
+    Package("bat", join(INSTALL_BAT)),
+
+    # https://github.com/BurntSushi/ripgrep
+    Package("rg", join(INSTALL_RIPGREP)),
+])()
+
+
+# thefuck https://github.com/nvbn/thefuck
+# pip3 install thefuck
+
+# Joplin https://github.com/laurent22/joplin
+# wget -O - https://raw.githubusercontent.com/laurent22/joplin/master/Joplin_install_and_update.sh | bash
