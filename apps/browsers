@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+from installer import Package, create_installer
+
+create_installer("browsers", [
+    Package("firefox", "sudo apt install -y firefox"),
+    Package("chromium", "sudo snap install chromium")
+])()

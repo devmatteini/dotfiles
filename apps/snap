@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+from installer import Package, create_installer
+
+create_installer("snap", [
+    Package("postman", "sudo snap install postman"),
+    Package("gimp", "sudo snap install gimp"),
+    Package("vlc", "sudo snap install vlc")
+])()
