@@ -29,6 +29,9 @@ def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> N
         print(f'Installing {BOLD}{package.name}{RESET}...')
         os.system(package.install_command)
 
+def join(list: List[str]) -> str:
+    return " && ".join(list)
+
 def create_installer(name:str, packages: List[Package]) -> Callable[[], None]:
     parser = argparse.ArgumentParser(description=f'Application installer for {BOLD}{name}{RESET}')
     parser.add_argument('--list', action="store_true", help='List all packages')
