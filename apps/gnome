@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+from installer import Package, create_installer
+
+create_installer("gnome", [
+    Package("tweaks", "sudo apt install -y gnome-tweaks"),
+])()

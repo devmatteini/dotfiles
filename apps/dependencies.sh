@@ -10,8 +10,7 @@ wget \
 git \
 python3-pip \
 python3-dev \
-python3-setuptools \
-gnome-tweaks
+python3-setuptools
 
 # Cleanup
 sudo apt autoremove
