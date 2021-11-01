@@ -33,7 +33,7 @@ Install basic dependencies:
 If you want to install other application:
 
 ```bash
-./apps/<name_of_the_file.sh>
+./apps/<script>
 ```
 
 ### :clipboard: List of application script
@@ -42,9 +42,9 @@ If you want to install other application:
 - docker (docker-ce, docker-compose)
 - dotnet (dotnet-sdk-3.1)
 - editors (vscode, rider, vim)
-- nvm (nvm, node-v12)
-- snap (postman, gimp, communitheme, vlc)
-- tools (fzf, thefuck, tldr, joplin, awscli)
+- nvm (nvm, node-v14)
+- snap (postman, gimp, vlc)
+- tools (fzf, tldr, shellcheck, awscli, bat, ripgrep)
 
 ## Inspired by
 
