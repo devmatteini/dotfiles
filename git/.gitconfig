@@ -1,9 +1,13 @@
 [user]
 	email = dev.matteini@gmail.com
 	name = devmatteini
+	signingKey = 75CB3DC5FCBEAFFDA62C21B06B35BCCACAEE94E2
 
 [credential]
     helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+
+[commit]
+	gpgSign = true
 
 [color]
 	# Use colors in Git commands that are capable of colored output when
