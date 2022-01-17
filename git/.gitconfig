@@ -40,7 +40,7 @@
 	pager = delta
 
 [delta]
-	syntax-theme = Monokai Extended Origin
+	syntax-theme = gruvbox-dark
 
 [interactive]
 	diffFilter = delta --color-only
