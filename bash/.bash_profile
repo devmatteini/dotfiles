@@ -4,7 +4,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # Add cargo to path
-[ -d ~/.cargo/bin ] && PATH="~/.cargo/bin:$PATH"
+[ -d ~/.cargo/bin ] && PATH="$HOME/.cargo/bin:$PATH"
 
 # Load the shell dotfiles
 for file in ~/.{bash_exports,bash_aliases,bash_options,bash_functions,bash.local}; do
