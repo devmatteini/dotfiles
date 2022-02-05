@@ -15,7 +15,7 @@ export HISTFILESIZE=2000
 export HISTSIZE=3000
 
 # Don't add certain commands to the history file.
-export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
+export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd"
 
 # Enable docker buildkit
 export DOCKER_BUILDKIT=1
