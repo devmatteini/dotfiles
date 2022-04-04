@@ -7,18 +7,6 @@ INSTALL_FZF = [
     '~/.fzf/install'
 ]
 
-INSTALL_BAT = [
-    'curl -fsSL -o bat.deb https://github.com/sharkdp/bat/releases/download/v0.18.3/bat_0.18.3_amd64.deb',
-    'sudo dpkg -i ./bat.deb',
-    'rm ./bat.deb'
-]
-
-INSTALL_RIPGREP = [
-    'curl -fsSL -o rg.deb https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb',
-    'sudo dpkg -i rg.deb',
-    'rm ./rg.deb'
-]
-
 create_installer("tools", [
     # https://github.com/junegunn/fzf
     Package("fzf", join(INSTALL_FZF)),
@@ -32,10 +20,10 @@ create_installer("tools", [
     Package("aws", "pip3 install awscli --upgrade --user"),
 
     # https://github.com/sharkdp/bat
-    Package("bat", join(INSTALL_BAT)),
+    Package("bat", 'sudo dra download -i -s "bat_{tag}_amd64.deb" sharkdp/bat'),
 
     # https://github.com/BurntSushi/ripgrep
-    Package("rg", join(INSTALL_RIPGREP)),
+    Package("rg", 'sudo dra download -i -s "ripgrep_{tag}_amd64.deb" BurntSushi/ripgrep'),
 ])()
 
 
