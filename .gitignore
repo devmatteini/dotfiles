@@ -1,1 +1,5 @@
 __pycache__/
+
+# Editors and IDEs
+.idea/
+.vscode/
