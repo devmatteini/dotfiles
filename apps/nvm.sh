@@ -10,3 +10,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Install node latest v16.x.x
 nvm install 16
+
+# Setup bash completion
+npm completion > "$HOME"/.local/share/bash-completion/completions/npm

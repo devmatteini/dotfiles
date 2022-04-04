@@ -41,6 +41,3 @@ if which direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
 
-if which npm > /dev/null; then
-    eval "$(npm completion)"
-fi
