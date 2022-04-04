@@ -8,5 +8,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Install node latest v14.x.x
-nvm install 14
+# Install node latest v16.x.x
+nvm install 16
