@@ -24,7 +24,7 @@ sudo apt install -y build-essential \
   python3-setuptools
 
 # Cleanup
-sudo apt autoremove
+sudo apt autoremove -y
 
 # Setup dra - https://github.com/devmatteini/dra
 has_installed dra
