@@ -8,7 +8,4 @@ sudo make --directory=/usr/share/doc/git/contrib/credential/libsecret
 
 # Install syntax-highlighting pager and diff output
 # https://github.com/dandavison/delta
-curl -fsSL -o git-delta.deb \
-    https://github.com/dandavison/delta/releases/download/0.9.2/git-delta_0.9.2_amd64.deb
-sudo dpkg -i ./git-delta.deb
-rm ./git-delta.deb
+sudo dra download -i -s "git-delta_{tag}_amd64.deb" dandavison/delta
