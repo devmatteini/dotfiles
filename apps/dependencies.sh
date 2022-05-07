@@ -12,7 +12,7 @@ mkdir -p "$HOME"/.local/share/bash-completion/completions
 mkdir -p "$HOME"/dev/
 
 sudo apt update
-sudo add-apt-repository universe
+sudo add-apt-repository -y universe
 sudo apt update
 
 sudo apt install -y build-essential \
