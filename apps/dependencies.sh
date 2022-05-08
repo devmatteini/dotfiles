@@ -7,6 +7,11 @@ function has_installed() {
   fi
 }
 
+function install_flatpak(){
+  sudo apt install -y flatpak
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+}
+
 # Create common directories
 mkdir -p "$HOME"/.local/share/bash-completion/completions
 mkdir -p "$HOME"/dev/
@@ -22,6 +27,8 @@ sudo apt install -y build-essential \
   python3-pip \
   python3-dev \
   python3-setuptools
+
+install_flatpak
 
 # Cleanup
 sudo apt autoremove -y
