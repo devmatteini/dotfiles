@@ -24,6 +24,9 @@ create_installer("tools", [
 
     # https://github.com/BurntSushi/ripgrep
     Package("rg", 'sudo dra download -i -s "ripgrep_{tag}_amd64.deb" BurntSushi/ripgrep'),
+
+    # https://github.com/starship/starship
+    Package("starship", "dra download -s starship-x86_64-unknown-linux-gnu.tar.gz -i -o ~/.local/bin starship/starship")
 ])()
 
 
