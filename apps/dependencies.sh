@@ -26,7 +26,8 @@ sudo apt install -y build-essential \
   git \
   python3-pip \
   python3-dev \
-  python3-setuptools
+  python3-setuptools \
+  fonts-firacode
 
 install_flatpak
 
