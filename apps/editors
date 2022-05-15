@@ -5,5 +5,6 @@ from installer import Package, create_installer
 create_installer("editors", [
     Package("vim", "sudo apt install -y vim"),
     Package("vscode", "sudo snap install code --classic"),
-    Package("rider", "sudo snap install rider --classic")
+    Package("rider", "sudo snap install rider --classic"),
+    Package("intellij-idea", "sudo snap install intellij-idea-community --classic"),
 ])()
