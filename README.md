@@ -43,7 +43,7 @@ If you want to install other application:
 - dotnet (dotnet-sdk-3.1)
 - editors (vscode, rider, vim)
 - nvm (nvm, node-v14)
-- snap (postman, gimp, vlc)
+- misc (postman, gimp, vlc)
 - tools (fzf, tldr, shellcheck, awscli, bat, ripgrep)
 
 ## Inspired by
