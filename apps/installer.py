@@ -40,6 +40,7 @@ def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> N
     for package in to_intall:
         print(f'Installing {BOLD}{package.name}{RESET}...')
         os.system(package.install_command)
+        print("")
 
 def join(list: List[str]) -> str:
     return " && ".join(list)
