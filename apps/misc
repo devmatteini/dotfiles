@@ -5,5 +5,6 @@ from installer import Package, create_installer
 create_installer("misc", [
     Package("postman", "sudo snap install postman"),
     Package("gimp", "sudo snap install gimp"),
-    Package("vlc", "sudo snap install vlc")
+    Package("vlc", "sudo snap install vlc"),
+    Package("peek", "flatpak install flathub com.uploadedlobster.peek"),
 ])()
