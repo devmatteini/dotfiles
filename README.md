@@ -46,6 +46,12 @@ If you want to install other application:
 - misc (postman, gimp, vlc)
 - tools (fzf, tldr, shellcheck, awscli, bat, ripgrep)
 
+## GRUB Theme
+
+https://github.com/shvchk/poly-dark
+
+![grub-poly-dark](./assets/grub-poly-dark.png)
+
 ## Inspired by
 
 - https://github.com/alrra/dotfiles
