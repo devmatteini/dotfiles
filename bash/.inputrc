@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # If there are multiple matches for completion,
 # make TAB cycle through them.

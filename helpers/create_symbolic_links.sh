@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ -z "$1" ];then
     echo "Usage: create_symbolic_links.sh <BASEDIR>"

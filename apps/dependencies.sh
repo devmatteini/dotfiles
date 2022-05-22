@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function has_installed() {
   if ! command -V "$1" >/dev/null; then

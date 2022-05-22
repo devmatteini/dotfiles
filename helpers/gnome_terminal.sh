@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ -z "$1" ]; then
     echo "Usage: $(basename "${BASH_SOURCE[0]}") <path/to/file.dconf>"
