@@ -17,10 +17,10 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     source /etc/bash_completion
 fi
 
-# Add tab completion for git alias "g"
+# Add tab completion for git alias "g" (https://askubuntu.com/a/642778)
 if [ -f /usr/share/bash-completion/completions/git ]; then
     source /usr/share/bash-completion/completions/git
-    __git_complete g _git
+    __git_complete g __git_main
 fi
 
 # Source fzf
