@@ -17,9 +17,13 @@ upgrade_terraform(){
     fi
     
     version=$1
+    url="https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_amd64.zip"
     
     echo -ne "${BLUE}[-] Downloading terraform $version...${RESET}"
-    wget -q https://releases.hashicorp.com/terraform/"$version"/terraform_"$version"_linux_amd64.zip
+    if ! wget -q "$url"; then
+        echo -ne "\r${RED}[X] Error downloading terraform${RESET}\e[K\n"
+        return 1
+    fi
     echo -ne "\r${GREEN}[✔] Download complete${RESET}\e[K\n"
     
     echo -ne "${BLUE}[-] Unzipping terraform_${version}_linux_amd64.zip...${RESET}"
