@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+RESET="\e[0m"
+RED="\e[1;31m"
+BLUE="\e[1;34m"
+GREEN="\e[1;32m"
+PURPLE="\e[1;35m"
+
 mkcd(){
     mkdir -p "$1" && cd "$_" || return 1
 }
@@ -12,28 +18,26 @@ upgrade_terraform(){
     
     version=$1
     
-    echo -ne "\e[1;34m[-] Downloading terraform $version...\e[0m"
+    echo -ne "${BLUE}[-] Downloading terraform $version...${RESET}"
     wget -q https://releases.hashicorp.com/terraform/"$version"/terraform_"$version"_linux_amd64.zip
-    echo -ne "\r\e[1;32m[✔] Download complete\e[0m\e[K\n"
+    echo -ne "\r${GREEN}[✔] Download complete${RESET}\e[K\n"
     
-    echo -ne "\e[1;34m[-] Unzipping terraform_${version}_linux_amd64.zip...\e[0m"
+    echo -ne "${BLUE}[-] Unzipping terraform_${version}_linux_amd64.zip...${RESET}"
     unzip -q terraform_"$version"_linux_amd64.zip
-    echo -ne "\r\e[1;32m[✔] Unzip complete\e[0m\e[K\n"
+    echo -ne "\r${GREEN}[✔] Unzip complete${RESET}\e[K\n"
     
-    echo -e "\e[1;35m[i] Move terraform to /usr/local/bin/\e[0m"
+    echo -e "${PURPLE}[i] Move terraform to /usr/local/bin/${RESET}"
     sudo mv terraform /usr/local/bin/terraform
-    echo -ne "\r\e[1;32m[✔] Moved terraform to /usr/local/bin/\e[0m\e[K\n"
+    echo -ne "\r${GREEN}[✔] Moved terraform to /usr/local/bin/${RESET}\e[K\n"
     
     # Cleanup
-    echo -e "\e[1;35m[i] Cleanup\e[0m\n"
+    echo -e "${PURPLE}[i] Cleanup${RESET}\n"
     rm terraform_"$version"_linux_amd64.zip
     
     terraform --version
 }
 
 has_installed() {
-    local RESET="\e[0m"
-    local RED="\e[1;31m"
     if ! which "$1" > /dev/null; then
         echo -e "${RED}$1 is not installed${RESET}"
         return 1
