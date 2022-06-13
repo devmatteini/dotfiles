@@ -10,10 +10,6 @@ alias g="git"
 alias ll="ls -lh --group-directories-first --color=auto"
 alias la="ls -Alh --group-directories-first --color=auto"
 
-
-# VS Code
-alias code="code ."
-
 # Docker
 alias dk="docker"
 alias dki="docker images"
