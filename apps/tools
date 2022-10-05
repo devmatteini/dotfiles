@@ -12,7 +12,12 @@ INSTALL_AWS = [
     'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"',
     'unzip -u awscliv2.zip',
     './aws/install --install-dir ~/.local/aws-cli --bin-dir ~/.local/bin',
-    "rm -rf awscliv2.zip aws/"
+    "rm -rf awscliv2.zip aws/",
+    # create bash completion file
+    """cat > ~/.local/share/bash-completion/completions/aws <<EOL
+#/usr/bin/env bash
+complete -C ~/.local/bin/aws_completer aws
+EOL"""
 ]
 
 create_installer("tools", [
