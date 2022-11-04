@@ -20,6 +20,13 @@ complete -C ~/.local/bin/aws_completer aws
 EOL"""
 ]
 
+INSTALL_TLDR = [
+    'dra download -s tealdeer-linux-x86_64-musl -o ~/.local/bin/tldr dbrgn/tealdeer',
+    'chmod +x ~/.local/bin/tldr',
+    # Download bash completion
+    'dra download -s completions_bash -o ~/.local/share/bash-completion/completions/tldr dbrgn/tealdeer'
+]
+
 create_installer("tools", [
     # https://github.com/junegunn/fzf
     Package("fzf", join(INSTALL_FZF)),
@@ -27,8 +34,8 @@ create_installer("tools", [
     # https://github.com/koalaman/shellcheck
     Package("shellcheck", "sudo apt install -y shellcheck"),
 
-    # https://github.com/tldr-pages/tldr/
-    Package("tldr", "npm install -g tldr"),
+    # https://github.com/dbrgn/tealdeer
+    Package("tldr", join(INSTALL_TLDR)),
 
     Package("aws", join(INSTALL_AWS)),
 
