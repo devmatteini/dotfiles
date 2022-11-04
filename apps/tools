@@ -17,7 +17,7 @@ INSTALL_AWS = [
     './aws/install --install-dir ~/.local/aws-cli --bin-dir ~/.local/bin',
     "rm -rf awscliv2.zip aws/",
     # create bash completion file
-    f"""cat > {bash_completion_path_for("aws2")} <<EOL
+    f"""cat > {bash_completion_path_for("aws")} <<EOL
 #/usr/bin/env bash
 complete -C ~/.local/bin/aws_completer aws
 EOL"""
