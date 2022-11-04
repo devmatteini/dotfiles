@@ -2,6 +2,9 @@
 
 from installer import Package, create_installer, join
 
+def bash_completion_path_for(file_name: str) -> str:
+    return f'~/.local/share/bash-completion/completions/{file_name}'
+
 INSTALL_FZF = [
     'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf',
     '~/.fzf/install --key-bindings --completion --no-update-rc'
@@ -14,7 +17,7 @@ INSTALL_AWS = [
     './aws/install --install-dir ~/.local/aws-cli --bin-dir ~/.local/bin',
     "rm -rf awscliv2.zip aws/",
     # create bash completion file
-    """cat > ~/.local/share/bash-completion/completions/aws <<EOL
+    f"""cat > {bash_completion_path_for("aws2")} <<EOL
 #/usr/bin/env bash
 complete -C ~/.local/bin/aws_completer aws
 EOL"""
@@ -24,7 +27,7 @@ INSTALL_TLDR = [
     'dra download -s tealdeer-linux-x86_64-musl -o ~/.local/bin/tldr dbrgn/tealdeer',
     'chmod +x ~/.local/bin/tldr',
     # Download bash completion
-    'dra download -s completions_bash -o ~/.local/share/bash-completion/completions/tldr dbrgn/tealdeer'
+    f'dra download -s completions_bash -o {bash_completion_path_for("tldr")} dbrgn/tealdeer'
 ]
 
 create_installer("tools", [
@@ -37,6 +40,7 @@ create_installer("tools", [
     # https://github.com/dbrgn/tealdeer
     Package("tldr", join(INSTALL_TLDR)),
 
+    # https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
     Package("aws", join(INSTALL_AWS)),
 
     # https://github.com/sharkdp/bat
