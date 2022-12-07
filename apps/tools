@@ -44,7 +44,7 @@ create_installer("tools", [
     Package("aws", join(INSTALL_AWS)),
 
     # https://github.com/sharkdp/bat
-    Package("bat", 'sudo dra download -i -s "bat_{tag}_amd64.deb" sharkdp/bat'),
+    Package("bat", 'dra download -i -s "bat-v{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin sharkdp/bat'),
 
     # https://github.com/BurntSushi/ripgrep
     Package("rg", 'sudo dra download -i -s "ripgrep_{tag}_amd64.deb" BurntSushi/ripgrep'),
