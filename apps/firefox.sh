@@ -6,7 +6,7 @@
 
 sudo snap remove --purge firefox
 
-sudo add-apt-repository ppa:mozillateam/ppa
+sudo add-apt-repository -y ppa:mozillateam/ppa
 
 # Alter the Firefox package priority to ensure the PPA/deb/apt version of Firefox is preferred
 echo '
