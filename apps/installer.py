@@ -47,8 +47,8 @@ def join(list: List[str]) -> str:
 
 def create_installer(name:str, packages: List[Package]) -> Callable[[], None]:
     parser = argparse.ArgumentParser(description=f'Application installer for {BOLD}{name}{RESET}')
-    parser.add_argument('--list', action="store_true", help='List all packages')
-    parser.add_argument('--filter', type=str, help='Comma separated list of packages to install')
-    parser.add_argument('--exclude', type=str, help='Comma separated list of packages to exclude')
+    parser.add_argument('--list', '-l', action="store_true", help='List all packages')
+    parser.add_argument('--filter', '-f', type=str, help='Comma separated list of packages to install')
+    parser.add_argument('--exclude', '-e', type=str, help='Comma separated list of packages to exclude')
 
     return lambda: run_installer(packages, parser)
