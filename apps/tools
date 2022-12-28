@@ -46,6 +46,9 @@ create_installer("tools", [
     # https://github.com/sharkdp/bat
     Package("bat", 'dra download -i -s "bat-v{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin sharkdp/bat'),
 
+    # https://github.com/sharkdp/fd
+    Package("fd", 'dra download -i -s "fd-v{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin sharkdp/fd'),
+
     # https://github.com/BurntSushi/ripgrep
     Package("rg", 'dra download -i -s "ripgrep-{tag}-x86_64-unknown-linux-musl.tar.gz" -o ~/.local/bin BurntSushi/ripgrep'),
 
