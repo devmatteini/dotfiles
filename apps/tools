@@ -30,6 +30,12 @@ INSTALL_TLDR = [
     f'dra download -s completions_bash -o {bash_completion_path_for("tldr")} dbrgn/tealdeer'
 ]
 
+INSTALL_MINISERVE = [
+    'dra download -s "miniserve-{tag}-x86_64-unknown-linux-gnu" -o ~/.local/bin/miniserve svenstaro/miniserve',
+    'chmod +x ~/.local/bin/miniserve',
+    f'miniserve --print-completions bash > {bash_completion_path_for("miniserve")}'
+]
+
 create_installer("tools", [
     # https://github.com/junegunn/fzf
     Package("fzf", join(INSTALL_FZF)),
@@ -57,6 +63,9 @@ create_installer("tools", [
 
     # https://github.com/direnv/direnv
     Package("direnv", "sudo apt install -y direnv"),
+
+    # https://github.com/svenstaro/miniserve
+    Package("miniserve", join(INSTALL_MINISERVE)),
 ])()
 
 
