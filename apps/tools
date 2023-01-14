@@ -66,6 +66,9 @@ create_installer("tools", [
 
     # https://github.com/svenstaro/miniserve
     Package("miniserve", join(INSTALL_MINISERVE)),
+
+    # https://github.com/devmatteini/pihole-switch
+    Package("phs", "dra download -i -s phs.zip -o ~/.local/bin devmatteini/pihole-switch"),
 ])()
 
 
