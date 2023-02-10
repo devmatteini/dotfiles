@@ -23,6 +23,7 @@ FILES=(
 
 CONFIG_FILES=(
     "config/starship.toml"
+    "config/wezterm"
 )
 
 echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
