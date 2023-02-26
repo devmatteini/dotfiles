@@ -23,6 +23,9 @@ FILES=(
 
 CONFIG_FILES=(
     "config/starship.toml"
+)
+
+CONFIG_DIRS=(
     "config/wezterm"
 )
 
@@ -43,5 +46,21 @@ for file in "${CONFIG_FILES[@]}"; do
     ln -sfn "$sourceFile" "$targetFile"
 done;
 unset file;
+
+echo -e "\e[1;34m[i] Creating directories in $HOME/.config/ ...\e[0m"
+for dir in "${CONFIG_DIRS[@]}"; do
+    sourceDir="$BASEDIR/$dir"
+    targetDir="$HOME/.config/$(printf "%s" "$dir" | sed "s/.*\/\(.*\)/\1/g")"
+
+    mkdir -p "$targetDir"
+    files=($(ls -A "$sourceDir"))
+    echo -e "\e[1;34m    [i] Creating symlinks in $targetDir ...\e[0m"
+    for file in "${files[@]}"; do
+        sourceFile="$sourceDir/$file"
+        targetFile="$targetDir/$file"
+
+        ln -sfn "$sourceFile" "$targetFile"
+    done;
+done;
 
 echo -e "\e[1;32m[✓] Symlinks created succesfully.\e[0m"
