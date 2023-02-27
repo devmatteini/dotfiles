@@ -1,6 +1,9 @@
 local wezterm = require "wezterm"
 
 return {
+  -- Avoid spawning login shell that causes starship to always shop the `jobs` module
+  default_prog = { os.getenv("SHELL") },
+
   font = wezterm.font "FiraCode Nerd Font",
   font_size = 15.0,
   color_scheme = "Gruvbox dark, hard (base16)",
