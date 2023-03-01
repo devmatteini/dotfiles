@@ -1,4 +1,5 @@
 local wezterm = require "wezterm"
+local act = wezterm.action
 
 return {
   -- Avoid spawning login shell that causes starship to always shop the `jobs` module
@@ -40,5 +41,10 @@ return {
       regex = [[\bfile://\S*\b]],
       format = '$0',
     },
+  },
+
+  keys = {
+    { key = 'LeftArrow', mods = 'SHIFT|ALT', action = act.MoveTabRelative(-1) },
+    { key = 'RightArrow', mods = 'SHIFT|ALT', action = act.MoveTabRelative(1) },
   },
 }
