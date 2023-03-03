@@ -12,6 +12,12 @@ function install_flatpak(){
   flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
+function post_install_dra(){
+  dra completion bash >"$HOME"/.local/share/bash-completion/completions/dra
+  # Create symlink to be able to use dra as superuser (for example when installing .deb assets)
+  sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
+}
+
 # Create common directories
 mkdir -p "$HOME"/.local/share/bash-completion/completions
 mkdir -p "$HOME"/dev/
@@ -36,4 +42,4 @@ sudo apt autoremove -y
 
 # Setup dra - https://github.com/devmatteini/dra
 has_installed dra
-dra completion bash >"$HOME"/.local/share/bash-completion/completions/dra
+post_install_dra
