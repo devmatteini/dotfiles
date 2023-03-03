@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+from installer import Package, create_installer
+
+create_installer("terminal", [
+    Package("wezterm", 'sudo dra download -i -s "wezterm-{tag}.Ubuntu22.04.deb" wez/wezterm'),
+])()
