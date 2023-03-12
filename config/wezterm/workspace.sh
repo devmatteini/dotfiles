@@ -21,5 +21,5 @@ run_command() {
         return 0
     fi
 
-    echo -e "$command_to_run\n" | wezterm cli send-text --pane-id "$pane_id"
+    echo -e "$command_to_run\n" | wezterm cli send-text --no-paste --pane-id "$pane_id"
 }
