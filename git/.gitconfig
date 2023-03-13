@@ -47,6 +47,8 @@
 
 [init]
 	defaultBranch = main
+[push]
+	autoSetupRemote = true
 
 [alias]
 	# View the current working tree status using the short format
