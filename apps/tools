@@ -36,7 +36,15 @@ INSTALL_MINISERVE = [
     f'miniserve --print-completions bash > {bash_completion_path_for("miniserve")}'
 ]
 
+INSTALL_DRA = [
+    'dra download -i -s "dra-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin/ devmatteini/dra',
+    f'dra completion bash > {bash_completion_path_for("dra")}'
+]
+
 create_installer("tools", [
+    # https://github.com/devmatteini/dra
+    Package("dra", join(INSTALL_DRA)),
+
     # https://github.com/junegunn/fzf
     Package("fzf", join(INSTALL_FZF)),
 
