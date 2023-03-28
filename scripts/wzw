@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Wezterm Workspace - Start a new wezterm workspace
+
+WORKSPACES_DIR="$HOME/.config/wezterm/workspaces"
+
+workspace=""
+
+if [[ -z "$1" ]]; then
+    # List all files in workspaces directory. Only keep the file name (without the ./<filename>)    
+    workspace=$(find "$WORKSPACES_DIR" -maxdepth 1 -type f -printf '%f\n' | fzf --cycle --layout=reverse)
+else
+    if [[ ! -e "$WORKSPACES_DIR/$1" ]]; then
+        echo "The workspace file '$WORKSPACES_DIR/$1' not exists"
+        exit 1
+    fi
+    workspace="$1"
+fi
+
+if [[ -z $workspace ]]; then
+    echo "No workspace selected"
+    exit 1
+fi
+
+WZ_WORKSPACE="$workspace" wezterm start --always-new-process &
