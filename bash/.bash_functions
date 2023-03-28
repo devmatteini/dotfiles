@@ -2,9 +2,6 @@
 
 RESET="\e[0m"
 RED="\e[1;31m"
-BLUE="\e[1;34m"
-GREEN="\e[1;32m"
-PURPLE="\e[1;35m"
 
 mkcd(){
     mkdir -p "$1" && cd "$_" || return 1
@@ -18,37 +15,6 @@ change-aws-profile(){
         return 0
     fi
     export AWS_PROFILE="$profile"
-}
-
-upgrade_terraform(){
-    if [ -z "$1" ];then
-        echo "Usage: upgrade_terraform <version>"
-        return 1
-    fi
-    
-    version=$1
-    url="https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_amd64.zip"
-    
-    echo -ne "${BLUE}[-] Downloading terraform $version...${RESET}"
-    if ! wget -q "$url"; then
-        echo -ne "\r${RED}[X] Error downloading terraform${RESET}\e[K\n"
-        return 1
-    fi
-    echo -ne "\r${GREEN}[✔] Download complete${RESET}\e[K\n"
-    
-    echo -ne "${BLUE}[-] Unzipping terraform_${version}_linux_amd64.zip...${RESET}"
-    unzip -q terraform_"$version"_linux_amd64.zip
-    echo -ne "\r${GREEN}[✔] Unzip complete${RESET}\e[K\n"
-    
-    echo -ne "${PURPLE}[i] Move terraform to $HOME/.local/bin/${RESET}"
-    mv terraform "$HOME/.local/bin/"
-    echo -ne "\r${GREEN}[✔] Moved terraform to $HOME/.local/bin/${RESET}\e[K\n"
-    
-    # Cleanup
-    echo -e "${BLUE}[i] Cleanup${RESET}\n"
-    rm terraform_"$version"_linux_amd64.zip
-    
-    terraform --version
 }
 
 has_installed() {
