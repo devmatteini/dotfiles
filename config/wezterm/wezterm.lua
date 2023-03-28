@@ -1,5 +1,11 @@
 local wezterm = require "wezterm"
+local workspace = require "workspace"
 local act = wezterm.action
+
+wezterm.on('gui-startup', function()
+  local base_dir = wezterm.config_dir .. "/workspaces"
+  workspace.startup("WZ_WORKSPACE", base_dir, wezterm)
+end)
 
 return {
   -- Avoid spawning login shell that causes starship to always shop the `jobs` module
