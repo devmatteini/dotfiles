@@ -29,6 +29,9 @@ CONFIG_DIRS=(
     "config/wezterm"
 )
 
+# NOTE: https://www.shellcheck.net/wiki/SC2207
+readarray -t SCRIPTS_FILES < <(find "$BASEDIR/scripts" -maxdepth 1 -type f -printf '%f\n')
+
 echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
 for file in "${FILES[@]}"; do
     sourceFile="$BASEDIR/$file"
@@ -62,5 +65,14 @@ for dir in "${CONFIG_DIRS[@]}"; do
         ln -sfn "$sourceFile" "$targetFile"
     done;
 done;
+
+echo -e "\e[1;34m[i] Creating symlinks in $HOME/.local/bin ...\e[0m"
+for file in "${SCRIPTS_FILES[@]}"; do
+    sourceFile="$BASEDIR/scripts/$file"
+    targetFile="$HOME/.local/bin/$file"
+
+    ln -sfn "$sourceFile" "$targetFile"
+done;
+unset file;
 
 echo -e "\e[1;32m[✓] Symlinks created succesfully.\e[0m"
