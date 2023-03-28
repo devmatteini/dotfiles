@@ -12,7 +12,11 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source b
 
 The [`bootstrap.sh`](bootstrap.sh) script does:
 
-- create symlinks for bash files inside [`bash/`](bash/) folder
+- create symlinks for:
+  1. [`bash`](bash/) shell files
+  2. [`git`](git/) files
+  3. config files ([`~/.config`](config/))
+  4. custom [`scripts`](scripts/) in `~/.local/bin`
 - if using `gnome-terminal`, it will load the [`gnome-terminal.dconf`](gnome-terminal.dconf) configuration file
 
 ## Prompt
@@ -22,11 +26,21 @@ You can customize it by editing [`config/starship.toml`](config/starship.toml)
 
 Alternatively you can use [`.bash_prompt`](bash/.bash_prompt) instead of `starship`.
 
+## Terminal Emulator
+
+Currently using [`WezTerm`](https://wezfurlong.org/wezterm/index.html).
+You can customize it by editing [`config/wezterm/wezterm.lua`](config/wezterm/wezterm.lua)
+
+Alternatively you can use `gnome-terminal`.
+
 ## Application
 
-Install basic dependencies:
+Firstly, install [`dra`](https://github.com/devmatteini/dra) which is used to download and install various apps.
+
+Now you can install basic dependencies:
 
 ```bash
+# Install basic packages like build-essential, curl (etc) and installs flatpak
 ./apps/dependencies.sh
 ```
 
@@ -34,17 +48,28 @@ If you want to install other application:
 
 ```bash
 ./apps/<script>
+
+# List what packages you can install
+./apps/tools --list
+
+# Only install some packages
+./apps/tools --filter bat,fzf
+
+# Install all packages but exclude some
+./apps/tools --exclude aws
 ```
 
 ### :clipboard: List of application script
 
-- browsers (firefox, chromium)
+- browsers (firefox, firefox-dev, chromium)
 - docker (docker-ce, docker-compose)
-- dotnet (dotnet-sdk-3.1)
-- editors (vscode, rider, vim)
-- nvm (nvm, node-v14)
+- dotnet (dotnet-sdk-3.1) // OUTDATED
+- editors (vscode, rider, vim, intellij-idea)
+- fnm (node-v{16,18}, npm, yarn)
+- fonts (firacode, firacode nerd font)
 - misc (postman, gimp, vlc)
-- tools (fzf, tldr, shellcheck, awscli, bat, ripgrep)
+- rust (installation and post install setup)
+- tools (fzf, tldr, shellcheck, awscli, bat, ripgrep, ...)
 
 ## GRUB Theme
 
