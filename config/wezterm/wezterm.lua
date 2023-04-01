@@ -1,10 +1,10 @@
 local wezterm = require "wezterm"
-local workspace = require "workspace"
+local project = require "project"
 local act = wezterm.action
 
 wezterm.on('gui-startup', function()
-  local base_dir = wezterm.config_dir .. "/workspaces"
-  workspace.startup("WZ_WORKSPACE", base_dir, wezterm)
+  local base_dir = wezterm.config_dir .. "/projects"
+  project.startup("WZ_PROJECT", base_dir, wezterm)
 end)
 
 return {
