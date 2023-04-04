@@ -3,8 +3,7 @@ local project = require "project"
 local act = wezterm.action
 
 wezterm.on('gui-startup', function()
-  local base_dir = wezterm.config_dir .. "/projects"
-  project.startup("WZ_PROJECT", base_dir, wezterm)
+  project.startup("WZ_PROJECT", "projects", wezterm)
 end)
 
 return {

@@ -6,11 +6,11 @@ PROJECTS_DIR="$HOME/.config/wezterm/projects"
 project=""
 
 if [[ -z "$1" ]]; then
-    # List all files in projects directory. Only keep the file name (without the ./<filename>)    
-    project=$(find "$PROJECTS_DIR" -maxdepth 1 -type f -name "*.lua" -printf '%f\n' | fzf --cycle --layout=reverse)
+    # List all files in projects directory. Only keep the file name without the extension
+    project=$(find "$PROJECTS_DIR" -maxdepth 1 -type f -name "*.lua" -printf '%f\n' | sed "s/\.lua//" | fzf --cycle --layout=reverse)
 else
-    if [[ ! -e "$PROJECTS_DIR/$1" ]]; then
-        echo "The project file '$PROJECTS_DIR/$1' not exists"
+    if [[ ! -e "$PROJECTS_DIR/$1.lua" ]]; then
+        echo "The project file '$PROJECTS_DIR/$1.lua' not exists"
         exit 1
     fi
     project="$1"

@@ -1,26 +1,16 @@
-local file_exists = function(name)
-    local file = io.open(name, "r")
-    if file ~= nil then
-        io.close(file)
-        return true
-    else
-        return false
-    end
-end
-
-local startup = function(env_var, base_path, wezterm)
+local startup = function(env_var, projects_module, wezterm)
     local project = os.getenv(env_var)
 
     if project == nil then return end
 
-    local project_path = base_path .. "/" .. project
-    if not file_exists(project_path) then
-        wezterm.log_error("Project file does not exist: " .. project_path)
+    local status, project_module = pcall(function()
+        return require(projects_module .. "." .. project)
+    end)
+    if not status then
+        wezterm.log_error("Unable to import " .. project_module)
         return
     end
-
-    local project_config = dofile(project_path)
-    local project_startup = project_config.startup
+    local project_startup = project_module.startup
 
     if project_startup == nil or type(project_startup) ~= "function" then
         wezterm.log_error("Project " ..
