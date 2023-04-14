@@ -77,6 +77,9 @@ create_installer("tools", [
 
     # https://github.com/devmatteini/pihole-switch
     Package("phs", "dra download -i -s phs.zip -o ~/.local/bin devmatteini/pihole-switch"),
+
+    # https://github.com/XAMPPRocky/tokei
+    Package("tokei", "dra download -i -s tokei-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin XAMPPRocky/tokei"),
 ])()
 
 
