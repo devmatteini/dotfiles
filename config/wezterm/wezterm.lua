@@ -11,7 +11,7 @@ return {
   default_prog = { os.getenv("SHELL") },
   font = wezterm.font "FiraCode Nerd Font",
   font_size = 15.0,
-  color_scheme = "Gruvbox dark, hard (base16)",
+  color_scheme = "Snazzy",
   scrollback_lines = 10000,
   window_padding = {
     left = 2,
