@@ -7,7 +7,7 @@ project=""
 
 if [[ -z "$1" ]]; then
     # List all files in projects directory. Only keep the file name without the extension
-    project=$(find "$PROJECTS_DIR" -maxdepth 1 -type f -name "*.lua" -printf '%f\n' | sed "s/\.lua//" | fzf --cycle --layout=reverse)
+    project=$(find "$PROJECTS_DIR" -maxdepth 1 -type "f,l" -name "*.lua" -printf '%f\n' | sed "s/\.lua//" | fzf --cycle --layout=reverse)
 else
     if [[ ! -e "$PROJECTS_DIR/$1.lua" ]]; then
         echo "The project file '$PROJECTS_DIR/$1.lua' not exists"
