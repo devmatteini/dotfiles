@@ -12,6 +12,7 @@ return {
   font = wezterm.font "FiraCode Nerd Font",
   font_size = 15.0,
   color_scheme = "Snazzy",
+  force_reverse_video_cursor = true,
   scrollback_lines = 10000,
   window_padding = {
     left = 2,
