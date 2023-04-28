@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-from installer import Package, create_installer
+from installer import Package, create_installer, join
+
+# NOTE: the url can be found at https://github.com/mongodb/mongo/blob/8c64458511a257877e99a2e78278db1ea3bd14b8/src/mongo/installer/compass/install_compass
+INSTALL_MONGO_COMPASS = [
+    'curl -L -o mongo_compass.deb https://compass.mongodb.com/api/v2/download/latest/compass/stable/linux_deb',
+    'sudo dpkg -i mongo_compass.deb',
+    'rm mongo_compass.deb'
+]
 
 create_installer("misc", [
     Package("postman", "flatpak install -y flathub com.getpostman.Postman"),
@@ -8,4 +15,5 @@ create_installer("misc", [
     Package("vlc", "sudo snap install vlc"),
     Package("peek", "flatpak install -y flathub com.uploadedlobster.peek"),
     Package("pdf-slicer", "flatpak install -y flathub com.github.junrrein.PDFSlicer"),
+    Package("mongo-compass", join(INSTALL_MONGO_COMPASS)),
 ])()
