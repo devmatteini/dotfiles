@@ -1,18 +1,26 @@
 #!/usr/bin/env bash
 
-function has_installed() {
-  if ! command -V "$1" >/dev/null; then
-    echo "$1 command missing" >&2
-    exit 1
-  fi
-}
-
 function install_flatpak(){
   sudo apt install -y flatpak
   flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
-function post_install_dra(){
+function install_dra(){
+  TMP_DIR=$(mktemp --directory)
+  ARCHIVE="$TMP_DIR/dra.tar.gz"
+
+  # Download latest linux musl release asset (https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8)
+  curl -s https://api.github.com/repos/devmatteini/dra/releases/latest \
+  | grep "browser_download_url.*linux-musl" \
+  | cut -d : -f 2,3 \
+  | tr -d \" \
+  | wget -O "$ARCHIVE" -i -
+
+  # Extract archive and move binary to home directory
+  tar xf "$ARCHIVE" --strip-components=1 -C "$TMP_DIR"
+  mv "$TMP_DIR"/dra "$HOME"/.local/bin/dra
+
+  # Post installation setup
   dra completion bash >"$HOME"/.local/share/bash-completion/completions/dra
   # Create symlink to be able to use dra as superuser (for example when installing .deb assets)
   sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
@@ -42,6 +50,5 @@ install_flatpak
 # Cleanup
 sudo apt autoremove -y
 
-# Setup dra - https://github.com/devmatteini/dra
-has_installed dra
-post_install_dra
+# https://github.com/devmatteini/dra
+install_dra
