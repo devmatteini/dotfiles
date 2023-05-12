@@ -7,7 +7,7 @@
 :warning: Backup your current dotfiles, otherwise launching the installation script _will override them_!
 
 ```bash
-git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && source bootstrap.sh
+git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && ./bootstrap.sh
 ```
 
 The [`bootstrap.sh`](bootstrap.sh) script does:
