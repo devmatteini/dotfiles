@@ -34,6 +34,7 @@ sudo apt install -y build-essential \
   python3-dev \
   python3-setuptools \
   pipx \
+  libfuse2 \
   fonts-firacode
 
 install_flatpak
