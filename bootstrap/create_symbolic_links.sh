@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ];then
-    echo "Usage: create_symbolic_links.sh <BASEDIR>"
-    return 1
+    echo "Usage: $(basename "${BASH_SOURCE[0]}") <BASEDIR>"
+    exit 1
 fi
 
 BASEDIR=$1
