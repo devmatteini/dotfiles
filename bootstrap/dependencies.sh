@@ -28,10 +28,6 @@ function install_dra(){
   sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
 }
 
-# Create common directories
-mkdir -p "$HOME"/.local/share/bash-completion/completions
-mkdir -p "$HOME"/dev/
-
 sudo apt update
 sudo add-apt-repository -y universe
 sudo apt update
