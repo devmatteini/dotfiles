@@ -1,5 +1,6 @@
 local wezterm = require "wezterm"
 local project = require "project"
+local helpers = require "helpers"
 local act = wezterm.action
 
 local config = {}
@@ -13,15 +14,11 @@ end)
 
 local copy_mode = nil
 if wezterm.gui then
-  copy_mode = wezterm.gui.default_key_tables().copy_mode
-  -- Same shorcuts as .inputrc
-  local custom_copy_mode = {
-    { key = "RightArrow", mods = "CTRL", action = act.CopyMode "MoveForwardWord" },
-    { key = "LeftArrow",  mods = "CTRL", action = act.CopyMode "MoveBackwardWord" }
-  }
-  for _, x in ipairs(custom_copy_mode) do
-    table.insert(copy_mode, x)
-  end
+  copy_mode = helpers.tables.concat(
+    wezterm.gui.default_key_tables().copy_mode, {
+      { key = "RightArrow", mods = "CTRL", action = act.CopyMode "MoveForwardWord" },
+      { key = "LeftArrow",  mods = "CTRL", action = act.CopyMode "MoveBackwardWord" }
+    })
 end
 
 -- Avoid spawning login shell that causes starship to always shop the `jobs` module
