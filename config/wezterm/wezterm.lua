@@ -7,7 +7,7 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-wezterm.on('gui-startup', function()
+wezterm.on("gui-startup", function()
   project.startup("WZ_PROJECT", "projects", wezterm)
 end)
 
@@ -16,8 +16,8 @@ if wezterm.gui then
   copy_mode = wezterm.gui.default_key_tables().copy_mode
   -- Same shorcuts as .inputrc
   local custom_copy_mode = {
-    { key = 'RightArrow', mods = 'CTRL', action = act.CopyMode 'MoveForwardWord' },
-    { key = 'LeftArrow',  mods = 'CTRL', action = act.CopyMode 'MoveBackwardWord' }
+    { key = "RightArrow", mods = "CTRL", action = act.CopyMode "MoveForwardWord" },
+    { key = "LeftArrow",  mods = "CTRL", action = act.CopyMode "MoveBackwardWord" }
   }
   for _, x in ipairs(custom_copy_mode) do
     table.insert(copy_mode, x)
@@ -45,8 +45,8 @@ config.inactive_pane_hsb = {
 }
 
 config.keys = {
-  { key = 'LeftArrow',  mods = 'SHIFT|ALT', action = act.MoveTabRelative(-1) },
-  { key = 'RightArrow', mods = 'SHIFT|ALT', action = act.MoveTabRelative(1) },
+  { key = "LeftArrow",  mods = "SHIFT|ALT", action = act.MoveTabRelative(-1) },
+  { key = "RightArrow", mods = "SHIFT|ALT", action = act.MoveTabRelative(1) },
 }
 config.key_tables = {
   copy_mode = copy_mode
