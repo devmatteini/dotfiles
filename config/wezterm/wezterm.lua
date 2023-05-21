@@ -33,7 +33,7 @@ config.font_size = 15.0
 config.color_scheme = "Snazzy"
 config.force_reverse_video_cursor = true
 
-config.scrollback_lines = 10000
+config.scrollback_lines = 30000
 config.window_padding = {
   left = 2,
   right = 2,
