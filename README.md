@@ -10,41 +10,41 @@
 git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && ./bootstrap.sh
 ```
 
-The [`bootstrap.sh`](bootstrap.sh) script does:
+The [`bootstrap.sh`](bootstrap.sh) script execute:
 
-- create symlinks for:
-  1. [`bash`](bash/) shell files
-  2. [`git`](git/) files
-  3. config files ([`~/.config`](config/))
-  4. custom [`scripts`](scripts/) in `~/.local/bin`
-- if using `gnome-terminal`, it will load the [`gnome-terminal.dconf`](gnome-terminal.dconf) configuration file
+1. [bootstrap/file_system.sh](bootstrap/file_system.sh) to create common directories
+2. [bootstrap/create_symbolic_links.sh](bootstrap/create_symbolic_links.sh) to create symlinks to home, config and script files
+3. [bootstrap/dependencies.sh](bootstrap/dependencies.sh) to install basic dependencies
 
 ## Prompt
 
 Currently using [`starship`](https://github.com/starship/starship/) as bash prompt.
-You can customize it by editing [`config/starship.toml`](config/starship.toml)
+You can customize it by editing [`config/starship.toml`](config/starship.toml).
 
 Alternatively you can use [`.bash_prompt`](bash/.bash_prompt) instead of `starship`.
 
 ## Terminal Emulator
 
 Currently using [`WezTerm`](https://wezfurlong.org/wezterm/index.html).
-You can customize it by editing [`config/wezterm/wezterm.lua`](config/wezterm/wezterm.lua)
+You can customize it by editing [`config/wezterm/wezterm.lua`](config/wezterm/wezterm.lua).
 
-Alternatively you can use `gnome-terminal`.
+Alternatively you can use `gnome-terminal` and load its configuration by running:
+
+```bash
+./bootstrap/gnome_terminal.sh gnome-terminal.dconf
+```
+
+To export a new configuration follow [this article](https://gist.github.com/devmatteini/968981d95fd203905f7618ce67647e83) instructions.
 
 ## Application
 
-Firstly, install [`dra`](https://github.com/devmatteini/dra) which is used to download and install various apps.
-
-Now you can install basic dependencies:
+If you didn't run the `bootstrap.sh` script, run:
 
 ```bash
-# Install basic packages like build-essential, curl (etc) and installs flatpak
-./apps/dependencies.sh
+./bootstrap/dependencies.sh
 ```
 
-If you want to install other application:
+To install application(s):
 
 ```bash
 ./apps/<script>
