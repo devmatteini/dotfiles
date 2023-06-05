@@ -10,4 +10,5 @@ INSTALL_WEZTERM = [
 
 create_installer("terminal", [
     Package("wezterm", join(INSTALL_WEZTERM)),
+    Package("wezterm-nightly", 'sudo dra download -t nightly -s wezterm-nightly.Ubuntu22.04.deb -i wez/wezterm'),
 ])()
