@@ -14,3 +14,6 @@ style="bold #5f5faf"
 
 [git_status]
 style="bold #afd7ff"
+
+[golang]
+symbol = "󰟓 "
