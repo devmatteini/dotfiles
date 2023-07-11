@@ -80,6 +80,9 @@ create_installer("tools", [
 
     # https://github.com/XAMPPRocky/tokei
     Package("tokei", "dra download -i -s tokei-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin XAMPPRocky/tokei"),
+
+    # https://github.com/balena-io/etcher
+    Package("balena-etcher", "sudo dra download -s balena-etcher_{tag}_amd64.deb -i balena-io/etcher || sudo apt -y --fix-broken install")
 ])()
 
 
