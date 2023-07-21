@@ -3,16 +3,17 @@
 from installer import Package, create_installer, join
 
 FIRACODE_NERD_TMP='/tmp/firacode-nerd'
+FIRACODE_NERD_TMP_ZIP='/tmp/FiraCode.zip'
 INSTALL_FIRACODE_NERD = [
-    'dra download -s FiraCode.zip ryanoasis/nerd-fonts',
+    f'dra download -s FiraCode.zip -o {FIRACODE_NERD_TMP_ZIP} ryanoasis/nerd-fonts',
     f'mkdir -p {FIRACODE_NERD_TMP}',
-    f'unzip FiraCode.zip -d {FIRACODE_NERD_TMP}',
+    f'unzip {FIRACODE_NERD_TMP_ZIP} -d {FIRACODE_NERD_TMP}',
     'mkdir -p ~/.fonts',
-    f"mv '{FIRACODE_NERD_TMP}/Fira Code Light Nerd Font Complete.ttf' ~/.fonts",
-    f"mv '{FIRACODE_NERD_TMP}/Fira Code Medium Nerd Font Complete.ttf' ~/.fonts",
-    f"mv '{FIRACODE_NERD_TMP}/Fira Code Regular Nerd Font Complete.ttf' ~/.fonts",
-    f"mv '{FIRACODE_NERD_TMP}/Fira Code Bold Nerd Font Complete.ttf' ~/.fonts",
-    f"mv '{FIRACODE_NERD_TMP}/Fira Code SemiBold Nerd Font Complete.ttf' ~/.fonts",
+    f"mv '{FIRACODE_NERD_TMP}/FiraCodeNerdFont-Light.ttf' ~/.fonts",
+    f"mv '{FIRACODE_NERD_TMP}/FiraCodeNerdFont-Medium.ttf' ~/.fonts",
+    f"mv '{FIRACODE_NERD_TMP}/FiraCodeNerdFont-Regular.ttf' ~/.fonts",
+    f"mv '{FIRACODE_NERD_TMP}/FiraCodeNerdFont-Bold.ttf' ~/.fonts",
+    f"mv '{FIRACODE_NERD_TMP}/FiraCodeNerdFont-SemiBold.ttf' ~/.fonts",
     'fc-cache -f -v',
 ]
 
