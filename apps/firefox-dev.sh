@@ -3,6 +3,7 @@
 TMP="/tmp/firefox-dev"
 ARCHIVE="$TMP/firefox-dev.tar.bz2"
 INSTALL_DIR="$HOME/.local/apps/firefox-dev"
+FIREFOX_BIN="$INSTALL_DIR/firefox"
 
 mkdir -p "$TMP"
 mkdir -p "$INSTALL_DIR"
@@ -19,13 +20,28 @@ tar xf "$ARCHIVE"
 mv firefox/* "$INSTALL_DIR"
 
 echo "Creating desktop entry"
+# Inspired by:
+# 1. /usr/share/applications/firefox.desktop
+# 2. https://gist.github.com/mahammad/e54e4be8938edf4d6c15?permalink_comment_id=4382260#gistcomment-4382260
 cat > "$HOME/.local/share/applications/firefox-developer.desktop" <<EOL
 [Desktop Entry]
 Name=Firefox Developer
-Exec=$INSTALL_DIR/firefox
+Exec=$FIREFOX_BIN
 Comment=The firefox developer browser
 Terminal=false
 Icon=$INSTALL_DIR/browser/chrome/icons/default/default128.png
+X-MultipleArgs=false
 Type=Application
 Categories=Network;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;video/webm;application/x-xpinstall;
+StartupWMClass=firefox-aurora
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=Open a New Window
+Exec=$FIREFOX_BIN -new-window
+
+[Desktop Action new-private-window]
+Name=Open a New Private Window
+Exec=$FIREFOX_BIN -private-window
 EOL
