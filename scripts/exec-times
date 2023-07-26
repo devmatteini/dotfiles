@@ -1,0 +1,19 @@
+#!/bin/bash
+
+green=0
+red=0
+
+for i in $(seq 1 "$1"); do
+  echo -e "\n\033[1m# Execution $i\033[0m"
+  if "${@:2}"; then
+    ((green+=1))
+  else
+    ((red+=1))
+  fi
+done
+
+echo ""
+echo "> Summary"
+echo "--------------------------------"
+echo -e "\e[1;32mOk: ${green}\e[0m    |    \e[1;31mKo: ${red}\e[0m"
+
