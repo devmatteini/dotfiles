@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DIR_A="$1"
+DIR_B="$2"
+
+# Find files from DIR_B that are not into DIR_A
+comm -23 \
+    <(find "$DIR_B" -type f -exec basename {} \; | sort) \
+    <(find "$DIR_A" -type f -exec basename {} \; | sort)
