@@ -27,6 +27,7 @@ CONFIG_FILES=(
 
 CONFIG_DIRS=(
     "config/wezterm"
+    "config/atuin"
 )
 
 # NOTE: https://www.shellcheck.net/wiki/SC2207
