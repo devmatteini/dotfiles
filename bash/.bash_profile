@@ -53,3 +53,9 @@ fi
 
 # Haskell (https://www.haskell.org/ghcup/)
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+if command -v atuin > /dev/null; then
+    eval "$(atuin init bash --disable-up-arrow)"
+fi

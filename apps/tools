@@ -7,7 +7,7 @@ def bash_completion_path_for(file_name: str) -> str:
 
 INSTALL_FZF = [
     'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf',
-    '~/.fzf/install --key-bindings --completion --no-update-rc'
+    '~/.fzf/install --no-key-bindings --completion --no-update-rc'
 ]
 
 # https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
@@ -39,6 +39,12 @@ INSTALL_MINISERVE = [
 INSTALL_DRA = [
     'dra download -i -s "dra-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin/ devmatteini/dra',
     f'dra completion bash > {bash_completion_path_for("dra")}'
+]
+
+INSTALL_ATUIN = [
+    'sudo dra download -s atuin_{tag}_amd64.deb -i atuinsh/atuin',
+    'curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh',
+    f'atuin gen-completions -s bash > {bash_completion_path_for("atuin")}'
 ]
 
 create_installer("tools", [
@@ -82,7 +88,10 @@ create_installer("tools", [
     Package("tokei", "dra download -i -s tokei-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin XAMPPRocky/tokei"),
 
     # https://github.com/balena-io/etcher
-    Package("balena-etcher", "sudo dra download -s balena-etcher_{tag}_amd64.deb -i balena-io/etcher || sudo apt -y --fix-broken install")
+    Package("balena-etcher", "sudo dra download -s balena-etcher_{tag}_amd64.deb -i balena-io/etcher || sudo apt -y --fix-broken install"),
+
+    # https://github.com/atuinsh/atuin
+    Package("atuin", join(INSTALL_ATUIN)),
 ])()
 
 
