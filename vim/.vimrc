@@ -50,6 +50,9 @@ set wildmenu
 " Make wildmenu behave like similar to Bash completion.
 set wildmode=list:longest,full
 
+" Enable mouse in all modes
+set mouse=a
+
 " --- PLUGINS
 call plug#begin('~/.vim/plugged')
 
