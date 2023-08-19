@@ -36,12 +36,6 @@ if command -v fnm > /dev/null; then
     eval "$(fnm env --use-on-cd)"
 fi
 
-if command -v starship > /dev/null; then
-    eval "$(starship init bash)"
-else
-    source ~/.bash_prompt
-fi
-
 if command -v direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
@@ -54,7 +48,19 @@ fi
 # Haskell (https://www.haskell.org/ghcup/)
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
+
+# NOTE: the right order must be (if atuin if eval'd before starship it will show the job module):
+# 1. bash-preexec
+# 2. starship
+# 3. atuin
+
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+if command -v starship > /dev/null; then
+    eval "$(starship init bash)"
+else
+    source ~/.bash_prompt
+fi
 
 if command -v atuin > /dev/null; then
     eval "$(atuin init bash --disable-up-arrow)"
