@@ -43,6 +43,7 @@ INSTALL_DRA = [
 
 INSTALL_ATUIN = [
     'sudo dra download -s atuin_{tag}_amd64.deb -i atuinsh/atuin',
+    'atuin import auto',
     'curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh',
     f'atuin gen-completions -s bash > {bash_completion_path_for("atuin")}'
 ]
