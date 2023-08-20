@@ -30,6 +30,16 @@ function install_dra(){
   sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
 }
 
+function setup_git(){
+  # Check out this guide: https://askubuntu.com/questions/773455/what-is-the-correct-way-to-use-git-with-gnome-keyring-and-https-repos
+  sudo apt install -y libsecret-1-0 libsecret-1-dev
+  sudo make --directory=/usr/share/doc/git/contrib/credential/libsecret
+
+  # Install syntax-highlighting pager and diff output
+  # https://github.com/dandavison/delta
+  dra download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
+}
+
 sudo apt update
 sudo add-apt-repository -y universe
 sudo apt update
@@ -37,7 +47,6 @@ sudo apt update
 sudo apt install -y build-essential \
   curl \
   wget \
-  git \
   python3-pip \
   python3-dev \
   python3-setuptools \
@@ -47,6 +56,7 @@ sudo apt install -y build-essential \
 
 install_flatpak
 install_dra
+setup_git
 
 # Cleanup
 sudo apt autoremove -y
