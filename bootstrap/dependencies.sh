@@ -40,6 +40,17 @@ function setup_git(){
   dra download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
 }
 
+function setup_vim(){
+  mkdir -p ~/.vim ~/.vim/autoload ~/.vim/backup ~/.vim/colors ~/.vim/plugged
+
+  # Install vim-plug (https://github.com/junegunn/vim-plug)
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+  # Install plugins (https://github.com/junegunn/vim-plug/issues/675#issuecomment-328157169)
+  vim +'PlugInstall --sync' +qa
+}
+
 sudo apt update
 sudo add-apt-repository -y universe
 sudo apt update
@@ -52,11 +63,13 @@ sudo apt install -y build-essential \
   python3-setuptools \
   pipx \
   libfuse2 \
-  fonts-firacode
+  fonts-firacode \
+  vim
 
 install_flatpak
 install_dra
 setup_git
+setup_vim
 
 # Cleanup
 sudo apt autoremove -y
