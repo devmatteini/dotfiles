@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
+# https://flathub.org/setup/Ubuntu
 function install_flatpak(){
   sudo apt install -y flatpak
-  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
+# https://github.com/devmatteini/dra
 function install_dra(){
   TMP_DIR=$(mktemp --directory)
   ARCHIVE="$TMP_DIR/dra.tar.gz"
@@ -44,9 +46,7 @@ sudo apt install -y build-essential \
   fonts-firacode
 
 install_flatpak
+install_dra
 
 # Cleanup
 sudo apt autoremove -y
-
-# https://github.com/devmatteini/dra
-install_dra
