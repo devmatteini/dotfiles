@@ -93,6 +93,9 @@ create_installer("tools", [
 
     # https://github.com/atuinsh/atuin
     Package("atuin", join(INSTALL_ATUIN)),
+
+    # https://github.com/sharkdp/hyperfine
+    Package("hyperfine", "dra download -i -s hyperfine-v{tag}-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin sharkdp/hyperfine"),
 ])()
 
 
