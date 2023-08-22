@@ -13,3 +13,22 @@ change-aws-profile(){
     fi
     export AWS_PROFILE="$profile"
 }
+
+gen_uuid(){
+    UUID=$(cat /proc/sys/kernel/random/uuid)
+    IS_COPIED="false"
+    
+    if [[ $XDG_SESSION_TYPE == "x11" ]]; then
+        echo "$UUID" | xclip -r -sel clip
+        IS_COPIED="true"
+    elif [[ $XDG_SESSION_TYPE == "wayland" ]]; then
+        wl-copy "$UUID"
+        IS_COPIED="true"
+    fi
+
+    if [[ $IS_COPIED == "true" ]]; then
+        echo "$UUID copied to clipboard!"
+    else
+        echo "$UUID"
+    fi
+}
