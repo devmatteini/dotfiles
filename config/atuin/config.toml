@@ -1,3 +1,4 @@
 # https://atuin.sh/docs/config
 
 style = "compact"
+filter_mode = "directory"
