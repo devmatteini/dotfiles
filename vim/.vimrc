@@ -1,9 +1,5 @@
 set nocompatible
 
-" Enable type file detection. Vim will be able to try to detect the type of file in use.
-filetype on
-filetype plugin on
-
 " Highlight cursor line underneath the cursor horizontally.
 set cursorline
 
@@ -53,6 +49,9 @@ set wildmode=list:longest,full
 " Enable mouse in all modes
 set mouse=a
 
+" Disable filetpye, this is important to do *before* plugins installation
+filetype off
+
 " --- PLUGINS
 call plug#begin('~/.vim/plugged')
 
@@ -60,8 +59,12 @@ Plug 'morhetz/gruvbox'
 
 call plug#end()
 
+" Enable indentation, this is important to do *after* 'plug#end()'
+filetype on
+filetype plugin indent on
+
+syntax on
+
 " --- COLOR SCHEME
-set syntax=on
 set bg=dark
 color gruvbox
-filetype indent on
