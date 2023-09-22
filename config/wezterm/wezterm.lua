@@ -31,14 +31,20 @@ config.color_scheme = "Snazzy"
 config.force_reverse_video_cursor = true
 
 config.scrollback_lines = 30000
+config.enable_scroll_bar = true
+config.min_scroll_bar_height = "1cell"
 config.window_padding = {
   left = 2,
-  right = 2,
+  right = 4,
   top = 2,
   bottom = 2,
 }
 config.inactive_pane_hsb = {
   brightness = 0.5,
+}
+
+config.colors = {
+  scrollbar_thumb = 'rgba(255,255,255,0.7)',
 }
 
 config.keys = {
