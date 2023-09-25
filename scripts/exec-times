@@ -1,19 +1,23 @@
 #!/bin/bash
 
-green=0
-red=0
+ok=0
+errors=()
 
 for i in $(seq 1 "$1"); do
   echo -e "\n\033[1m# Execution $i\033[0m"
   if "${@:2}"; then
-    ((green+=1))
+    ((ok+=1))
   else
-    ((red+=1))
+    errors+=("$i")
   fi
 done
+
+error_message=""
+if [[ ${#errors[@]} -ge 1 ]]; then
+  error_message="[$(IFS=,; echo "${errors[*]}")]"
+fi
 
 echo ""
 echo "> Summary"
 echo "--------------------------------"
-echo -e "\e[1;32mOk: ${green}\e[0m    |    \e[1;31mKo: ${red}\e[0m"
-
+echo -e "\e[1;32mOk: ${ok}\e[0m    |    \e[1;31mKo: ${#errors[@]} $error_message\e[0m"
