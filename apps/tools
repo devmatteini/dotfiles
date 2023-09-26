@@ -48,6 +48,11 @@ INSTALL_ATUIN = [
     f'atuin gen-completions -s bash > {bash_completion_path_for("atuin")}'
 ]
 
+INSTALL_ERDTREE = [
+    'dra download -s erd-v{tag}-x86_64-unknown-linux-musl.tar.gz -i -o ~/.local/bin/ solidiquis/erdtree',
+    f'erd --completions bash > {bash_completion_path_for("erd")}'
+]
+
 create_installer("tools", [
     # https://github.com/devmatteini/dra
     Package("dra", join(INSTALL_DRA)),
@@ -96,6 +101,9 @@ create_installer("tools", [
 
     # https://github.com/sharkdp/hyperfine
     Package("hyperfine", "dra download -i -s hyperfine-v{tag}-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin sharkdp/hyperfine"),
+        
+    # https://github.com/solidiquis/erdtree
+    Package("erdtree", join(INSTALL_ERDTREE)),
 ])()
 
 
