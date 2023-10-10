@@ -83,9 +83,10 @@
 	
 	# Diff
 	d = diff
-
 	# Diff staged files
 	ds = diff --staged
+	# Diff side by side
+	dss = -c delta.side-by-side=true diff
 
 	# unstage staged files (or pass a filename)
 	unstage = reset HEAD --
