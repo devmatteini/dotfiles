@@ -2,3 +2,4 @@
 
 style = "compact"
 filter_mode = "directory"
+enter_accept = false
