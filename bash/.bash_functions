@@ -32,3 +32,18 @@ gen_uuid(){
         echo "$UUID"
     fi
 }
+
+typetest(){
+    if [[ -e package-lock.json ]]; then
+        npm run typecheck && npm run test
+    elif [[ -e yarn.lock ]]; then
+        if [[ -n $1 ]]; then
+            yarn workspace "$1" typecheck && yarn workspace "$1" test
+        else
+            yarn typecheck && yarn test
+        fi
+    else
+        echo "Cannot recognize node package manager (npm or yarn)"
+        return 1
+    fi
+}
