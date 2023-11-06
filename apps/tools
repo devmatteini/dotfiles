@@ -104,6 +104,9 @@ create_installer("tools", [
         
     # https://github.com/solidiquis/erdtree
     Package("erdtree", join(INSTALL_ERDTREE)),
+
+    # https://github.com/lycheeverse/lychee
+    Package("lychee", "dra download -i -s lychee-v{tag}-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin lycheeverse/lychee")
 ])()
 
 
