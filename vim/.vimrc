@@ -46,9 +46,6 @@ set wildmenu
 " Make wildmenu behave like similar to Bash completion.
 set wildmode=list:longest,full
 
-" Enable mouse in all modes
-set mouse=a
-
 " Disable filetpye, this is important to do *before* plugins installation
 filetype off
 
