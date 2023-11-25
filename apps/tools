@@ -37,7 +37,8 @@ INSTALL_MINISERVE = [
 ]
 
 INSTALL_DRA = [
-    'dra download -i -s "dra-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin/ devmatteini/dra',
+    'dra download -i -s "dra-{tag}-x86_64-unknown-linux-musl.tar.gz" devmatteini/dra',
+    'mv dra ~/.local/bin/',
     f'dra completion bash > {bash_completion_path_for("dra")}'
 ]
 
