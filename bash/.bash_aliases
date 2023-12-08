@@ -23,3 +23,6 @@ alias tra="terraform apply"
 
 # .NET CORE CLI
 alias dnt="dotnet test"
+
+# Misc
+alias utc="date --iso-8601"
