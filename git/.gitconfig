@@ -106,3 +106,6 @@
 	sl = stash list
 	# Stash all with message (including untracked files) 
 	sp = stash push -u -m
+
+	# List aliases
+	aliases = config --get-regexp alias
