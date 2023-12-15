@@ -44,7 +44,7 @@ INSTALL_DRA = [
 
 INSTALL_ATUIN = [
     'dra download -i -s atuin-v{tag}-x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin/ atuinsh/atuin',
-    'atuin import auto',
+    '[[ ! -e ~/.local/share/atuin/history.db ]] && atuin import auto || echo "skip import, just update"',
     'curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh',
     f'atuin gen-completions -s bash > {bash_completion_path_for("atuin")}'
 ]
