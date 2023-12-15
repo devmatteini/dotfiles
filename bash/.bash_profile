@@ -3,6 +3,10 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+if [ -d "$HOME/dotfiles/scripts" ] ; then
+    PATH="$HOME/dotfiles/scripts:$PATH"
+fi
+
 # Add cargo to path
 [ -d "$HOME"/.cargo/bin ] && PATH="$HOME/.cargo/bin:$PATH"
 
