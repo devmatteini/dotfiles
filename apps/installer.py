@@ -2,7 +2,7 @@
 
 import argparse
 from typing import Callable, List, Optional
-import os
+import subprocess
 
 BOLD='\033[1m'
 RESET='\033[0m'
@@ -36,10 +36,10 @@ def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> N
 
     to_filter = __str_to_array(args.filter)
     to_exclude = __str_to_array(args.exclude)
-    to_intall = __filter_or_exclude(packages, to_filter, to_exclude)
-    for package in to_intall:
+    to_install = __filter_or_exclude(packages, to_filter, to_exclude)
+    for package in to_install:
         print(f'Installing {BOLD}{package.name}{RESET}...')
-        os.system(package.install_command)
+        subprocess.run(package.install_command, shell=True)
         print("")
 
 def join(list: List[str]) -> str:
