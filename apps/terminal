@@ -4,11 +4,17 @@ from installer import Package, create_installer, join
 
 INSTALL_WEZTERM = [
     # This package will enable Nautilus to have "Open in WezTerm" action
-    'sudo apt install -y python3-nautilus',
-    'sudo dra download -i -s "wezterm-{tag}.Ubuntu22.04.deb" wez/wezterm'
+    "sudo apt install -y python3-nautilus",
+    'sudo dra download -i -s "wezterm-{tag}.Ubuntu22.04.deb" wez/wezterm',
 ]
 
-create_installer("terminal", [
-    Package("wezterm", join(INSTALL_WEZTERM)),
-    Package("wezterm-nightly", 'sudo dra download -t nightly -s wezterm-nightly.Ubuntu22.04.deb -i wez/wezterm'),
-])()
+create_installer(
+    "terminal",
+    [
+        Package("wezterm", join(INSTALL_WEZTERM)),
+        Package(
+            "wezterm-nightly",
+            "sudo dra download -t nightly -s wezterm-nightly.Ubuntu22.04.deb -i wez/wezterm",
+        ),
+    ],
+)()
