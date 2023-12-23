@@ -4,28 +4,33 @@ import argparse
 from typing import Callable, List, Optional
 import subprocess
 
-BOLD='\033[1m'
-RESET='\033[0m'
-RED='\033[1;31m'
+BOLD = "\033[1m"
+RESET = "\033[0m"
+RED = "\033[1;31m"
+
 
 class Package:
-    name:str
-    install_command:str
+    name: str
+    install_command: str
 
-    def __init__(self, name:str, install_command:str) -> None:
+    def __init__(self, name: str, install_command: str) -> None:
         self.name = name
         self.install_command = install_command
 
 
-def __filter_or_exclude(packages: List[Package], to_filter: List[str], to_exclude: List[str]) -> List[Package]:
+def __filter_or_exclude(
+    packages: List[Package], to_filter: List[str], to_exclude: List[str]
+) -> List[Package]:
     if to_filter:
         return filter(lambda x: x.name in to_filter, packages)
     if to_exclude:
         return filter(lambda x: x.name not in to_exclude, packages)
     return packages
 
+
 def __str_to_array(value: Optional[str]) -> List[str]:
     return value.split(",") if value else []
+
 
 def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
@@ -42,24 +47,32 @@ def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> N
     errors = []
 
     for package in to_install:
-        print(f'Installing {BOLD}{package.name}{RESET}...')
+        print(f"Installing {BOLD}{package.name}{RESET}...")
         try:
             subprocess.run(package.install_command, shell=True, check=True)
         except subprocess.CalledProcessError:
             errors.append(package.name)
         print("")
 
-    if len(errors) > 0: 
+    if len(errors) > 0:
         print(f"{RED}Failed to install: {errors}{RESET}")
         exit(1)
+
 
 def join(list: List[str]) -> str:
     return " && ".join(list)
 
-def create_installer(name:str, packages: List[Package]) -> Callable[[], None]:
-    parser = argparse.ArgumentParser(description=f'Application installer for {BOLD}{name}{RESET}')
-    parser.add_argument('--list', '-l', action="store_true", help='List all packages')
-    parser.add_argument('--filter', '-f', type=str, help='Comma separated list of packages to install')
-    parser.add_argument('--exclude', '-e', type=str, help='Comma separated list of packages to exclude')
+
+def create_installer(name: str, packages: List[Package]) -> Callable[[], None]:
+    parser = argparse.ArgumentParser(
+        description=f"Application installer for {BOLD}{name}{RESET}"
+    )
+    parser.add_argument("--list", "-l", action="store_true", help="List all packages")
+    parser.add_argument(
+        "--filter", "-f", type=str, help="Comma separated list of packages to install"
+    )
+    parser.add_argument(
+        "--exclude", "-e", type=str, help="Comma separated list of packages to exclude"
+    )
 
     return lambda: run_installer(packages, parser)
