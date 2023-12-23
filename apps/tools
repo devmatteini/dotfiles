@@ -54,6 +54,11 @@ INSTALL_ERDTREE = [
     f'erd --completions bash > {bash_completion_path_for("erd")}'
 ]
 
+INSTALL_JUST = [
+    'dra download -s just-{tag}-x86_64-unknown-linux-musl.tar.gz -i -o ~/.local/bin/ casey/just',
+    f'just --completions bash > {bash_completion_path_for("just")}'
+]
+
 create_installer("tools", [
     # https://github.com/devmatteini/dra
     Package("dra", join(INSTALL_DRA)),
@@ -111,6 +116,9 @@ create_installer("tools", [
 
     # https://github.com/astral-sh/ruff
     Package("ruff", "pipx install ruff"),
+
+    # https://github.com/casey/just
+    Package("just", join(INSTALL_JUST)),
 ])()
 
 
