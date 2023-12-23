@@ -6,6 +6,7 @@ import subprocess
 
 BOLD='\033[1m'
 RESET='\033[0m'
+RED='\033[1;31m'
 
 class Package:
     name:str
@@ -37,10 +38,20 @@ def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> N
     to_filter = __str_to_array(args.filter)
     to_exclude = __str_to_array(args.exclude)
     to_install = __filter_or_exclude(packages, to_filter, to_exclude)
+
+    errors = []
+
     for package in to_install:
         print(f'Installing {BOLD}{package.name}{RESET}...')
-        subprocess.run(package.install_command, shell=True)
+        try:
+            subprocess.run(package.install_command, shell=True, check=True)
+        except subprocess.CalledProcessError:
+            errors.append(package.name)
         print("")
+
+    if len(errors) > 0: 
+        print(f"{RED}Failed to install: {errors}{RESET}")
+        exit(1)
 
 def join(list: List[str]) -> str:
     return " && ".join(list)
