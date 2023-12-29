@@ -7,5 +7,6 @@ create_installer(
     [
         Package("tweaks", "sudo apt install -y gnome-tweaks"),
         Package("scanner", "sudo apt install -y simple-scan"),
+        Package("weather", "sudo apt install -y gnome-weather"),
     ],
 )()
