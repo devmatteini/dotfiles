@@ -17,6 +17,5 @@ create_installer(
     "docker",
     [
         Package("docker", join(INSTALL_DOCKER)),
-        Package("docker-compose", "pip3 install docker-compose --user"),
     ],
 )()
