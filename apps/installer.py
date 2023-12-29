@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from typing import Callable, List, Optional
+from typing import List, Optional
 import subprocess
 
 BOLD = "\033[1m"
@@ -32,7 +32,7 @@ def __str_to_array(value: Optional[str]) -> List[str]:
     return value.split(",") if value else []
 
 
-def install_packages(packages: List[Package], parser: argparse.ArgumentParser) -> None:
+def __install_packages(packages: List[Package], parser: argparse.ArgumentParser):
     args = parser.parse_args()
 
     if args.list:
@@ -75,4 +75,4 @@ def installer(name: str, packages: List[Package]):
         "--exclude", "-e", type=str, help="Comma separated list of packages to exclude"
     )
 
-    install_packages(packages, parser)
+    __install_packages(packages, parser)
