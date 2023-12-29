@@ -9,8 +9,8 @@ curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$INSTALL_D
 ln -sf "$INSTALL_DIR/fnm" "$HOME/.local/bin/fnm"
 
 # Install node versions
-fnm install 16
-fnm install 18
+fnm install --corepack-enabled 18
+fnm install --corepack-enabled 20
 
 fnm completions --shell bash > "$HOME"/.local/share/bash-completion/completions/fnm
 
@@ -18,6 +18,3 @@ fnm completions --shell bash > "$HOME"/.local/share/bash-completion/completions/
 
 # Setup npm
 npm completion > "$HOME"/.local/share/bash-completion/completions/npm
-
-# Setup yarn https://yarnpkg.com/getting-started/install#nodejs-1610
-corepack enable
