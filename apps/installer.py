@@ -32,7 +32,7 @@ def __str_to_array(value: Optional[str]) -> List[str]:
     return value.split(",") if value else []
 
 
-def run_installer(packages: List[Package], parser: argparse.ArgumentParser) -> None:
+def install_packages(packages: List[Package], parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
 
     if args.list:
@@ -63,7 +63,7 @@ def join(list: List[str]) -> str:
     return " && ".join(list)
 
 
-def create_installer(name: str, packages: List[Package]) -> Callable[[], None]:
+def installer(name: str, packages: List[Package]):
     parser = argparse.ArgumentParser(
         description=f"Application installer for {BOLD}{name}{RESET}"
     )
@@ -75,4 +75,4 @@ def create_installer(name: str, packages: List[Package]) -> Callable[[], None]:
         "--exclude", "-e", type=str, help="Comma separated list of packages to exclude"
     )
 
-    return lambda: run_installer(packages, parser)
+    install_packages(packages, parser)

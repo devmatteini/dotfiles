@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from installer import Package, create_installer, join
+from installer import Package, installer, join
 
 FIRACODE_NERD_TMP = "/tmp/firacode-nerd"
 FIRACODE_NERD_TMP_ZIP = "/tmp/FiraCode.zip"
 INSTALL_FIRACODE_NERD = [
+    f"rm -rf {FIRACODE_NERD_TMP}",
     f"dra download -s FiraCode.zip -o {FIRACODE_NERD_TMP_ZIP} ryanoasis/nerd-fonts",
     f"mkdir -p {FIRACODE_NERD_TMP}",
     f"unzip {FIRACODE_NERD_TMP_ZIP} -d {FIRACODE_NERD_TMP}",
@@ -17,10 +18,10 @@ INSTALL_FIRACODE_NERD = [
     "fc-cache -f -v",
 ]
 
-create_installer(
+installer(
     "fonts",
     [
         Package("firacode", "sudo apt install -y fonts-firacode"),
         Package("firacode-nerd", join(INSTALL_FIRACODE_NERD)),
     ],
-)()
+)

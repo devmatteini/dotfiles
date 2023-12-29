@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from installer import Package, create_installer, join
+from installer import Package, installer, join
 
 # NOTE: the url can be found at https://github.com/mongodb/mongo/blob/8c64458511a257877e99a2e78278db1ea3bd14b8/src/mongo/installer/compass/install_compass
 INSTALL_MONGO_COMPASS = [
@@ -9,7 +9,7 @@ INSTALL_MONGO_COMPASS = [
     "rm mongo_compass.deb",
 ]
 
-create_installer(
+installer(
     "misc",
     [
         Package("postman", "flatpak install -y flathub com.getpostman.Postman"),
@@ -21,4 +21,4 @@ create_installer(
         ),
         Package("mongo-compass", join(INSTALL_MONGO_COMPASS)),
     ],
-)()
+)
