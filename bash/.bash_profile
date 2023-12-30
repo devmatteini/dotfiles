@@ -46,7 +46,7 @@ fi
 
 # Add autocomplete for pipx
 if command -v pipx > /dev/null; then
-    eval "$(register-python-argcomplete pipx)"
+    eval "$(register-python-argcomplete3 pipx)"
 fi
 
 # Haskell (https://www.haskell.org/ghcup/)
