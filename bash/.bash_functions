@@ -49,3 +49,8 @@ typetest(){
         return 1
     fi
 }
+
+gh_clear_cache(){
+    PATTERN_OR_ALL="$1"
+    gh cache list | rg "$PATTERN_OR_ALL" | awk '{print $2}' | xargs -I {} gh cache delete {}
+}
