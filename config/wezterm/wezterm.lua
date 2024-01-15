@@ -27,7 +27,8 @@ config.default_prog = { os.getenv("SHELL") }
 config.font = wezterm.font "FiraCode Nerd Font"
 config.font_size = 15.0
 
-config.color_scheme = "Snazzy"
+-- config.color_scheme = "Snazzy"
+config.color_scheme = "GruvboxDarkHard"
 config.force_reverse_video_cursor = true
 
 config.scrollback_lines = 30000
