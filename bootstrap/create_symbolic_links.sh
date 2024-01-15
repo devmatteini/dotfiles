@@ -7,61 +7,60 @@ fi
 
 BASEDIR=$1
 
-FILES=(
-    "bash/.bash_aliases"
-    "bash/.bash_exports"
-    "bash/.bash_logout"
-    "bash/.bash_options"
-    "bash/.bash_profile"
-    "bash/.bash_prompt"
-    "bash/.bash_functions"
-    "bash/.bashrc"
-    "bash/.inputrc"
-    "git/.gitconfig"
-    "vim/.vimrc"
-)
+# $1 = source_file, $2 = target_file
+create_symlink() {
+    local source_file=$1
+    local target_file=$2
 
-CONFIG_FILES=(
-    "config/starship.toml"
-)
+    if [[ $DEBUG != "true" ]]; then
+        ln -sfn "$source_file" "$target_file"
+    else
+        echo "$source_file -> $target_file"
+    fi
+}
 
-CONFIG_DIRS=(
-    "config/wezterm"
-    "config/atuin"
-)
+# $1 = source_directory, $2 = target_directory
+symlink_dir_files() {
+    local directory=$1
+    local target_directory=$2
+    local full_path="$BASEDIR/$directory"
 
-echo -e "\e[1;34m[i] Creating symlinks in $HOME/ ...\e[0m"
-for file in "${FILES[@]}"; do
-    sourceFile="$BASEDIR/$file"
-    targetFile="$HOME/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")"
+    echo -e "\e[1;34m[i] Creating symlinks for '$directory' in '$target_directory'\e[0m"
+
+    readarray -t DIR_FILES < <(find "$full_path" -maxdepth 1 -type f)
     
-    ln -sfn "$sourceFile" "$targetFile"
-done;
-unset file;
+    for file in "${DIR_FILES[@]}"; do
+        filename=$(basename "$file")
 
-echo -e "\e[1;34m[i] Creating symlinks in $HOME/.config/ ...\e[0m"
-for file in "${CONFIG_FILES[@]}"; do
-    sourceFile="$BASEDIR/$file"
-    targetFile="$HOME/.config/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")"
+        source_file=$file
+        target_file="$target_directory/$filename"
 
-    ln -sfn "$sourceFile" "$targetFile"
-done;
-unset file;
+        create_symlink "$source_file" "$target_file"
+    done
+}
 
-echo -e "\e[1;34m[i] Creating directories in $HOME/.config/ ...\e[0m"
-for dir in "${CONFIG_DIRS[@]}"; do
-    sourceDir="$BASEDIR/$dir"
-    targetDir="$HOME/.config/$(printf "%s" "$dir" | sed "s/.*\/\(.*\)/\1/g")"
+# $1 = source_directory, $2 = target_directory
+symlink_dirs() {
+    local directory=$1
+    local target_directory=$2
 
-    mkdir -p "$targetDir"
-    files=($(ls -A "$sourceDir"))
-    echo -e "\e[1;34m    [i] Creating symlinks in $targetDir ...\e[0m"
-    for file in "${files[@]}"; do
-        sourceFile="$sourceDir/$file"
-        targetFile="$targetDir/$file"
+    # NOTE: -mindepth 1 is to avoid including $directory itself
+    readarray -t DIRS < <(find "$directory" -maxdepth 1 -mindepth 1 -type d)
 
-        ln -sfn "$sourceFile" "$targetFile"
+    for source_dir in "${DIRS[@]}"; do
+        dir_name=$(basename "$source_dir")
+        target_dir="$target_directory/$dir_name"
+
+        mkdir -p "$target_dir"
+        symlink_dir_files "$source_dir" "$target_dir"
     done;
-done;
+}
+
+symlink_dir_files "bash" "$HOME"
+symlink_dir_files "git" "$HOME"
+symlink_dir_files "vim" "$HOME"
+
+symlink_dir_files "config" "$HOME/.config"
+symlink_dirs "config" "$HOME/.config"
 
 echo -e "\e[1;32m[✓] Symlinks created succesfully.\e[0m"
