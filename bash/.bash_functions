@@ -54,3 +54,7 @@ gh_clear_cache(){
     PATTERN_OR_ALL="$1"
     gh cache list | rg "$PATTERN_OR_ALL" | awk '{print $2}' | xargs -I {} gh cache delete {}
 }
+
+vercel_delete_previews(){
+    npx vercel ls --environment preview --no-color 2>/dev/null | xargs -I {} npx vercel rm --yes {}
+}
