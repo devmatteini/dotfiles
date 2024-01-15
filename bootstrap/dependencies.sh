@@ -51,6 +51,20 @@ function setup_vim(){
   vim +'PlugInstall --sync' +qa
 }
 
+function setup_pipx(){
+  local python_argcomplete=""
+  if command -v register-python-argcomplete3 > /dev/null; then
+      python_argcomplete="register-python-argcomplete3"
+  elif command -v register-python-argcomplete > /dev/null; then
+      python_argcomplete="register-python-argcomplete"
+  else
+    echo "Cannot find 'register-python-argcomplete', skipping setup_pipx"
+    return
+  fi
+
+  "$python_argcomplete" pipx >"$HOME"/.local/share/bash-completion/completions/pipx 
+}
+
 sudo apt update
 sudo add-apt-repository -y universe
 sudo apt update
@@ -70,6 +84,7 @@ install_flatpak
 install_dra
 setup_git
 setup_vim
+setup_pipx
 
 # Cleanup
 sudo apt autoremove -y

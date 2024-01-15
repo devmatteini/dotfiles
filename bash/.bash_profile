@@ -44,15 +44,6 @@ if command -v direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
 
-# Add autocomplete for pipx
-if command -v pipx > /dev/null; then
-    if command -v register-python-argcomplete3 > /dev/null; then
-        eval "$(register-python-argcomplete3 pipx)"
-    elif command -v register-python-argcomplete > /dev/null; then
-        eval "$(register-python-argcomplete pipx)"
-    fi
-fi
-
 # Haskell (https://www.haskell.org/ghcup/)
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
