@@ -15,7 +15,7 @@ function install_dra(){
 
   # Download latest linux musl release asset (https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8)
   curl -s https://api.github.com/repos/devmatteini/dra/releases/latest \
-  | grep "browser_download_url.*linux-musl" \
+  | grep "browser_download_url.*x86_64-unknown-linux-musl" \
   | cut -d : -f 2,3 \
   | tr -d \" \
   | wget -O "$ARCHIVE" -i -
