@@ -3,18 +3,18 @@ add_newline = false
 command_timeout = 700
 
 [directory]
-truncate_to_repo=false
-style="bold #5faf5f"
+truncate_to_repo = false
+style = "bold #5faf5f"
 
 [character]
-success_symbol="[◆](bold white)"
-error_symbol="[◆](bold red)"
+success_symbol = "[◆](bold white)"
+error_symbol = "[◆](bold red)"
 
 [git_branch]
-style="bold #5f5faf"
+style = "bold #5f5faf"
 
 [git_status]
-style="bold #afd7ff"
+style = "bold #afd7ff"
 
 [golang]
 symbol = "󰟓 "
