@@ -8,7 +8,7 @@ INSTALL_DOCKER = [
     "sudo sh get-docker.sh",
     "rm get-docker.sh",
     # User group for docker
-    "sudo groupadd docker",
+    "sudo groupadd -f docker",
     'sudo usermod -aG docker "$USER"',
     "newgrp docker",
 ]
