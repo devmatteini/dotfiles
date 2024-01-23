@@ -36,7 +36,9 @@ if command -v fnm > /dev/null; then
 fi
 
 if command -v mise > /dev/null; then
-    eval "$(mise activate bash)"
+    # TODO: starship will show the actual version after a full reload and not on cd. It works with shims
+    # eval "$(mise activate bash)"
+    PATH="$HOME/.local/share/mise/shims:$PATH"
 fi
 
 if command -v direnv > /dev/null; then
