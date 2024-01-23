@@ -61,6 +61,12 @@ INSTALL_JUST = [
     f'just --completions bash > {bash_completion_path_for("just")}',
 ]
 
+INSTALL_MISE = [
+    "dra download -s mise-v{tag}-linux-x64-musl -o ~/.local/bin/mise jdx/mise",
+    "chmod +x ~/.local/bin/mise",
+    f'mise completion bash > {bash_completion_path_for("mise")}',
+]
+
 installer(
     "tools",
     [
@@ -131,6 +137,8 @@ installer(
         Package("ruff", "pipx install ruff"),
         # https://github.com/casey/just
         Package("just", join(INSTALL_JUST)),
+        # https://github.com/jdx/mise
+        Package("mise", join(INSTALL_MISE)),
     ],
 )
 

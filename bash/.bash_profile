@@ -35,6 +35,10 @@ if command -v fnm > /dev/null; then
     eval "$(fnm env --use-on-cd)"
 fi
 
+if command -v mise > /dev/null; then
+    eval "$(mise activate bash)"
+fi
+
 if command -v direnv > /dev/null; then
     eval "$(direnv hook bash)"
 fi
