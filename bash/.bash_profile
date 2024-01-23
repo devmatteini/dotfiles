@@ -30,11 +30,6 @@ fi
 # Source fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# Source fnm (node version manger)
-if command -v fnm > /dev/null; then
-    eval "$(fnm env --use-on-cd)"
-fi
-
 if command -v mise > /dev/null; then
     # TODO: starship will show the actual version after a full reload and not on cd. It works with shims
     # eval "$(mise activate bash)"
