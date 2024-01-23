@@ -26,6 +26,7 @@ alias dnt="dotnet test"
 
 # Misc
 alias utc="date --iso-8601"
+alias print_path='echo -e ${PATH//:/\\n}'
 
 # apt
 alias upgradable="apt list --upgradable"
