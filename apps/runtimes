@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from installer import Package, bash_completion_path_for, installer, join
+from installer import Package, bash_completion_for, installer, join
 
 
 INSTALL_NODE = [
@@ -11,8 +11,8 @@ INSTALL_NODE = [
     "mise exec node@18 -- corepack enable",
     "mise exec node@20 -- corepack enable",
     # Bash completions
-    f"npm completion > {bash_completion_path_for('npm')}",
-    f"curl -o {bash_completion_path_for('yarn')} https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash",
+    f"npm completion > {bash_completion_for('npm')}",
+    f"curl -o {bash_completion_for('yarn')} https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash",
 ]
 
 installer("runtimes", [Package("node", join(INSTALL_NODE))])
