@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-from installer import Package, installer, join
-
-
-def bash_completion_path_for(file_name: str) -> str:
-    return f"~/.local/share/bash-completion/completions/{file_name}"
+from installer import Package, bash_completion_path_for, installer, join
 
 
 INSTALL_FZF = [

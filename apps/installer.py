@@ -76,3 +76,7 @@ def installer(name: str, packages: List[Package]):
     )
 
     __install_packages(packages, parser)
+
+
+def bash_completion_path_for(file_name: str) -> str:
+    return f"~/.local/share/bash-completion/completions/{file_name}"
