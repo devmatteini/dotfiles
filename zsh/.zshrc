@@ -65,6 +65,13 @@ setopt HIST_SAVE_NO_DUPS      # Dont write duplicate entries in the history file
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
+# Bash-style keys
+bindkey "^P" history-beginning-search-backward # View previous command
+bindkey "^A" vi-beginning-of-line # Move cursor at beginning
+bindkey "^E" vi-end-of-line # Move cursor at end
+bindkey "^U" backward-kill-line # Erase from cursor to beginning of line
+bindkey "^K" kill-line # Erase from cursor to end of line
+
 # --------------------
 # Tools & Environment variables
 # --------------------
