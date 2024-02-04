@@ -57,6 +57,7 @@ symlink_dirs() {
 }
 
 symlink_dir_files "bash" "$HOME"
+symlink_dir_files "zsh" "$HOME"
 symlink_dir_files "git" "$HOME"
 symlink_dir_files "vim" "$HOME"
 
