@@ -80,3 +80,8 @@ def installer(name: str, packages: List[Package]):
 
 def bash_completion_for(file_name: str) -> str:
     return f"~/.local/share/bash-completion/completions/{file_name}"
+
+
+def zsh_completion_for(file_name: str) -> str:
+    name = file_name if file_name.startswith("_") else f"_{file_name}"
+    return f"~/.local/share/zsh-completion/{name}"

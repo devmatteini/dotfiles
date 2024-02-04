@@ -26,6 +26,7 @@ function install_dra(){
 
   # Post installation setup
   dra completion bash >"$HOME"/.local/share/bash-completion/completions/dra
+  dra completion zsh >"$HOME/.local/share/zsh-completion/_dra"
   # Create symlink to be able to use dra as superuser (for example when installing .deb assets)
   sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
 }

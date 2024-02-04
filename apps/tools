@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from installer import Package, bash_completion_for, installer, join
+from installer import Package, bash_completion_for, installer, join, zsh_completion_for
 
 
 INSTALL_FZF = [
@@ -26,18 +26,21 @@ INSTALL_TLDR = [
     "chmod +x ~/.local/bin/tldr",
     # Download bash completion
     f'dra download -s completions_bash -o {bash_completion_for("tldr")} dbrgn/tealdeer',
+    f'dra download -s completions_zsh -o {zsh_completion_for("tldr")} dbrgn/tealdeer',
 ]
 
 INSTALL_MINISERVE = [
     'dra download -s "miniserve-{tag}-x86_64-unknown-linux-gnu" -o ~/.local/bin/miniserve svenstaro/miniserve',
     "chmod +x ~/.local/bin/miniserve",
     f'miniserve --print-completions bash > {bash_completion_for("miniserve")}',
+    f'miniserve --print-completions zsh > {zsh_completion_for("miniserve")}',
 ]
 
 INSTALL_DRA = [
     'dra download -i -s "dra-{tag}-x86_64-unknown-linux-musl.tar.gz" devmatteini/dra',
     "mv dra ~/.local/bin/",
     f'dra completion bash > {bash_completion_for("dra")}',
+    f'dra completion zsh > {zsh_completion_for("dra")}',
 ]
 
 INSTALL_ATUIN = [
@@ -45,22 +48,26 @@ INSTALL_ATUIN = [
     '[ ! -e ~/.local/share/atuin/history.db ] && atuin import auto || echo "skip import, just update"',
     "curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh",
     f'atuin gen-completions -s bash > {bash_completion_for("atuin")}',
+    f'atuin gen-completions -s zsh > {zsh_completion_for("atuin")}',
 ]
 
 INSTALL_ERDTREE = [
     "dra download -s erd-v{tag}-x86_64-unknown-linux-musl.tar.gz -i -o ~/.local/bin/ solidiquis/erdtree",
     f'erd --completions bash > {bash_completion_for("erd")}',
+    f'erd --completions zsh > {zsh_completion_for("erd")}',
 ]
 
 INSTALL_JUST = [
     "dra download -s just-{tag}-x86_64-unknown-linux-musl.tar.gz -i -o ~/.local/bin/ casey/just",
     f'just --completions bash > {bash_completion_for("just")}',
+    f'just --completions zsh > {zsh_completion_for("just")}',
 ]
 
 INSTALL_MISE = [
     "dra download -s mise-v{tag}-linux-x64-musl -o ~/.local/bin/mise jdx/mise",
     "chmod +x ~/.local/bin/mise",
     f'mise completion bash > {bash_completion_for("mise")}',
+    f'mise completion zsh > {zsh_completion_for("mise")}',
 ]
 
 installer(
