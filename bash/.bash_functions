@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 mkcd(){
     mkdir -p "$1" && cd "$_" || return 1
 }
