@@ -31,6 +31,11 @@ autoload -Uz compinit
 compinit
 _comp_options+=(globdots) # Include hidden files
 
+setopt MENU_COMPLETE        # Automatically highlight first element of completion menu
+setopt AUTO_LIST            # Automatically list choices on ambiguous completion.
+setopt COMPLETE_IN_WORD     # Complete from both ends of a word.
+
+zstyle ':completion:*' menu select
 # Use case-insensitive TAB autocompletion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
