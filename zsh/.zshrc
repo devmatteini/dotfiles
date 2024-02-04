@@ -79,9 +79,16 @@ fi
 # Prompt & History search
 # --------------------
 
-# TODO: add nicer fallback prompt
 if command -v starship > /dev/null; then
     eval "$(starship init zsh)"
+else
+    orange=$(tput setaf 166)
+    white=$(tput setaf 15)
+    yellow=$(tput setaf 228)
+    green=$(tput setaf 71)
+    reset=$(tput sgr0)
+    PS1="%B$orange%n$white@$yellow%m ${white}in $green%~
+$reset$ "
 fi
 
 if command -v atuin > /dev/null; then
