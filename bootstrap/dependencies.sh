@@ -78,7 +78,8 @@ sudo apt install -y build-essential \
   pipx \
   libfuse2 \
   fonts-firacode \
-  vim
+  vim \
+  zsh
 
 install_flatpak
 install_dra
