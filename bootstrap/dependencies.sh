@@ -65,6 +65,10 @@ function setup_pipx(){
   "$python_argcomplete" pipx >"$HOME"/.local/share/bash-completion/completions/pipx 
 }
 
+function install_zsh_plugins(){
+  sudo apt install -y zsh-autosuggestions
+}
+
 sudo apt update
 sudo add-apt-repository -y universe
 sudo apt update
@@ -83,6 +87,7 @@ sudo apt install -y build-essential \
 
 install_flatpak
 install_dra
+install_zsh_plugins
 setup_git
 setup_vim
 setup_pipx
