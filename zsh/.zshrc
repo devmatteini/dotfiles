@@ -1,4 +1,5 @@
 typeset -U path PATH
+typeset -U fpath FPATH
 autoload -U colors && colors
 
 # --------------------
@@ -26,6 +27,9 @@ unset file;
 # --------------------
 # Command completion
 # --------------------
+
+fpath=("$HOME/.local/share/zsh-completion" $fpath)
+export FPATH
 
 autoload -Uz compinit
 compinit
