@@ -19,6 +19,9 @@ INSTALL_AWS = [
 #/usr/bin/env bash
 complete -C ~/.local/bin/aws_completer aws
 EOL""",
+    f"""cat > {zsh_completion_for("aws")} <<EOL
+complete -C ~/.local/bin/aws_completer aws
+EOL""",
 ]
 
 INSTALL_TLDR = [

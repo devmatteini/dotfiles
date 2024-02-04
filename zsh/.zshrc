@@ -31,8 +31,9 @@ unset file;
 fpath=("$HOME/.local/share/zsh-completion" $fpath)
 export FPATH
 
-autoload -Uz compinit
+autoload -Uz compinit bashcompinit
 compinit
+bashcompinit
 _comp_options+=(globdots) # Include hidden files
 
 setopt MENU_COMPLETE        # Automatically highlight first element of completion menu
