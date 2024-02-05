@@ -11,7 +11,7 @@ INSTALL_NODE = [
     "mise exec node@18 -- corepack enable",
     "mise exec node@20 -- corepack enable",
     # Bash completions
-    f"npm completion > {bash_completion_for('npm')}",
+    f"mise exec node@20 -- npm completion > {bash_completion_for('npm')}",
     f"curl -o {bash_completion_for('yarn')} https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash",
 ]
 
