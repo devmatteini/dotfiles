@@ -19,7 +19,7 @@ export PATH
 # Aliases, functions and private configs
 # --------------------
 
-for file in ~/.{zsh_aliases,zsh_functions,zsh.local}; do
+for file in $ZDOTDIR/.{zsh_aliases,zsh_functions,zsh.local}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
@@ -48,7 +48,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # History
 # --------------------
 
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="$XDG_CACHE_HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
 
