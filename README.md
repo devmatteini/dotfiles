@@ -13,15 +13,22 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && ./bootst
 The [`bootstrap.sh`](bootstrap.sh) script execute:
 
 1. [bootstrap/file_system.sh](bootstrap/file_system.sh) to create common directories
-2. [bootstrap/create_symbolic_links.sh](bootstrap/create_symbolic_links.sh) to create symlinks to home, config and script files
+2. [bootstrap/create_symbolic_links.sh](bootstrap/create_symbolic_links.sh) to create symlinks to home and config files
 3. [bootstrap/dependencies.sh](bootstrap/dependencies.sh) to install basic dependencies
+
+## Shell
+
+Currently using [`zsh`](https://www.zsh.org/).
+You can customize it by editing [`config/zsh`](config/zsh/) files.
+
+Alternatively you can use [`bash`](bash/).
 
 ## Prompt
 
-Currently using [`starship`](https://github.com/starship/starship/) as bash prompt.
+Currently using [`starship`](https://github.com/starship/starship/).
 You can customize it by editing [`config/starship.toml`](config/starship.toml).
 
-Alternatively you can use [`.bash_prompt`](bash/.bash_prompt) instead of `starship`.
+By default if starship is not installed basic fallback prompt is available for both `bash` and `zsh`.
 
 ## Terminal Emulator
 
@@ -36,18 +43,29 @@ Alternatively you can use `gnome-terminal` and load its configuration by running
 
 To export a new configuration follow [this article](https://gist.github.com/devmatteini/968981d95fd203905f7618ce67647e83) instructions.
 
-## Application
+## Applications
 
 If you didn't run the `bootstrap.sh` script, run:
 
 ```bash
+./bootstrap/file_system.sh
 ./bootstrap/dependencies.sh
 ```
 
-To install application(s):
+To install application you can find scripts in [`apps`](apps/).
+
+### Simple bash scripts
 
 ```bash
-./apps/<script>
+./apps/<script>.sh
+```
+
+### Advanced installers
+
+Python scripts to install multiple apps with a convenient `cli` wrapper:
+
+```bash
+./apps/<script> --help
 
 # List what packages you can install
 ./apps/tools --list
@@ -58,18 +76,6 @@ To install application(s):
 # Install all packages but exclude some
 ./apps/tools --exclude aws
 ```
-
-### :clipboard: List of application script
-
-- browsers (firefox, firefox-dev, chromium)
-- docker (docker-ce, docker-compose)
-- dotnet (dotnet-sdk-3.1) // OUTDATED
-- editors (vscode, rider, vim, intellij-idea)
-- fnm (node-v{16,18}, npm, yarn)
-- fonts (firacode, firacode nerd font)
-- misc (postman, gimp, vlc)
-- rust (installation and post install setup)
-- tools (fzf, tldr, shellcheck, awscli, bat, ripgrep, ...)
 
 ## GRUB Theme
 
@@ -83,3 +89,6 @@ https://github.com/shvchk/poly-dark
 - https://github.com/mathiasbynens/dotfiles
 - https://github.com/iacoware/dotfiles/
 - https://github.com/CoreyMSchafer/dotfiles
+- https://github.com/mrnugget/dotfiles
+- https://github.com/LukeSmithxyz/voidrice
+- https://github.com/Phantas0s/.dotfiles
