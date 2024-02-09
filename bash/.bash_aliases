@@ -7,8 +7,9 @@ alias h="cd ~"
 alias g="git"
 
 # List files
-alias ll="ls -lh --group-directories-first --color=auto"
-alias la="ls -Alh --group-directories-first --color=auto"
+alias ll="eza -l --icons=always --group-directories-first"
+alias lll="ll --hyperlink"
+alias la="eza -al --icons=always --group-directories-first"
 alias tree="erd -H -I --layout inverted"
 alias treeh="erd -H -I --layout inverted --hidden"
 

@@ -73,6 +73,11 @@ INSTALL_MISE = [
     f'mise completion zsh > {zsh_completion_for("mise")}',
 ]
 
+INSTALL_EZA = [
+    "dra download -i -s eza_x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin/ eza-community/eza",
+    f'curl -o {zsh_completion_for("eza")} https://raw.githubusercontent.com/eza-community/eza/main/completions/zsh/_eza',
+]
+
 installer(
     "tools",
     [
@@ -145,6 +150,8 @@ installer(
         Package("just", join(INSTALL_JUST)),
         # https://github.com/jdx/mise
         Package("mise", join(INSTALL_MISE)),
+        # https://github.com/eza-community/eza
+        Package("eza", join(INSTALL_EZA)),
     ],
 )
 
