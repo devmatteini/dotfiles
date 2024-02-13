@@ -109,3 +109,7 @@
 
 	# List aliases
 	aliases = config --get-regexp alias
+
+# REuse REcorded REsolution - remeber how a conflict was resolved so that it can be applied automatically in the future
+[rerere]
+	enabled = true
