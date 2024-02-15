@@ -11,6 +11,7 @@ path=(
     "$HOME/dotfiles/scripts"
     "$HOME/.cargo/bin"
     "$HOME/.local/share/mise/shims"
+    "$HOME/.local/share/JetBrains/Toolbox/scripts/"
     $path
 )
 export PATH
