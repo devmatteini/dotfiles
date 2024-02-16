@@ -3,6 +3,7 @@
 import argparse
 from typing import List, Optional
 import subprocess
+from pathlib import Path
 
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -85,3 +86,10 @@ def bash_completion_for(file_name: str) -> str:
 def zsh_completion_for(file_name: str) -> str:
     name = file_name if file_name.startswith("_") else f"_{file_name}"
     return f"~/.local/share/zsh-completion/{name}"
+
+
+def write_file(file_name: str, content: str) -> str:
+    path = Path(file_name).expanduser()
+    with open(path, "w") as file:
+        file.write(content)
+    return "true"  # this is the shell command so can be used in join
