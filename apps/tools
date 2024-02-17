@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-from installer import Package, bash_completion_for, installer, join, zsh_completion_for
+from installer import (
+    Package,
+    bash_completion_for,
+    installer,
+    join,
+    write_file,
+    zsh_completion_for,
+)
 
 
 INSTALL_FZF = [
@@ -15,14 +22,16 @@ INSTALL_AWS = [
     "./aws/install --install-dir ~/.local/share/aws --bin-dir ~/.local/bin --update",
     "rm -rf awscliv2.zip aws/",
     # create bash completion file
-    f"""cat > {bash_completion_for("aws")} <<EOL
-#/usr/bin/env bash
-complete -C ~/.local/bin/aws_completer aws
-EOL""",
-    f"""cat > {zsh_completion_for("aws")} <<EOL
-#compdef aws
-complete -C ~/.local/bin/aws_completer aws
-EOL""",
+    write_file(
+        bash_completion_for("aws"),
+        """#/usr/bin/env bash
+complete -C ~/.local/bin/aws_completer aws""",
+    ),
+    write_file(
+        zsh_completion_for("aws"),
+        """#compdef aws
+complete -C ~/.local/bin/aws_completer aws""",
+    ),
 ]
 
 INSTALL_TLDR = [
