@@ -20,6 +20,7 @@ INSTALL_AWS = [
 complete -C ~/.local/bin/aws_completer aws
 EOL""",
     f"""cat > {zsh_completion_for("aws")} <<EOL
+#compdef aws
 complete -C ~/.local/bin/aws_completer aws
 EOL""",
 ]
