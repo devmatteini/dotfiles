@@ -12,7 +12,7 @@ INSTALL_FZF = [
 INSTALL_AWS = [
     'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"',
     "unzip -u awscliv2.zip",
-    "./aws/install --install-dir ~/.local/aws-cli --bin-dir ~/.local/bin",
+    "./aws/install --install-dir ~/.local/share/aws --bin-dir ~/.local/bin --update",
     "rm -rf awscliv2.zip aws/",
     # create bash completion file
     f"""cat > {bash_completion_for("aws")} <<EOL
