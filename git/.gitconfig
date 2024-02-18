@@ -9,6 +9,33 @@
 [commit]
 	gpgSign = true
 
+[core]
+	# https://github.com/dandavison/delta
+	pager = delta
+
+[delta]
+	syntax-theme = gruvbox-dark
+
+[init]
+	defaultBranch = main
+
+[diff]
+	algorithm = histogram
+
+[merge]
+	# Git >= 2.35
+	conflictstyle = zdiff3
+
+[interactive]
+	diffFilter = delta --color-only
+
+[push]
+	autoSetupRemote = true
+
+# REuse REcorded REsolution - remeber how a conflict was resolved so that it can be applied automatically in the future
+[rerere]
+	enabled = true
+
 [color]
 	# Use colors in Git commands that are capable of colored output when
 	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
@@ -34,21 +61,6 @@
 	added = green
 	changed = yellow
 	untracked = red
-
-[core]
-	# https://github.com/dandavison/delta
-	pager = delta
-
-[delta]
-	syntax-theme = gruvbox-dark
-
-[interactive]
-	diffFilter = delta --color-only
-
-[init]
-	defaultBranch = main
-[push]
-	autoSetupRemote = true
 
 [alias]
 	# View the current working tree status using the short format
@@ -110,10 +122,3 @@
 	# List aliases
 	aliases = config --get-regexp alias
 
-# REuse REcorded REsolution - remeber how a conflict was resolved so that it can be applied automatically in the future
-[rerere]
-	enabled = true
-[diff]
-	algorithm = histogram
-[merge]
-	conflictstyle = zdiff3
