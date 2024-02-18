@@ -113,3 +113,7 @@
 # REuse REcorded REsolution - remeber how a conflict was resolved so that it can be applied automatically in the future
 [rerere]
 	enabled = true
+[diff]
+	algorithm = histogram
+[merge]
+	conflictstyle = zdiff3
