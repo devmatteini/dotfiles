@@ -72,9 +72,15 @@ function install_zsh_plugins(){
 
 sudo apt update
 sudo add-apt-repository -y universe
+sudo add-apt-repository -y ppa:git-core/ppa
 sudo apt update
 
-sudo apt install -y build-essential \
+# Remove old git version
+sudo apt remove -y git
+sudo apt autoremove -y
+
+sudo apt install -y git \
+  build-essential \
   curl \
   wget \
   python3-pip \
