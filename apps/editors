@@ -6,7 +6,5 @@ installer(
     "editors",
     [
         Package("vscode", "sudo snap install code --classic"),
-        Package("rider", "sudo snap install rider --classic"),
-        Package("intellij-idea", "sudo snap install intellij-idea-community --classic"),
     ],
 )
