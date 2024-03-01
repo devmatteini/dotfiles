@@ -20,7 +20,7 @@ export PATH
 # Aliases, functions and private configs
 # --------------------
 
-for file in $ZDOTDIR/.{zsh_aliases,zsh_functions,zsh.local}; do
+for file in ~/.{zsh_aliases,zsh_functions,zsh.local}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
