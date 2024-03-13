@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+    echo "Missing required <REPO_PATH>"
+    echo
+    echo "Usage: $(basename "$0") <REPO_PATH> [FROM] [TO]"
+    echo "Parse commit messages for updated dependencies and create changelog"
+    echo
+    echo "Arguments:"
+    echo " <REPO_PATH>  -- path to the git repository"
+    echo " [FROM]       -- start range for git log. Default is latest tag or first commit if no tags are present"
+    echo " [TO]         -- end range for git log. Defatult is HEAD"
+    exit 1
+fi
+
+REPO_PATH=$1
+FROM=$2
+TO=$3
+
+_git() {
+    git -C "$REPO_PATH" "$@"
+}
+
+default_start_range=$(_git describe --tags --abbrev=0 || _git rev-list --max-parents=0 HEAD)
+
+start_range="${FROM:-$default_start_range}"
+end_range="${TO:-HEAD}"
+cargo_prefix_regex='cargo:\sbump\s'
+dependabot_prefix_regex='build\(deps(-dev)?\):\sbump\s'
+# TODO: for now only rust projects are supported
+prefix_regex=$cargo_prefix_regex
+
+readarray -t COMMITS < <(_git log --pretty=format:"%s" "$start_range".."$end_range" | 
+    grep -E "$prefix_regex" |
+    sed -E "s/$prefix_regex//" |
+    sort --reverse)
+
+#for commit in "${COMMITS[@]}"; do
+#    echo "$commit"
+#done
+
+# DOCS: https://stackoverflow.com/a/4024263
+version_lte() {
+    [[  "$1" == "$(echo -e "$1\n$2" | sort -V | head -n1)" ]]
+}
+version_lt() {
+    [[ "$1" == "$2" ]] && return 1 || version_lte "$1" "$2"
+}
+version_gt(){
+    version_lt "$2" "$1"
+}
+
+DEPENDENCIES_NAMES=()
+declare -A DEPENDENCIES_FROM
+declare -A DEPENDENCIES_TO
+
+for commit in "${COMMITS[@]}"; do
+    name=$(echo "$commit" | cut -d ' ' -f 1)
+    new_from=$(echo "$commit" | cut -d ' ' -f 3)
+    new_to=$(echo "$commit" | cut -d ' ' -f 5)
+
+    old_from=${DEPENDENCIES_FROM[$name]}
+    old_to=${DEPENDENCIES_TO[$name]}
+
+    # Only insert name in array if it doesn't exist
+    if [[ ! "${DEPENDENCIES_NAMES[*]}" =~ $name ]]; then
+        DEPENDENCIES_NAMES+=("$name")
+    fi
+
+    if [[  $old_from == "" ]] || version_lt "$new_from" "$old_from"; then
+        DEPENDENCIES_FROM[$name]=$new_from
+    fi
+    if version_gt "$new_to" "$old_to"; then
+        DEPENDENCIES_TO[$name]=$new_to
+    fi
+done
+
+echo -e "Changelog:"
+for name in "${DEPENDENCIES_NAMES[@]}"; do
+    echo "- bump \`$name\` from ${DEPENDENCIES_FROM[$name]} to ${DEPENDENCIES_TO[$name]}"
+done
