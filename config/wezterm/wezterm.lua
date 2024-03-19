@@ -3,13 +3,19 @@ local project = require "project"
 local helpers = require "helpers"
 local act = wezterm.action
 
+local WZ_PROJECT = "WZ_PROJECT"
+
 local config = {}
 if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
 wezterm.on("gui-startup", function()
-  project.startup("WZ_PROJECT", "projects", wezterm)
+  project.startup(WZ_PROJECT, "projects", wezterm)
+end)
+
+wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
+  return project.format_window_title(WZ_PROJECT, tab, tabs)
 end)
 
 local copy_mode = nil
