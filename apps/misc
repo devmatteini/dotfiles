@@ -14,7 +14,7 @@ installer(
     [
         Package("postman", "flatpak install -y flathub com.getpostman.Postman"),
         Package("gimp", "sudo snap install gimp"),
-        Package("vlc", "sudo snap install vlc"),
+        Package("mpv", "sudo apt install -y mpv"),
         Package("peek", "flatpak install -y flathub com.uploadedlobster.peek"),
         Package(
             "pdf-slicer", "flatpak install -y flathub com.github.junrrein.PDFSlicer"
