@@ -1,9 +1,30 @@
 #!/usr/bin/env bash
 
+usage(){
+    echo
+    echo "Usage: $(basename "$0") <COUNT> [COMMAND]"
+    echo "Execute a command multiple times"
+    echo
+    echo "Arguments:"
+    echo " <COUNT>      -- number of times to execute the command"
+    exit 1
+}
+
+if [[ -z $1 ]]; then
+    echo "Missing required <COUNT>"
+    usage
+fi
+if [[ ! $1 =~ ^[0-9]+$ ]]; then
+    echo "Invalid <COUNT>: '$1' is not a number"
+    usage
+fi
+
+max=$1
+
 ok=0
 errors=()
 
-for i in $(seq 1 "$1"); do
+for i in $(seq 1 "$max"); do
   echo -e "\n\033[1m# Execution $i\033[0m"
   if "${@:2}"; then
     ((ok+=1))
