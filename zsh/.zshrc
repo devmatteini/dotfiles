@@ -79,11 +79,8 @@ bindkey "^U" backward-kill-line # Erase from cursor to beginning of line
 bindkey "^K" kill-line # Erase from cursor to end of line
 
 # --------------------
-# Tools & Environment variables
+# Tools & Plugins
 # --------------------
-
-export EDITOR="vim"
-export DOCKER_BUILDKIT=1
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
