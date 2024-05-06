@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+    echo "Missing string to find"
+    exit 1
+fi
+if [[ -z $2 ]]; then
+    echo "Missing value to replace with"
+    exit 1
+fi
+
+find_string=$1
+replace_string=$2
+
+
+rg --hidden -l "$find_string" | xargs -I {} sed -i "s/$find_string/$replace_string/g" {}
