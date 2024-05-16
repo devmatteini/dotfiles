@@ -45,6 +45,11 @@ zstyle ':completion:*' menu select
 # Use case-insensitive TAB autocompletion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
+# sort directories first
+zstyle ":completion:*" sort false
+zstyle ':completion:*' list-dirs-first true
+
+# add colors to completion
 eval "$(dircolors)"
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
