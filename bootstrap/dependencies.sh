@@ -68,6 +68,7 @@ function setup_pipx(){
 
 function install_zsh_plugins(){
   sudo apt install -y zsh-autosuggestions
+  git clone --depth=1 https://github.com/Aloxaf/fzf-tab "$HOME/.local/share/fzf-tab"
 }
 
 sudo apt update

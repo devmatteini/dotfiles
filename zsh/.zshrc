@@ -88,6 +88,7 @@ if command -v direnv > /dev/null; then
     eval "$(direnv hook zsh)"
 fi
 
+[ -f ~/.local/share/fzf-tab/fzf-tab.plugin.zsh ] && source ~/.local/share/fzf-tab/fzf-tab.plugin.zsh
 [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # --------------------
