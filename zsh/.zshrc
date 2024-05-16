@@ -45,6 +45,9 @@ zstyle ':completion:*' menu select
 # Use case-insensitive TAB autocompletion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
+eval "$(dircolors)"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
 # --------------------
 # History
 # --------------------
