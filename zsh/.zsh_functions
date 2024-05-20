@@ -4,6 +4,26 @@ mkcd(){
     mkdir -p "$1" && cd "$_" || return 1
 }
 
+# usage: cat file.txt | copy-to-clipboard or copy-to-clipboard "text to copy"
+copy-to-clipboard(){
+    copy_command=""
+    
+    if [[ $XDG_SESSION_TYPE == "x11" ]]; then
+        copy_command="xclip -r -sel clip"
+    elif [[ $XDG_SESSION_TYPE == "wayland" ]]; then
+        copy_command="wl-copy"
+    else
+        echo "Error: $XDG_SESSION_TYPE not supported"
+        return 1
+    fi
+
+    if [[ -n "$1" ]]; then
+        echo -n "$1" | eval "$copy_command"
+    else
+        eval "$copy_command"
+    fi
+}
+
 change-aws-profile(){
     local profile
     profile=$(aws configure list-profiles | fzf --cycle --layout=reverse)
