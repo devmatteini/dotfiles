@@ -43,4 +43,39 @@ INSTALL_NODE = [
     f"curl -o {zsh_completion_for('yarn')} https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/yarn/_yarn",
 ]
 
-installer("runtimes", [Package("node", join(INSTALL_NODE))])
+
+# https://learn.microsoft.com/en-us/dotnet/core/tools/enable-tab-autocomplete#zsh
+DOTNET_ZSH_COMPLETION = r"""#compdef dotnet
+
+_dotnet_zsh_complete()
+{
+  local completions=("$(dotnet complete "$words")")
+
+  # If the completion list is empty, just continue with filename selection
+  if [ -z "$completions" ]
+  then
+    _arguments '*::arguments: _normal'
+    return
+  fi
+
+  # This is not a variable assignment, don't remove spaces!
+  _values = "${(ps:\n:)completions}"
+}
+
+compdef _dotnet_zsh_complete dotnet
+"""
+
+INSTALL_DOTNET = [
+    "sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0",
+    write_file(zsh_completion_for("dotnet"), DOTNET_ZSH_COMPLETION),
+]
+
+installer(
+    "runtimes",
+    [
+        # keep new line
+        Package("node", join(INSTALL_NODE)),
+        # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2404
+        Package("dotnet", join(INSTALL_DOTNET)),
+    ],
+)
