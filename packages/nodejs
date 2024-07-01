@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+mise install node@18 node@20
+
+# Default version
+mise use -g node@20
+
+# Activate node corepack
+mise exec node@18 -- corepack enable
+mise exec node@20 -- corepack enable
+
+# Shell completions
+mise exec node@20 -- npm completion > ~/.local/share/bash-completion/completions/npm
+
+# NOTE: this is a snippet from `npm completion` output but works fine even with `bashcompinit` in .zshrc
+cat > ~/.local/share/zsh-completion/_npm <<'EOL'
+#compdef npm
+
+_npm() {
+  local si=$IFS
+  compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                COMP_LINE=$BUFFER \
+                COMP_POINT=0 \
+                npm completion -- "${words[@]}" \
+                2>/dev/null)
+  IFS=$si
+}
+
+if [ "$funcstack[1]" = "_npm" ]; then
+    _npm "$@"
+else
+    compdef _npm npm
+fi
+EOL
+
+curl -o ~/.local/share/bash-completion/completions/yarn https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash
+curl -o ~/.local/share/zsh-completion/_yarn https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/yarn/_yarn
