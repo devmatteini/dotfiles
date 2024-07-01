@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# NOTE: the url can be found at https://github.com/mongodb/mongo/blob/8c64458511a257877e99a2e78278db1ea3bd14b8/src/mongo/installer/compass/install_compass
+
+curl -L -o mongo_compass.deb "https://compass.mongodb.com/api/v2/download/latest/compass/stable/linux_deb"
+sudo dpkg -i mongo_compass.deb
+rm mongo_compass.deb
