@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# https://github.com/dbrgn/tealdeer
+
+dra download -s tealdeer-linux-x86_64-musl -o ~/.local/bin/tldr dbrgn/tealdeer
+chmod +x ~/.local/bin/tldr
+
+# Download bash completion
+dra download -s completions_bash -o ~/.local/share/bash-completion/completions/tldr dbrgn/tealdeer
+dra download -s completions_zsh -o ~/.local/share/zsh-completion/_tldr dbrgn/tealdeer

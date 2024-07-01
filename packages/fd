@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/sharkdp/fd
+
+dra download -i -s "fd-v{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin sharkdp/fd

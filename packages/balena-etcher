@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/balena-io/etcher
+
+sudo dra download -s "balena-etcher_{tag}_amd64.deb" -i balena-io/etcher || sudo apt -y --fix-broken install

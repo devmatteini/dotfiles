@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# https://github.com/casey/just
+
+dra download -s "just-{tag}-x86_64-unknown-linux-musl.tar.gz" -i -o ~/.local/bin/ casey/just
+
+just --completions bash > ~/.local/share/bash-completion/completions/just
+just --completions zsh > ~/.local/share/zsh-completion/_just

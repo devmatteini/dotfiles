@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# https://github.com/eza-community/eza
+
+dra download -i -s eza_x86_64-unknown-linux-musl.tar.gz -o ~/.local/bin/ eza-community/eza
+
+curl -o ~/.local/share/zsh-completion/_eza https://raw.githubusercontent.com/eza-community/eza/main/completions/zsh/_eza

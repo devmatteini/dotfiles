@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/BurntSushi/ripgrep
+
+dra download -i -s "ripgrep-{tag}-x86_64-unknown-linux-musl.tar.gz" -o ~/.local/bin BurntSushi/ripgrep

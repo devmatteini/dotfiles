@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/starship/starship
+
+dra download -s starship-x86_64-unknown-linux-gnu.tar.gz -i -o ~/.local/bin starship/starship

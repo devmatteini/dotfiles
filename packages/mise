@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# https://github.com/jdx/mise
+
+dra download -s "mise-v{tag}-linux-x64-musl" -o ~/.local/bin/mise jdx/mise
+chmod +x ~/.local/bin/mise
+
+mise completion bash > ~/.local/share/bash-completion/completions/mise
+mise completion zsh > ~/.local/share/zsh-completion/_mise

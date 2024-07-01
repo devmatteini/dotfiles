@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/sharkdp/bat
+
+dra download -i -s "bat-v{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin sharkdp/bat

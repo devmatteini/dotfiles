@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/direnv/direnv
+
+sudo apt install -y direnv

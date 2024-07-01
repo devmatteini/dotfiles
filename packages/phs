@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/devmatteini/pihole-switch
+
+dra download -i -s phs.zip -o ~/.local/bin devmatteini/pihole-switch
