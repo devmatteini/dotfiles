@@ -1,5 +1,0 @@
-#!/usr/bin/env python3
-
-from installer import Package, installer
-
-installer("browsers", [Package("chromium", "sudo snap install chromium")])
