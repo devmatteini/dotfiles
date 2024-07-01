@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# This package will enable Nautilus to have "Open in WezTerm" action
+sudo apt install -y python3-nautilus
+
+sudo dra download -i -s "wezterm-{tag}.Ubuntu22.04.deb" wez/wezterm
+echo "To change default terminal run: sudo update-alternatives --config x-terminal-emulator"

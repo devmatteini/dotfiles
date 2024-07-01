@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo dra download -t nightly -s wezterm-nightly.Ubuntu22.04.deb -i wez/wezterm
