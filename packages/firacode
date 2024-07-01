@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Base font
+sudo apt install -y fonts-firacode
+
+# Nerd font version
+
+FIRACODE_NERD_TMP="/tmp/firacode-nerd"
+FIRACODE_NERD_TMP_ZIP="/tmp/FiraCode.zip"
+rm -rf "$FIRACODE_NERD_TMP"
+dra download -s FiraCode.zip -o "$FIRACODE_NERD_TMP_ZIP" ryanoasis/nerd-fonts
+mkdir -p "$FIRACODE_NERD_TMP"
+unzip "$FIRACODE_NERD_TMP_ZIP" -d "$FIRACODE_NERD_TMP"
+
+mkdir -p ~/.fonts
+mv "$FIRACODE_NERD_TMP/FiraCodeNerdFont-Light.ttf" ~/.fonts
+mv "$FIRACODE_NERD_TMP/FiraCodeNerdFont-Medium.ttf" ~/.fonts
+mv "$FIRACODE_NERD_TMP/FiraCodeNerdFont-Regular.ttf" ~/.fonts
+mv "$FIRACODE_NERD_TMP/FiraCodeNerdFont-Bold.ttf" ~/.fonts
+mv "$FIRACODE_NERD_TMP/FiraCodeNerdFont-SemiBold.ttf" ~/.fonts
+fc-cache -f -v
