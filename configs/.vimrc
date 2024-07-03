@@ -1,8 +1,5 @@
 set nocompatible
 
-" Highlight cursor line underneath the cursor horizontally.
-set cursorline
-
 " Set shift width to 4 spaces.
 set shiftwidth=4
 " Set tab width to 4 columns.
@@ -46,22 +43,15 @@ set wildmenu
 " Make wildmenu behave like similar to Bash completion.
 set wildmode=list:longest,full
 
-" Disable filetpye, this is important to do *before* plugins installation
-filetype off
-
-" --- PLUGINS
-call plug#begin('~/.vim/plugged')
-
-Plug 'morhetz/gruvbox'
-
-call plug#end()
-
-" Enable indentation, this is important to do *after* 'plug#end()'
+" Enable type file detection. Vim will be able to try to detect the type of file in use.
 filetype on
-filetype plugin indent on
+" Enable plugins and load plugin for the detected file type.
+filetype plugin on
+" Load an indent file for the detected file type.
+filetype indent on
 
+" Turn syntax highlighting on
 syntax on
 
-" --- COLOR SCHEME
+" Dark mode
 set bg=dark
-color gruvbox

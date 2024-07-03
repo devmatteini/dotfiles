@@ -41,17 +41,6 @@ function setup_git(){
   dra download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
 }
 
-function setup_vim(){
-  mkdir -p ~/.vim ~/.vim/autoload ~/.vim/backup ~/.vim/colors ~/.vim/plugged
-
-  # Install vim-plug (https://github.com/junegunn/vim-plug)
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-  # Install plugins (https://github.com/junegunn/vim-plug/issues/675#issuecomment-328157169)
-  vim +'PlugInstall --sync' +qa
-}
-
 function setup_pipx(){
   local python_argcomplete=""
   if command -v register-python-argcomplete3 > /dev/null; then
@@ -97,7 +86,6 @@ install_flatpak
 install_dra
 install_zsh_plugins
 setup_git
-setup_vim
 setup_pipx
 
 # Cleanup
