@@ -38,7 +38,7 @@ You can customize it by editing [`configs/wezterm/wezterm.lua`](configs/wezterm/
 Alternatively you can use `gnome-terminal` and load its configuration by running:
 
 ```bash
-./bootstrap/gnome_terminal.sh configs/gnome-terminal.dconf
+./packages/gnome-terminal configs/gnome-terminal.dconf
 ```
 
 To export a new configuration follow [this article](https://gist.github.com/devmatteini/968981d95fd203905f7618ce67647e83) instructions.
