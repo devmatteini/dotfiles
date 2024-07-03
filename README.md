@@ -13,7 +13,7 @@ git clone https://github.com/devmatteini/dotfiles.git && cd dotfiles && ./bootst
 The [`bootstrap.sh`](bootstrap.sh) script execute:
 
 1. [bootstrap/file_system.sh](bootstrap/file_system.sh) to create common directories
-2. [bootstrap/create_symbolic_links.sh](bootstrap/create_symbolic_links.sh) to create symlinks to home and config files
+2. [bootstrap/configs.sh](bootstrap/configs.sh) to create symlinks to home and config files
 3. [bootstrap/dependencies.sh](bootstrap/dependencies.sh) to install basic dependencies
 
 ## Shell
