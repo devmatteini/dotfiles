@@ -11,7 +11,7 @@ fi
 [ -d "$HOME"/.cargo/bin ] && PATH="$HOME/.cargo/bin:$PATH"
 
 # Load the shell dotfiles
-for file in ~/.{bash_exports,bash_aliases,bash_options,bash_functions,bash.local}; do
+for file in ~/.{bash_exports,aliases,bash_options,functions,bash.local}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;

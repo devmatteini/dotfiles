@@ -68,6 +68,7 @@ symlink_dir() {
 
 symlink_dir_files "$CONFIGS/bash" "$HOME"
 symlink_dir_files "$CONFIGS/zsh" "$HOME"
+symlink_dir_files "$CONFIGS/shell" "$HOME"
 symlink_file "$CONFIGS/.gitconfig" "$HOME"
 symlink_file "$CONFIGS/.vimrc" "$HOME"
 symlink_file "$CONFIGS/starship.toml" "$HOME/.config"
