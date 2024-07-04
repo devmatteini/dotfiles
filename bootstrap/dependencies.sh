@@ -39,6 +39,9 @@ function setup_git(){
   # Install syntax-highlighting pager and diff output
   # https://github.com/dandavison/delta
   dra download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
+  
+  delta --generate-completion bash >"$HOME"/.local/share/bash-completion/completions/delta
+  delta --generate-completion zsh >"$HOME/.local/share/zsh-completion/_delta"
 }
 
 function setup_pipx(){
