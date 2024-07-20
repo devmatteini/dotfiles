@@ -30,6 +30,8 @@ dependabot_prefix_regex='build\(deps(-dev)?\):\sbump\s'
 # TODO: for now only rust projects are supported
 prefix_regex=$cargo_prefix_regex
 
+echo -e "Parsing commits from $start_range to $end_range\n"
+
 readarray -t COMMITS < <(_git log --pretty=format:"%s" "$start_range".."$end_range" | 
     grep -E "$prefix_regex" |
     sed -E "s/$prefix_regex//" |
