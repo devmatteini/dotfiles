@@ -3,7 +3,6 @@
 # https://github.com/atuinsh/atuin
 
 dra download -i -s "atuin-x86_64-unknown-linux-musl.tar.gz" -o ~/.local/bin/ atuinsh/atuin
-[ ! -e ~/.local/share/atuin/history.db ] && atuin import auto || echo "skip import, just update"
 
 curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bashpreexec.sh
 
