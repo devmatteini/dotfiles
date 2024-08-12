@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-TMP="/tmp/firefox-dev"
-ARCHIVE="$TMP/firefox-dev.tar.bz2"
-INSTALL_DIR="$HOME/.local/apps/firefox-dev"
+TMP="/tmp/firefox-developer"
+ARCHIVE="$TMP/firefox-developer.tar.bz2"
+INSTALL_DIR="$HOME/.local/share/firefox-developer"
 FIREFOX_BIN="$INSTALL_DIR/firefox"
 
 mkdir -p "$TMP"
@@ -11,7 +11,7 @@ mkdir -p "$INSTALL_DIR"
 cd "$TMP" || exit 1 
 echo "Temp dir: $TMP"
 
-echo "Download firefox-dev archive"
+echo "Download firefox-developer archive"
 curl -L -o "$ARCHIVE" \
     "https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US"
 
@@ -26,7 +26,7 @@ echo "Creating desktop entry"
 cat > "$HOME/.local/share/applications/firefox-developer.desktop" <<EOL
 [Desktop Entry]
 Name=Firefox Developer
-Exec=$FIREFOX_BIN
+Exec=$FIREFOX_BIN %u
 Comment=The firefox developer browser
 Terminal=false
 Icon=$INSTALL_DIR/browser/chrome/icons/default/default128.png
