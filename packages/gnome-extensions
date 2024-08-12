@@ -2,3 +2,13 @@
 
 sudo apt install -y gnome-browser-connector gnome-shell-extension-manager
 pipx install gnome-extensions-cli --system-site-packages
+
+# Install extensions
+
+gnome-extensions-cli install auto-move-windows@gnome-shell-extensions.gcampax.github.com
+gnome-extensions-cli install clipboard-history@alexsaveau.dev
+gnome-extensions-cli install impatience@gfxmonk.net
+gnome-extensions-cli install just-perfection-desktop@just-perfection
+gnome-extensions-cli install user-theme@gnome-shell-extensions.gcampax.github.com
+gnome-extensions-cli install weatherornot@somepaulo.github.io
+gnome-extensions-cli install window-title-is-back@fthx
