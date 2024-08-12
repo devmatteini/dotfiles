@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+DRA_BIN="$HOME/.local/bin/dra"
+
 # https://flathub.org/setup/Ubuntu
 function install_flatpak(){
   sudo apt install -y flatpak
@@ -22,26 +24,27 @@ function install_dra(){
 
   # Extract archive and move binary to home directory
   tar xf "$ARCHIVE" --strip-components=1 -C "$TMP_DIR"
-  mv "$TMP_DIR"/dra "$HOME"/.local/bin/dra
+  mv "$TMP_DIR"/dra "$DRA_BIN"
 
   # Post installation setup
-  dra completion bash >"$HOME"/.local/share/bash-completion/completions/dra
-  dra completion zsh >"$HOME/.local/share/zsh-completion/_dra"
+  "$DRA_BIN" completion bash >"$HOME"/.local/share/bash-completion/completions/dra
+  "$DRA_BIN" completion zsh >"$HOME/.local/share/zsh-completion/_dra"
   # Create symlink to be able to use dra as superuser (for example when installing .deb assets)
-  sudo ln -sf "$HOME"/.local/bin/dra /usr/local/bin/dra
+  sudo ln -sf "$DRA_BIN" /usr/local/bin/dra
 }
 
 function setup_git(){
+  DELTA_BIN="$HOME/.local/bin/delta"
   # Check out this guide: https://askubuntu.com/questions/773455/what-is-the-correct-way-to-use-git-with-gnome-keyring-and-https-repos
   sudo apt install -y libsecret-1-0 libsecret-1-dev
   sudo make --directory=/usr/share/doc/git/contrib/credential/libsecret
 
   # Install syntax-highlighting pager and diff output
   # https://github.com/dandavison/delta
-  dra download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
+  "$DRA_BIN" download -i -s "delta-{tag}-x86_64-unknown-linux-gnu.tar.gz" -o ~/.local/bin dandavison/delta
   
-  delta --generate-completion bash >"$HOME"/.local/share/bash-completion/completions/delta
-  delta --generate-completion zsh >"$HOME/.local/share/zsh-completion/_delta"
+  "$DELTA_BIN" --generate-completion bash >"$HOME"/.local/share/bash-completion/completions/delta
+  "$DELTA_BIN" --generate-completion zsh >"$HOME/.local/share/zsh-completion/_delta"
 }
 
 function setup_pipx(){
