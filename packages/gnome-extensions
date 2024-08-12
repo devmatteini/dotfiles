@@ -4,7 +4,6 @@ sudo apt install -y gnome-browser-connector gnome-shell-extension-manager
 pipx install gnome-extensions-cli --system-site-packages
 
 # Install extensions
-
 gnome-extensions-cli install auto-move-windows@gnome-shell-extensions.gcampax.github.com
 gnome-extensions-cli install clipboard-history@alexsaveau.dev
 gnome-extensions-cli install impatience@gfxmonk.net
@@ -12,3 +11,35 @@ gnome-extensions-cli install just-perfection-desktop@just-perfection
 gnome-extensions-cli install user-theme@gnome-shell-extensions.gcampax.github.com
 gnome-extensions-cli install weatherornot@somepaulo.github.io
 gnome-extensions-cli install window-title-is-back@fthx
+
+# Compile extensions schemas to be able to change their settings with gsettings
+# - https://github.com/basecamp/omakub/blob/54c8a75cf9e93544a1d32fa4499b57b2840fee82/install/desktop/set-gnome-extensions.sh#L22
+# - https://askubuntu.com/a/491224
+for extension in ~/.local/share/gnome-shell/extensions/* ; do
+    schema=$(find "$extension/schemas" -type "f" -name "*.gschema.xml" | head -n 1 | xargs realpath)
+    if [[ -z $schema ]]; then
+        echo "No schema found. Skipping settings for $extension"
+        exit 1
+    fi
+    sudo cp "$schema" /usr/share/glib-2.0/schemas/
+done
+
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+# Auto move windows settings
+gsettings set org.gnome.shell.extensions.auto-move-windows application-list "['code_code.desktop:1', 'jetbrains-webstorm-7e1a045a-440d-45c8-a58d-b7c78039e5db.desktop:1', 'firefox_firefox.desktop:2', 'firefox-developer.desktop:2', 'spotify_spotify.desktop:3', 'com.discordapp.Discord.desktop:3', 'google-chrome.desktop:2']"
+
+# # Clipboard History settings
+gsettings set org.gnome.shell.extensions.clipboard-history paste-on-selection false
+gsettings set org.gnome.shell.extensions.clipboard-history next-entry "['<Control>F12']"
+gsettings set org.gnome.shell.extensions.clipboard-history prev-entry "['<Control>F11']"
+
+# # Impatience settings
+gsettings set org.gnome.shell.extensions.net.gfxmonk.impatience speed-factor 0.5
+
+# # Weather or Not settings
+gsettings set org.gnome.shell.extensions.weatherornot position 'left'
+
+# # Window title is back settings
+gsettings set org.gnome.shell.extensions.window-title-is-back show-title false
+gsettings set org.gnome.shell.extensions.window-title-is-back indicator-width 30
