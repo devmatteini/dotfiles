@@ -49,11 +49,13 @@ gsettings set org.gnome.shell.extensions.window-title-is-back indicator-width 30
 
 # system-monitor-next settings
 gsettings set org.gnome.shell.extensions.system-monitor cpu-style 'digit'
+gsettings set org.gnome.shell.extensions.system-monitor cpu-refresh-time 3500
 gsettings set org.gnome.shell.extensions.system-monitor disk-show-menu false
 gsettings set org.gnome.shell.extensions.system-monitor disk-show-text false
 gsettings set org.gnome.shell.extensions.system-monitor gpu-show-text false
 gsettings set org.gnome.shell.extensions.system-monitor icon-display false
 gsettings set org.gnome.shell.extensions.system-monitor memory-style 'digit'
+gsettings set org.gnome.shell.extensions.system-monitor memory-refresh-time 3500
 gsettings set org.gnome.shell.extensions.system-monitor net-display false
 gsettings set org.gnome.shell.extensions.system-monitor net-show-menu false
 gsettings set org.gnome.shell.extensions.system-monitor net-show-text false
