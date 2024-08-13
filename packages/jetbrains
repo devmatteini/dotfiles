@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://intellij-support.jetbrains.com/hc/en-us/articles/15268113529362-Inotify-Watches-Limit-Linux
+echo 'fs.inotify.max_user_watches = 524288' | sudo tee /etc/sysctl.d/jetbrains.conf > /dev/null
+sudo sysctl -p --system
