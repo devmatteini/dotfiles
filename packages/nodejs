@@ -38,3 +38,6 @@ EOL
 
 curl -o ~/.local/share/bash-completion/completions/yarn https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash
 curl -o ~/.local/share/zsh-completion/_yarn https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/yarn/_yarn
+
+mise exec node@20 -- pnpm completion bash > ~/.local/share/bash-completion/completions/pnpm
+mise exec node@20 -- pnpm completion zsh > ~/.local/share/zsh-completion/_pnpm
