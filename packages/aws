@@ -9,12 +9,12 @@ rm -rf awscliv2.zip aws/
 
 # Shell completions
 
-cat ~/.local/share/bash-completion/completions/aws <<'EOL'
+cat > ~/.local/share/bash-completion/completions/aws <<'EOL'
 #!/usr/bin/env bash
 complete -C ~/.local/bin/aws_completer aws
 EOL
 
-cat ~/.local/share/zsh-completion/_aws <<'EOL'
+cat > ~/.local/share/zsh-completion/_aws <<'EOL'
 #!/usr/bin/env bash
 complete -C ~/.local/bin/aws_completer aws
 EOL
