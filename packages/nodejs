@@ -9,6 +9,9 @@ mise use -g node@20
 mise exec node@18 -- corepack enable
 mise exec node@20 -- corepack enable
 
+# Sometimes after running corepack enable the shims are not updated
+mise reshim
+
 # Shell completions
 mise exec node@20 -- npm completion > ~/.local/share/bash-completion/completions/npm
 
