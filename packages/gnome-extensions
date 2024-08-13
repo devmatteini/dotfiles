@@ -18,8 +18,8 @@ gnome-extensions-cli install window-title-is-back@fthx
 for extension in ~/.local/share/gnome-shell/extensions/* ; do
     schema=$(find "$extension/schemas" -type "f" -name "*.gschema.xml" | head -n 1 | xargs realpath)
     if [[ -z $schema ]]; then
-        echo "No schema found. Skipping settings for $extension"
-        exit 1
+        echo "No schema found for $extension. Skipped"
+        continue
     fi
     sudo cp "$schema" /usr/share/glib-2.0/schemas/
 done
