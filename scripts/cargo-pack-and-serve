@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-tar czf "$1.tar.gz" --exclude="target" --exclude=".idea" --exclude=".vscode" .
-
-miniserve "$1.tar.gz"
