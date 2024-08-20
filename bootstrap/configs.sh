@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 if [ -z "$1" ];then
     echo "Usage: $(basename "${BASH_SOURCE[0]}") <BASEDIR>"
     exit 1
@@ -13,7 +15,7 @@ create_symlink() {
     local source_file=$1
     local target_file=$2
 
-    if [[ $DEBUG != "true" ]]; then
+    if [[ ${DEBUG-} != "true" ]]; then
         ln -sfn "$source_file" "$target_file"
     else
         echo "$source_file -> $target_file"
