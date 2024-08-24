@@ -46,6 +46,11 @@ config.window_padding = {
   top = 2,
   bottom = 2,
 }
+
+config.tab_bar_at_bottom = true
+config.use_fancy_tab_bar = false
+config.tab_and_split_indices_are_zero_based = true
+
 config.inactive_pane_hsb = {
   brightness = 0.5,
 }
