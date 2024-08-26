@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo apt install -y clevis clevis-tpm2 clevis-luks clevis-initramfs initramfs-tools

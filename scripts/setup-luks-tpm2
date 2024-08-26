@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# DOCS:
+# - https://askubuntu.com/a/1475182
+# - https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/
+# - https://github.com/latchset/clevis
+# - https://wiki.archlinux.org/title/Clevis
+# - https://wiki.archlinux.org/title/Trusted_Platform_Module
+
+if ! command -v clevis >/dev/null 2>&1; then
+    echo "Missing clevis package"
+    exit 1
+fi
+
+if [[ -z $1 ]]; then
+    echo "Missing LUKS device path (e.g /dev/nvme0n1p3)"
+    exit 1
+fi
+
+LUKS_DEVICE=$1
+
+echo -n "Enter boot passphrase password: "
+read -s BOOT_PASSPHRASE
+
+# https://wiki.archlinux.org/title/Trusted_Platform_Module
+# pcr_id 1 - Core System Firmware data (aka UEFI settings)
+# pcr_id 7 - Secure Boot State
+# If these values changes, the TPM key needs to be regenerated
+echo -e "\nBinding LUKS device $LUKS_DEVICE to TPM2"
+sudo clevis luks bind -d "$LUKS_DEVICE" tpm2 '{"pcr_bank":"sha256","pcr_ids":"1,7"}' <<< "$BOOT_PASSPHRASE"
+
+echo -e "\nUpdating initramfs to allow automatic decryption on boot"
+sudo update-initramfs -u -k all
+
+echo -e "\nList pins for LUKS device $LUKS_DEVICE"
+sudo clevis luks list -d "$LUKS_DEVICE"
