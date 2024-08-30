@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo apt install -y gnome-browser-connector gnome-shell-extension-manager
+sudo apt install -y gnome-shell-extension-manager
 pipx install gnome-extensions-cli --system-site-packages
 
 # Install extensions
