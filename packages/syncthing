@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+sudo apt install -y syncthing
+
+# Setup autostart with systemd https://docs.syncthing.net/users/autostart.html#linux
+# Running as a user service ensures that Syncthing only starts after the user has logged into the system
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
+
+systemctl --no-pager --user status syncthing.service
