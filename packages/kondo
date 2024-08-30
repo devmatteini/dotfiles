@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# https://github.com/tbillington/kondo
+
+dra download -a -i -o ~/.local/bin/ tbillington/kondo
+
+kondo --completions bash > ~/.local/share/bash-completion/completions/kondo
+kondo --completions zsh > ~/.local/share/zsh-completion/_kondo
