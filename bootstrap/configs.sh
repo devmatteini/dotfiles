@@ -27,6 +27,8 @@ symlink_file() {
     file=$1
     target_directory=$2
 
+    mkdir -p "$target_directory"
+
     echo -e "\e[1;34m[i] Creating symlinks for '$file' in '$target_directory'\e[0m"
 
     filename=$(basename "$file")
@@ -41,6 +43,8 @@ symlink_file() {
 symlink_dir_files() {
     local directory=$1
     local target_directory=$2
+
+    mkdir -p "$target_directory"
 
     echo -e "\e[1;34m[i] Creating symlinks for '$directory' in '$target_directory'\e[0m"
 
@@ -64,7 +68,6 @@ symlink_dir() {
     dir_name=$(basename "$directory")
     target_dir="$target_directory/$dir_name"
 
-    mkdir -p "$target_dir"
     symlink_dir_files "$directory" "$target_dir"
 }
 
