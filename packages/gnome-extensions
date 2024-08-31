@@ -45,7 +45,9 @@ gsettings set org.gnome.shell.extensions.weatherornot position 'left'
 
 # Window title is back settings
 gsettings set org.gnome.shell.extensions.window-title-is-back show-title false
-gsettings set org.gnome.shell.extensions.window-title-is-back indicator-width 30
+gsettings set org.gnome.shell.extensions.window-title-is-back fixed-width false
+gsettings set org.gnome.shell.extensions.window-title-is-back colored-icon true
+gsettings set org.gnome.shell.extensions.window-title-is-back ease-time 0
 
 # system-monitor-next settings
 gsettings set org.gnome.shell.extensions.system-monitor cpu-style 'digit'
