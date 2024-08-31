@@ -6,7 +6,6 @@ pipx install gnome-extensions-cli --system-site-packages
 # Install extensions
 gnome-extensions-cli install auto-move-windows@gnome-shell-extensions.gcampax.github.com
 gnome-extensions-cli install clipboard-history@alexsaveau.dev
-gnome-extensions-cli install impatience@gfxmonk.net
 gnome-extensions-cli install just-perfection-desktop@just-perfection
 gnome-extensions-cli install user-theme@gnome-shell-extensions.gcampax.github.com
 gnome-extensions-cli install weatherornot@somepaulo.github.io
@@ -36,9 +35,6 @@ gsettings set org.gnome.shell.extensions.auto-move-windows application-list "['c
 gsettings set org.gnome.shell.extensions.clipboard-history paste-on-selection false
 gsettings set org.gnome.shell.extensions.clipboard-history next-entry "['<Control>F12']"
 gsettings set org.gnome.shell.extensions.clipboard-history prev-entry "['<Control>F11']"
-
-# Impatience settings
-gsettings set org.gnome.shell.extensions.net.gfxmonk.impatience speed-factor 0.5
 
 # Weather or Not settings
 gsettings set org.gnome.shell.extensions.weatherornot position 'left'
