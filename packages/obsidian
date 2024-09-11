@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo dra download -s "obsidian_{tag}_amd64.deb" -i obsidianmd/obsidian-releases
