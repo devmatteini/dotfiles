@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://cli.github.com/
+
+sudo apt install -y gh
