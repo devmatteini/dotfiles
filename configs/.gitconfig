@@ -118,6 +118,8 @@
 	sl = stash list
 	# Stash all with message (including untracked files) 
 	sp = stash push -u -m
+	# Stash show with patch diff (including untracked files) 
+	sshow = stash show -u -p
 
 	# List aliases
 	aliases = config --get-regexp alias
