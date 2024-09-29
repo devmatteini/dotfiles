@@ -2,8 +2,7 @@
 
 # https://github.com/dbrgn/tealdeer
 
-dra download -s tealdeer-linux-x86_64-musl -o ~/.local/bin/tldr dbrgn/tealdeer
-chmod +x ~/.local/bin/tldr
+dra download -s tealdeer-linux-x86_64-musl -i -o ~/.local/bin/tldr dbrgn/tealdeer
 
 # Download bash completion
 dra download -s completions_bash -o ~/.local/share/bash-completion/completions/tldr dbrgn/tealdeer

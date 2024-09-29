@@ -2,8 +2,7 @@
 
 # https://github.com/jdx/mise
 
-dra download -s "mise-v{tag}-linux-x64-musl" -o ~/.local/bin/mise jdx/mise
-chmod +x ~/.local/bin/mise
+dra download -s "mise-v{tag}-linux-x64-musl" -i -o ~/.local/bin/mise jdx/mise
 
 # This tool (same author of mise) is needed for shell completions to work
 mise use -g usage

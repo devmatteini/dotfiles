@@ -2,8 +2,7 @@
 
 # https://github.com/svenstaro/miniserve
 
-dra download -s "miniserve-{tag}-x86_64-unknown-linux-gnu" -o ~/.local/bin/miniserve svenstaro/miniserve
-chmod +x ~/.local/bin/miniserve
+dra download -s "miniserve-{tag}-x86_64-unknown-linux-gnu" -i -o ~/.local/bin/miniserve svenstaro/miniserve
 
 miniserve --print-completions bash > ~/.local/share/bash-completion/completions/miniserve
 miniserve --print-completions zsh > ~/.local/share/zsh-completion/_miniserve
