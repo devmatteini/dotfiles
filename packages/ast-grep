@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# https://github.com/ast-grep/ast-grep
+dra download -a -i -o ~/.local/bin/ ast-grep/ast-grep
