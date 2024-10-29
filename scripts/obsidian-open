@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# obsidian-open - Open a note in Obsidian from cli
+# Usage: obsidian-open [note]
+# If no argument is passed, the user can select a note from the vault
+
+VAULT_NAME="cosimo"
+VAULT_DIR="$HOME/Documents/Notes/$VAULT_NAME"
+
+note=""
+
+if [[ -z "$1" ]]; then
+    # List all files in vault directory. Only keep the relative path without the extension
+    note=$(find "$VAULT_DIR" -maxdepth 2 -type "f,l" -name "*.md" -printf '%P\n' | sed "s/\.md//" | sort | fzf --cycle --layout=reverse)
+else
+    if [[ ! -e "$VAULT_DIR/$1.md" ]]; then
+        echo "The note '$VAULT_DIR/$1.md' not exists"
+        exit 1
+    fi
+    note="$1"
+fi
+
+if [[ -z $note ]]; then
+    echo "No note selected"
+    exit 1
+fi
+
+
+encoded_note=$(python3 -c 'import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))' "$note")
+
+nohup xdg-open "obsidian://open?vault=$VAULT_NAME&file=$encoded_note" >/dev/null 2>&1 &
