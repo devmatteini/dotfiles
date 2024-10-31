@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if ! command -v mise > /dev/null; then
+  echo "mise is required to run this script"
+  exit 1
+fi
+
+mise install java@21
+
+mise use -g java@21
