@@ -4,6 +4,10 @@ mkcd(){
     mkdir -p "$1" && cd "$_" || return 1
 }
 
+cdtemp(){
+    cd "$(mktemp --directory)" || return 1
+}
+
 # usage: cat file.txt | copy-to-clipboard or copy-to-clipboard "text to copy"
 copy-to-clipboard(){
     copy_command=""
