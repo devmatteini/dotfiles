@@ -6,5 +6,7 @@ if ! command -v mise > /dev/null; then
 fi
 
 mise install java@21
+mise install maven@3.9
 
 mise use -g java@21
+mise use -g maven@3.9
