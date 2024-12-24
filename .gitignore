@@ -3,3 +3,6 @@ __pycache__/
 # Editors and IDEs
 .idea/
 .vscode/
+
+# Generated files
+ubuntu-autoinstall.yaml
