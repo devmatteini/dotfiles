@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+sudo apt install -y virt-manager
+
+echo "You need to reboot before using virt-manager"
