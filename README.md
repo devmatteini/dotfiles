@@ -18,9 +18,9 @@ The [`bootstrap.sh`](bootstrap.sh) script execute:
 
 ### Ubuntu autoinstall
 
-1. Boot into Live Ubuntu ISO
-2. Setup Language, Accessibility, Keyboard, Network and then select "Try Ubuntu"
-3. Manually test that everything works as expected
+1. Boot into Live Ubuntu image
+2. Configure Language, Accessibility, Keyboard, Network and then select **Try Ubuntu**
+3. Verify that the system works as expected
 4. Download and run the [`ubuntu-autoinstall.sh`](bootstrap/ubuntu-autoinstall.sh) script to generate the [configuration file](https://canonical-subiquity.readthedocs-hosted.com/en/latest/reference/autoinstall-reference.html)
 
 ```bash
@@ -29,8 +29,8 @@ chmod +x ubuntu-autoinstall.sh
 ./ubuntu-autoinstall.sh
 ```
 
-5. Open "Install Ubuntu" and progress until "Type of installation" section
-6. Select "Automated Install" and paste the configuration file URI from the script output
+5. Open **Install Ubuntu** app and proceed to **Type of installation** section
+6. Select **Automated Install** and paste the configuration file URI from the script output
 7. Wait for validation, review the generated file and proceed with the installation
 
 ## Shell
