@@ -15,3 +15,10 @@ rm get-docker.sh
 sudo groupadd -f docker
 sudo usermod -aG docker "$USER"
 newgrp docker
+
+# use local logging driver to prevent disk-exhaustion
+# local logging driver performs log-rotation & compresses log files by default.
+# https://docs.docker.com/config/containers/logging/configure/
+sudo touch /etc/docker/daemon.json
+echo '{"log-driver": "local", "log-opts": {"max-size": "10m"}}' \
+    | sudo tee /etc/docker/daemon.json > /dev/null
