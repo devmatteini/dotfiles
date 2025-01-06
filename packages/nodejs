@@ -5,20 +5,22 @@ if ! command -v mise > /dev/null; then
   exit 1
 fi
 
-mise install node@18 node@20
+DEFAULT_VERSION=node@20
+
+mise install node@18 "$DEFAULT_VERSION"
 
 # Default version
-mise use -g node@20
+mise use -g "$DEFAULT_VERSION"
 
 # Activate node corepack
 mise exec node@18 -- corepack enable
-mise exec node@20 -- corepack enable
+mise exec "$DEFAULT_VERSION" -- corepack enable
 
 # Sometimes after running corepack enable the shims are not updated
 mise reshim
 
 # Shell completions
-mise exec node@20 -- npm completion > ~/.local/share/bash-completion/completions/npm
+mise exec "$DEFAULT_VERSION" -- npm completion > ~/.local/share/bash-completion/completions/npm
 
 # NOTE: this is a snippet from `npm completion` output but works fine even with `bashcompinit` in .zshrc
 cat > ~/.local/share/zsh-completion/_npm <<'EOL'
@@ -44,5 +46,5 @@ EOL
 curl -o ~/.local/share/bash-completion/completions/yarn https://raw.githubusercontent.com/dsifford/yarn-completion/master/yarn-completion.bash
 curl -o ~/.local/share/zsh-completion/_yarn https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/yarn/_yarn
 
-mise exec node@20 -- pnpm completion bash > ~/.local/share/bash-completion/completions/pnpm
-mise exec node@20 -- pnpm completion zsh > ~/.local/share/zsh-completion/_pnpm
+mise exec "$DEFAULT_VERSION" -- pnpm completion bash > ~/.local/share/bash-completion/completions/pnpm
+mise exec "$DEFAULT_VERSION" -- pnpm completion zsh > ~/.local/share/zsh-completion/_pnpm
