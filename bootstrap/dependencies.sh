@@ -12,19 +12,10 @@ function install_flatpak(){
 
 # https://github.com/devmatteini/dra
 function install_dra(){
-  TMP_DIR=$(mktemp --directory)
-  ARCHIVE="$TMP_DIR/dra.tar.gz"
-
-  # Download latest linux musl release asset (https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8)
-  curl -s https://api.github.com/repos/devmatteini/dra/releases/latest \
-  | grep "browser_download_url.*x86_64-unknown-linux-musl" \
-  | cut -d : -f 2,3 \
-  | tr -d \" \
-  | wget -O "$ARCHIVE" -i -
-
-  # Extract archive and move binary to home directory
-  tar xf "$ARCHIVE" --strip-components=1 -C "$TMP_DIR"
-  mv "$TMP_DIR"/dra "$DRA_BIN"
+  curl --proto '=https' \
+    --tlsv1.2 \
+    -sSf https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh | \
+    bash -s -- --to "$DRA_BIN"
 
   # Post installation setup
   "$DRA_BIN" completion bash >"$HOME"/.local/share/bash-completion/completions/dra
