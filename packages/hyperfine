@@ -2,4 +2,13 @@
 
 # https://github.com/sharkdp/hyperfine
 
-dra download -i -s "hyperfine-v{tag}-x86_64-unknown-linux-musl.tar.gz" -o ~/.local/bin sharkdp/hyperfine
+TMP_DIR=$(mktemp --directory)
+ARCHIVE="$TMP_DIR/hyperfine.tar.gz"
+
+dra download -s "hyperfine-v{tag}-x86_64-unknown-linux-musl.tar.gz" -o "$ARCHIVE" sharkdp/hyperfine
+
+tar xf "$ARCHIVE" --strip-components=1 -C "$TMP_DIR"
+
+mv "$TMP_DIR/hyperfine" ~/.local/bin/hyperfine
+mv "$TMP_DIR/autocomplete/hyperfine.bash" ~/.local/share/bash-completion/completions/hyperfine
+mv "$TMP_DIR/autocomplete/_hyperfine" ~/.local/share/zsh-completion/_hyperfine
