@@ -3,3 +3,6 @@
 # https://github.com/starship/starship
 
 dra download -s starship-x86_64-unknown-linux-gnu.tar.gz -i -o ~/.local/bin starship/starship
+
+starship completions bash > ~/.local/share/bash-completion/completions/starship
+starship completions zsh > ~/.local/share/zsh-completion/_starship
