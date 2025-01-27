@@ -5,7 +5,9 @@
 dra download -s "mise-v{tag}-linux-x64-musl" -i -o ~/.local/bin/mise jdx/mise
 
 # This tool (same author of mise) is needed for shell completions to work
+mise install usage
 mise use -g usage
 
+# NOTE: if tab completion breaks, run `mise remove usage --all` and the above commands again
 mise completion bash > ~/.local/share/bash-completion/completions/mise
 mise completion zsh > ~/.local/share/zsh-completion/_mise
