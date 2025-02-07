@@ -1,21 +1,32 @@
 #!/usr/bin/env bash
 
-# This script install firefox as .deb package from mozilla ppa.
-# The problem with the snap version was making gnome extensions work! 
-# Source: https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
+# This script install firefox as .deb package from mozilla ppa, replacing ubuntu snap version
+# Source:
+# - https://support.mozilla.org/en-US/kb/install-firefox-linux#w_install-firefox-deb-package-for-debian-based-distributions-recommended
+# - https://askubuntu.com/a/1516224
 
 sudo snap remove --purge firefox
 
-sudo add-apt-repository -y ppa:mozillateam/ppa
+# 1. Create a directory to store APT repository keys if it doesn't exist
+sudo install -d -m 0755 /etc/apt/keyrings
 
-# Alter the Firefox package priority to ensure the PPA/deb/apt version of Firefox is preferred
+# 2. Import the Mozilla APT repository signing key
+wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+
+# 3. The fingerprint should be 35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3. You may check it with the following command
+gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk '/pub/{getline; gsub(/^ +| +$/,""); if($0 == "35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3") print "\nThe key fingerprint matches ("$0").\n"; else print "\nVerification failed: the fingerprint ("$0") does not match the expected one.\n"}'
+
+# 4. Next, add the Mozilla APT repository to your sources list
+echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee /etc/apt/sources.list.d/mozilla.list > /dev/null
+
+# 5. Configure APT to prioritize packages from the Mozilla repository
 echo '
-Package: *
-Pin: release o=LP-PPA-mozillateam
-Pin-Priority: 1001
-' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+Package: firefox*
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+' | sudo tee /etc/apt/preferences.d/mozilla > /dev/null
 
-# Make future Firefox upgrades installed automatically
-echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+echo 'Unattended-Upgrade::Origins-Pattern { "archive=mozilla"; };' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
 
-sudo apt install -y firefox
+# 6. Update your package list, and install the Firefox .deb package
+sudo apt-get update && sudo apt-get install -y --allow-downgrades firefox
