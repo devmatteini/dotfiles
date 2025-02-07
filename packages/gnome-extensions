@@ -57,3 +57,9 @@ gsettings set org.gnome.shell.extensions.system-monitor memory-refresh-time 3500
 gsettings set org.gnome.shell.extensions.system-monitor net-display false
 gsettings set org.gnome.shell.extensions.system-monitor net-show-menu false
 gsettings set org.gnome.shell.extensions.system-monitor net-show-text false
+
+# ubuntu dash-to-dock settings
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
+gsettings set org.gnome.shell.extensions.dash-to-dock hotkeys-show-dock false
+gsettings set org.gnome.shell.extensions.dash-to-dock show-trash false
