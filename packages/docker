@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+RESET="\e[0m"
+BOLD="\e[1;37m"
+
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
 
 if command -v docker > /dev/null; then
@@ -14,4 +17,4 @@ rm get-docker.sh
 # User group for docker
 sudo groupadd -f docker
 sudo usermod -aG docker "$USER"
-newgrp docker
+echo -e "${BOLD}[docker] Remember to log out and log back in so that docker group membership is re-evaluated${RESET}"
