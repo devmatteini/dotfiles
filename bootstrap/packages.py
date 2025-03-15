@@ -2,6 +2,8 @@
 
 from os import path
 import subprocess
+import argparse
+from typing import Literal
 
 RESET = "\033[0m"
 RED = "\033[1;31m"
@@ -36,11 +38,35 @@ ESSENTIAL_PACKAGES = [
     "wezterm",
 ]
 
+DESKTOP_PACKAGES = []
+
+parser = argparse.ArgumentParser(description="Install packages")
+parser.add_argument(
+    "--preset",
+    "-p",
+    choices=["essential", "desktop"],
+    default="essential",
+    help="Packages preset to install",
+)
+
+
+def packages_by_preset(preset: Literal["essential", "desktop"]) -> list[str]:
+    match preset:
+        case "essential":
+            return ESSENTIAL_PACKAGES
+        case "desktop":
+            return DESKTOP_PACKAGES
+        case _:
+            raise ValueError(f"Invalid preset: {preset}")
+
 
 def main():
+    args = parser.parse_args()
+
+    packages = packages_by_preset(args.preset)
     errors = []
 
-    for package in ESSENTIAL_PACKAGES:
+    for package in packages:
         install_script = path.join(PACKAGES_DIR, package)
 
         print(f"Installing {BLUE}{package}{RESET}...")
