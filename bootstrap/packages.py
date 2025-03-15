@@ -38,7 +38,17 @@ ESSENTIAL_PACKAGES = [
     "wezterm",
 ]
 
-DESKTOP_PACKAGES = []
+DESKTOP_PACKAGES = [
+    "gimp",
+    "gnome-extensions",
+    "gnome-weather",
+    "google-chrome",
+    "jetbrains",
+    "libreoffice",
+    "localsend",
+    "obsidian",
+    "spotify",
+]
 
 parser = argparse.ArgumentParser(description="Install packages")
 parser.add_argument(
