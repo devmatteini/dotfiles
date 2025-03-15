@@ -12,6 +12,7 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 "$BASEDIR"/bootstrap/file_system.sh
 "$BASEDIR"/bootstrap/configs.sh "$BASEDIR"
 "$BASEDIR"/bootstrap/dependencies.sh
+"$BASEDIR"/bootstrap/gnome-settings.sh
 
 echo -e "${green}Bootstrap completed!$reset\n"
 echo -e "If you want to set ${underline}zsh${reset} as default shell run:\n${white}chsh -s \$(which zsh)${reset}"
