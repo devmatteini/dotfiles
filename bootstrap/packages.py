@@ -44,6 +44,7 @@ DESKTOP_PACKAGES = [
     "gnome-weather",
     "google-chrome",
     "jetbrains",
+    "jetbrains-toolbox",
     "libreoffice",
     "localsend",
     "obsidian",
