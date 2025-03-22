@@ -51,6 +51,7 @@ source:
 storage:
   layout:
     name: "lvm"
+    sizing-policy: all
     password: "$storage_password"
 identity:
   hostname: "$hostname"
