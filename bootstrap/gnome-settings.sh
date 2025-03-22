@@ -35,4 +35,7 @@ gsettings set org.gnome.TextEditor show-map true
 gsettings set org.gnome.TextEditor style-scheme 'Yaru-dark'
 gsettings set org.gnome.TextEditor style-variant 'dark'
 
+# Weather
+gsettings set org.gnome.GWeather4 temperature-unit 'centigrade'
+
 echo -e "${GREEN}Loaded GNOME settings!${RESET}"
