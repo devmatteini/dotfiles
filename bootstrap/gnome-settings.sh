@@ -24,4 +24,15 @@ gsettings set org.gnome.desktop.peripherals.touchpad speed 0.44852941176470584
 gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('xkb', 'it')]"
 gsettings set org.gnome.desktop.input-sources per-window false
 
+# Text Editor
+gsettings set org.gnome.TextEditor use-system-font false
+gsettings set org.gnome.TextEditor custom-font 'Fira Code 16'
+gsettings set org.gnome.TextEditor highlight-current-line true
+gsettings set org.gnome.TextEditor indent-style 'space'
+gsettings set org.gnome.TextEditor tab-width 2
+gsettings set org.gnome.TextEditor restore-session false
+gsettings set org.gnome.TextEditor show-map true
+gsettings set org.gnome.TextEditor style-scheme 'Yaru-dark'
+gsettings set org.gnome.TextEditor style-variant 'dark'
+
 echo -e "${GREEN}Loaded GNOME settings!${RESET}"
