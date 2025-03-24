@@ -36,3 +36,6 @@ alias upgradable="apt list --upgradable"
 # benchmarks
 alias bench_shell="hyperfine --warmup 1 -r 10 'bash -i -c exit' 'zsh -i -c exit'"
 alias bench_zsh="hyperfine --warmup 1 -r 10 'zsh -i -c exit'"
+
+# node.js
+alias pn="pnpm"
