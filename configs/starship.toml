@@ -23,3 +23,4 @@ symbol = "󰟓 "
 command = 'basename "$AWS_CONFIG_FILE"'
 when = 'test -n "$AWS_CONFIG_FILE"'
 style = "bold yellow"
+symbol = " "
