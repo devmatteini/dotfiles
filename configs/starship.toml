@@ -18,3 +18,8 @@ style = "bold #afd7ff"
 
 [golang]
 symbol = "󰟓 "
+
+[custom.aws_config_file]
+command = 'basename "$AWS_CONFIG_FILE"'
+when = 'test -n "$AWS_CONFIG_FILE"'
+style = "bold yellow"
