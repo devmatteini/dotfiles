@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+fwupdmgr refresh --force
+fwupdmgr get-updates
+fwupdmgr update
