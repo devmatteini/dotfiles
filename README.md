@@ -14,7 +14,9 @@ The [`bootstrap.sh`](bootstrap.sh) script execute:
 
 1. [bootstrap/file_system.sh](bootstrap/file_system.sh) to create common directories
 2. [bootstrap/configs.sh](bootstrap/configs.sh) to create symlinks to home and config files
-3. [bootstrap/dependencies.sh](bootstrap/dependencies.sh) to install basic dependencies
+3. [bootstrap/system-configs.sh](bootstrap/system-configs.sh) to create symlinks for system configs
+4. [bootstrap/dependencies.sh](bootstrap/dependencies.sh) to install basic dependencies
+5. [bootstrap/gnome-settings.sh](bootstrap/gnome-settings.sh) to configure GNOME settings
 
 ### Ubuntu autoinstall
 
