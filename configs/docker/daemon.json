@@ -1,0 +1,6 @@
+{
+    "log-driver": "local",
+    "features": {
+        "containerd-snapshotter": true
+    }
+}
