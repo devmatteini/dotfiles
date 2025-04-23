@@ -18,3 +18,13 @@ rm get-docker.sh
 sudo groupadd -f docker
 sudo usermod -aG docker "$USER"
 echo -e "${BOLD}[docker] Remember to log out and log back in so that docker group membership is re-evaluated${RESET}"
+
+# https://github.com/docker/docker-credential-helpers
+dra download -s "docker-credential-secretservice-v{tag}.linux-amd64" -i -o ~/.local/bin/docker-credential-secretservice docker/docker-credential-helpers
+
+# NOTE: this file is not part of configs because docker modifies it when you login to a registry
+cat > "$HOME/.docker/config.json" <<EOF
+{
+	"credsStore": "secretservice"
+}
+EOF
