@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://github.com/jqlang/jq
+
+sudo apt install -y jq
