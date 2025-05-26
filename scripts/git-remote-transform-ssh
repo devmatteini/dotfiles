@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPO="$PWD/.git"
+REMOTE_NAME="origin"
+
+if [[ ! -d "$REPO" ]]; then
+    echo "Error: git repository not found"
+    exit 1
+fi
+
+if [[ -n "${1:-}" ]]; then
+    REMOTE_NAME="$1"
+fi
+
+remote_url=$(git remote get-url "$REMOTE_NAME")
+
+if [[ "$remote_url" =~ ^git@ ]]; then
+    echo "Git remote is already using SSH. Nothing to do."
+    exit 0
+fi
+
+function to_ssh_remote() {
+    domain='([^/]+)'
+    repo='(.+)'
+    https_url="^https://$domain/$repo"
+    rewrite_to_ssh='git@\1:\2'
+
+    echo "$1" | sed -E "s|$https_url|$rewrite_to_ssh|"
+}
+
+ssh_remote_url=$(to_ssh_remote "$remote_url")
+
+git remote set-url "$REMOTE_NAME" "$ssh_remote_url"
