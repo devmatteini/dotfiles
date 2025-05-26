@@ -37,7 +37,7 @@ config.font_size = 15.0
 config.color_scheme = "GruvboxDarkHard"
 config.force_reverse_video_cursor = true
 
-config.scrollback_lines = 30000
+config.scrollback_lines = 100000
 config.enable_scroll_bar = true
 config.min_scroll_bar_height = "1cell"
 config.window_padding = {
