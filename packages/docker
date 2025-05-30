@@ -23,6 +23,7 @@ echo -e "${BOLD}[docker] Remember to log out and log back in so that docker grou
 dra download -s "docker-credential-secretservice-v{tag}.linux-amd64" -i -o ~/.local/bin/docker-credential-secretservice docker/docker-credential-helpers
 
 # NOTE: this file is not part of configs because docker modifies it when you login to a registry
+mkdir -p "$HOME/.docker"
 cat > "$HOME/.docker/config.json" <<EOF
 {
 	"credsStore": "secretservice"
