@@ -82,3 +82,7 @@ gh_clear_cache(){
 vercel_delete_previews(){
     npx vercel ls --environment preview --no-color 2>/dev/null | xargs -I {} npx vercel rm --yes {}
 }
+
+debug_command(){
+    printf "%s\n" "$@"
+}
