@@ -2,7 +2,7 @@
 
 # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-ubuntu-net-backports-package-repository
 sudo add-apt-repository -y ppa:dotnet/backports
-sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-sdk-6.0 aspnetcore-runtime-6.0
+sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-sdk-9.0 aspnetcore-runtime-9.0
 
 # https://learn.microsoft.com/en-us/dotnet/core/tools/enable-tab-autocomplete#zsh
 cat > ~/.local/share/zsh-completion/_dotnet <<'EOL'
