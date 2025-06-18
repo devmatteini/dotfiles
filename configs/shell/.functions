@@ -86,3 +86,7 @@ vercel_delete_previews(){
 debug_command(){
     printf "%s\n" "$@"
 }
+
+aws_sqs_messages() {
+    aws sqs get-queue-attributes --attribute-names ApproximateNumberOfMessages --queue-url "$1"
+}
