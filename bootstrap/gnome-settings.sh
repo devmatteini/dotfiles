@@ -19,6 +19,7 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 # Mouse & Touchpad
 gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true
 gsettings set org.gnome.desktop.peripherals.touchpad speed 0.44852941176470584
+gsettings set org.gnome.desktop.peripherals.touchpad click-method 'fingers'
 
 # Keyboard
 gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('xkb', 'it')]"
