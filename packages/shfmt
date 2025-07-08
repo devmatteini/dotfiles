@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+dra download -a -i -o ~/.local/bin/shfmt mvdan/sh
+
