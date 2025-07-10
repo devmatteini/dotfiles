@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $(basename "$0") <FILE_PATH>"
+    exit 1
+fi
+
+FILE_PATH=$1
+
+cat >"$FILE_PATH" <<'EOL'
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+EOL
+
+chmod +x "$FILE_PATH"
