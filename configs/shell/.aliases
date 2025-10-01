@@ -39,3 +39,4 @@ alias bench_zsh="hyperfine --warmup 1 -r 10 'zsh -i -c exit'"
 
 # node.js
 alias pn="pnpm"
+alias pnx="pnpm exec"
