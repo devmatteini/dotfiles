@@ -9,3 +9,5 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 export EDITOR="vim"
 export DOCKER_BUILDKIT=1
+
+export FLIX_HOME="$XDG_DATA_HOME/flix"
