@@ -10,7 +10,6 @@ path=(
     "$HOME/.local/bin"
     "$HOME/dotfiles/scripts"
     "$HOME/.cargo/bin"
-    "$HOME/.local/share/mise/shims"
     "$HOME/.local/share/JetBrains/Toolbox/scripts/"
     $path
 )
@@ -101,6 +100,10 @@ fi
 
 if command -v aws aws_completer > /dev/null; then
     complete -C aws_completer aws
+fi
+
+if command -v mise > /dev/null; then
+    eval "$(mise activate zsh)"
 fi
 
 # --------------------
