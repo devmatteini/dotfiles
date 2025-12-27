@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $0 <video> [output-image]"
+    echo "Missing video input path"
+    exit 1
+fi
+
+INPUT_VIDEO=$1
+OUTPUT_IMAGE=${2:-first_frame.jpg}
+
+ffmpeg -i "$INPUT_VIDEO" -vf "select=eq(n\,0)" -q:v 3 -frames:v 1 "$OUTPUT_IMAGE"
