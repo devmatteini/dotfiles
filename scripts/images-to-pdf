@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $0 <images>"
+    echo "Missing image(s). Pass list of images or a glob pattern"
+    exit 1
+fi
+
+img2pdf "$@" --output combined.pdf
