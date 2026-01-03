@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $0 <input> [output]"
+    echo "Missing input pdf file path"
+    exit 1
+fi
+
+INPUT_PDF=$1
+OUTPUT_PDF=${2:-compressed.pdf}
+
+ps2pdf -dPDFSETTINGS=/ebook "$INPUT_PDF" "$OUTPUT_PDF"
