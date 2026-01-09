@@ -14,7 +14,7 @@ if ! command -v clevis >/dev/null 2>&1; then
     exit 1
 fi
 
-if [[ -z $1 ]]; then
+if [[ -z "${1:-}" ]]; then
     echo "Missing LUKS device path (e.g /dev/nvme0n1p3)"
     exit 1
 fi
