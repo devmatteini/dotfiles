@@ -30,6 +30,9 @@ end
 -- Avoid spawning login shell that causes starship to always shop the `jobs` module
 config.default_prog = { os.getenv("SHELL") }
 
+-- https://github.com/wezterm/wezterm/issues/5263
+config.enable_wayland = false
+
 config.font = wezterm.font "FiraCode Nerd Font"
 config.font_size = 15.0
 
