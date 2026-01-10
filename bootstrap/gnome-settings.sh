@@ -12,6 +12,7 @@ gsettings set org.gnome.desktop.interface toolkit-accessibility false
 # Power
 gsettings set org.gnome.desktop.interface show-battery-percentage true
 gsettings set org.gnome.settings-daemon.plugins.power idle-dim false
+gsettings set org.gnome.settings-daemon.plugins.power ambient-enabled false
 
 # Appearance
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
