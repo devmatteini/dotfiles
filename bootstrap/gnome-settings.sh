@@ -40,4 +40,8 @@ gsettings set org.gnome.TextEditor style-variant 'dark'
 # Weather
 gsettings set org.gnome.GWeather4 temperature-unit 'centigrade'
 
+# Workspaces
+gsettings set org.gnome.mutter dynamic-workspaces false
+gsettings set org.gnome.desktop.wm.preferences num-workspaces 4
+
 echo -e "${GREEN}Loaded GNOME settings!${RESET}"
