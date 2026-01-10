@@ -30,7 +30,7 @@ done
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 # Auto move windows settings
-gsettings set org.gnome.shell.extensions.auto-move-windows application-list "['code_code.desktop:1', 'jetbrains-webstorm-7e1a045a-440d-45c8-a58d-b7c78039e5db.desktop:1', 'spotify_spotify.desktop:3', 'com.discordapp.Discord.desktop:3', 'google-chrome.desktop:2', 'firefox.desktop:2', 'firefox-devedition.desktop:2']"
+gsettings set org.gnome.shell.extensions.auto-move-windows application-list "['code_code.desktop:1', 'spotify_spotify.desktop:3', 'com.discordapp.Discord.desktop:3', 'google-chrome.desktop:2', 'firefox.desktop:2', 'jetbrains-rustrover-433e2b6a-1f04-4e39-bda5-4d7f89462411.desktop:1', 'jetbrains-webstorm-65d18b0d-a561-47dd-92eb-3ded4468645f.desktop:1', 'chromium_chromium.desktop:2']"
 
 # Clipboard History settings
 gsettings set org.gnome.shell.extensions.clipboard-history paste-on-selection false
