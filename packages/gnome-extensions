@@ -13,9 +13,7 @@ gnome-extensions-cli install window-title-is-back@fthx
 gnome-extensions-cli install windowIsReady_Remover@nunofarruca@gmail.com
 gnome-extensions-cli install tactile@lundal.io
 gnome-extensions-cli install space-bar@luchrioh
-
-sudo apt install -y gir1.2-gtop-2.0 gir1.2-nm-1.0 gir1.2-clutter-1.0 gnome-system-monitor
-gnome-extensions-cli install system-monitor-next@paradoxxx.zero.gmail.com
+gnome-extensions-cli install tophat@fflewddur.github.io
 
 # Compile extensions schemas to be able to change their settings with gsettings
 # - https://github.com/basecamp/omakub/blob/54c8a75cf9e93544a1d32fa4499b57b2840fee82/install/desktop/set-gnome-extensions.sh#L22
@@ -48,19 +46,6 @@ gsettings set org.gnome.shell.extensions.window-title-is-back fixed-width false
 gsettings set org.gnome.shell.extensions.window-title-is-back colored-icon true
 gsettings set org.gnome.shell.extensions.window-title-is-back ease-time 0
 
-# system-monitor-next settings
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet cpu-style 'digit'
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet cpu-refresh-time 3500
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet disk-show-menu false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet disk-show-text false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet gpu-show-text false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet icon-display false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet memory-style 'digit'
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet memory-refresh-time 3500
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet net-display false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet net-show-menu false
-gsettings set org.gnome.shell.extensions.system-monitor-next-applet net-show-text false
-
 # ubuntu dash-to-dock settings
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
@@ -76,3 +61,10 @@ gsettings set org.gnome.shell.extensions.space-bar.shortcuts enable-activate-wor
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts open-menu []
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts activate-previous-key []
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts activate-empty-key []
+
+# top hat settings
+gsettings set org.gnome.shell.extensions.tophat cpu-display 'numeric'
+gsettings set org.gnome.shell.extensions.tophat mem-display 'numeric'
+gsettings set org.gnome.shell.extensions.tophat show-disk false
+gsettings set org.gnome.shell.extensions.tophat show-fs false
+gsettings set org.gnome.shell.extensions.tophat show-net false
