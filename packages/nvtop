@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# https://github.com/Syllo/nvtop
+
+dra download -a -i -o "$HOME/.local/bin/nvtop" Syllo/nvtop
