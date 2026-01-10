@@ -17,7 +17,7 @@ gnome-extensions-cli install system-monitor-next@paradoxxx.zero.gmail.com
 # Compile extensions schemas to be able to change their settings with gsettings
 # - https://github.com/basecamp/omakub/blob/54c8a75cf9e93544a1d32fa4499b57b2840fee82/install/desktop/set-gnome-extensions.sh#L22
 # - https://askubuntu.com/a/491224
-for extension in ~/.local/share/gnome-shell/extensions/* ; do
+for extension in ~/.local/share/gnome-shell/extensions/*; do
     schema=$(find "$extension/schemas" -type "f" -name "*.gschema.xml" | head -n 1 | xargs realpath)
     if [[ -z $schema ]]; then
         echo "No schema found for $extension. Skipped"
@@ -63,3 +63,6 @@ gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
 gsettings set org.gnome.shell.extensions.dash-to-dock hotkeys-show-dock false
 gsettings set org.gnome.shell.extensions.dash-to-dock show-trash false
+
+# just perfection settings
+gsettings set org.gnome.shell.extensions.just-perfection animation 4 # faster
