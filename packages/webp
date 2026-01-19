@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# https://developers.google.com/speed/webp
+
+sudo apt install -y webp
