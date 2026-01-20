@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+import * as path from "node:path";
+
+const rawUrl = process.argv[2];
+
+if (!rawUrl) {
+  console.error(`Usage: ${path.basename(process.argv[1])} <URL>`);
+  process.exit(1);
+}
+
+let url;
+try {
+  url = new URL(rawUrl);
+} catch (e) {
+  console.error("Error parsing URL:", e);
+  process.exit(1);
+}
+
+console.log("\nDecoded URL:");
+console.log(decodeURIComponent(url.href));
+
+if (url.search) {
+  console.log("\nQuery params:");
+  for (const [key, value] of url.searchParams) {
+    console.log(`  ${key}=${decodeURIComponent(value)}`);
+  }
+}
