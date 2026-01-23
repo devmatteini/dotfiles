@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-if command -v eza &>/dev/null; then
-    eza -l --icons=always --group-directories-first "$@"
-else
-    ls -lh --group-directories-first --color=auto "$@"
-fi
