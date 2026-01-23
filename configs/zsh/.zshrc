@@ -20,7 +20,7 @@ export PATH
 # --------------------
 
 for file in ~/.{aliases,functions,zsh-functions,zsh.local}; do
-    [ -r "$file" ] && [ -f "$file" ] && source "$file";
+    [[ -r "$file" && -f "$file" ]] && source "$file";
 done;
 unset file;
 
@@ -89,13 +89,13 @@ bindkey "^K" kill-line # Erase from cursor to end of line
 # Tools & Plugins
 # --------------------
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 if command -v direnv > /dev/null; then
     eval "$(direnv hook zsh)"
 fi
 
-[ -f ~/.local/share/fzf-tab/fzf-tab.plugin.zsh ] && source ~/.local/share/fzf-tab/fzf-tab.plugin.zsh
+[[ -f ~/.local/share/fzf-tab/fzf-tab.plugin.zsh ]] && source ~/.local/share/fzf-tab/fzf-tab.plugin.zsh
 [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh && -z $PRESENTATION_MODE ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 if command -v aws aws_completer > /dev/null; then
