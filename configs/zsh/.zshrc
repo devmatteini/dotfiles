@@ -96,7 +96,7 @@ if command -v direnv > /dev/null; then
 fi
 
 [ -f ~/.local/share/fzf-tab/fzf-tab.plugin.zsh ] && source ~/.local/share/fzf-tab/fzf-tab.plugin.zsh
-[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh && -z $PRESENTATION_MODE ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 if command -v aws aws_completer > /dev/null; then
     complete -C aws_completer aws
