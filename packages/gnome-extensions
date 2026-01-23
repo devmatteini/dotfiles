@@ -61,6 +61,8 @@ gsettings set org.gnome.shell.extensions.space-bar.shortcuts enable-activate-wor
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts open-menu []
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts activate-previous-key []
 gsettings set org.gnome.shell.extensions.space-bar.shortcuts activate-empty-key []
+gsettings set org.gnome.shell.extensions.space-bar.shortcuts move-workspace-left []
+gsettings set org.gnome.shell.extensions.space-bar.shortcuts move-workspace-right []
 
 # top hat settings
 gsettings set org.gnome.shell.extensions.tophat cpu-display 'numeric'
