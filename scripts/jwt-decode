@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# https://fabianlee.org/2023/08/27/bash-decoding-a-jwt-from-the-command-line-with-jq/
+
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $(basename "$0") <JWT_TOKEN>"
+    exit 1
+fi
+
+JWT=$1
+
+echo "$JWT" | jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
