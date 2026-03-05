@@ -100,6 +100,11 @@
 	# Diff side by side
 	dss = -c delta.side-by-side=true diff
 
+	# Show
+	sh = show
+	# Show side by side
+	shs = -c delta.side-by-side=true show
+
 	# unstage staged files (or pass a filename)
 	unstage = reset HEAD --
 
