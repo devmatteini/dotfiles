@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-ubuntu-net-backports-package-repository
-sudo add-apt-repository -y ppa:dotnet/backports
-sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-sdk-9.0 aspnetcore-runtime-9.0
+# https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet10&pivots=os-linux-ubuntu-2404#ubuntu-2404
+sudo apt install -y dotnet-sdk-10.0 aspnetcore-runtime-10.0
 
 # https://learn.microsoft.com/en-us/dotnet/core/tools/enable-tab-autocomplete#zsh
-cat > ~/.local/share/zsh-completion/_dotnet <<'EOL'
+cat >~/.local/share/zsh-completion/_dotnet <<'EOL'
 #compdef dotnet
 
 _dotnet_zsh_complete()

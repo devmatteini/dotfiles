@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#register-the-ubuntu-net-backports-package-repository
+sudo add-apt-repository -y ppa:dotnet/backports
+sudo apt install -y dotnet-sdk-9.0 aspnetcore-runtime-9.0
