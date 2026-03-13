@@ -1,0 +1,207 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import sys
+import os
+from datetime import datetime, timedelta, timezone
+from collections import Counter
+from dataclasses import dataclass, field
+
+
+@dataclass
+class CommitInfo:
+    commit_id: str
+    timestamp: datetime
+
+
+@dataclass
+class RepoStats:
+    name: str
+    path: str
+    commits: list[CommitInfo] = field(default_factory=list)
+
+
+TIME_SLOTS = [
+    ("Night", 0, 5),
+    ("Morning", 6, 11),
+    ("Afternoon", 12, 17),
+    ("Evening", 18, 23),
+]
+
+PERIODS = {
+    "week": 7,
+    "month": 30,
+    "quarter": 90,
+    "year": 365,
+}
+
+
+def get_git_user_email() -> str:
+    result = subprocess.run(
+        ["git", "config", "user.email"],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        print("Error: git user.email is not configured.", file=sys.stderr)
+        print("Run: git config --global user.email 'you@example.com'", file=sys.stderr)
+        sys.exit(1)
+    return result.stdout.strip()
+
+
+def get_repo_name(path: str) -> str:
+    return os.path.basename(os.path.abspath(path))
+
+
+def get_commits(
+    repo_path: str, author_email: str, since: datetime
+) -> list[CommitInfo] | None:
+    since_str = since.strftime("%Y-%m-%d")
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            repo_path,
+            "log",
+            f"--author={author_email}",
+            f"--after={since_str}",
+            "--format=%H %aI",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+
+    commits: list[CommitInfo] = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split(" ", 1)
+        if len(parts) != 2:
+            continue
+        commit_id, timestamp_str = parts
+        try:
+            timestamp = datetime.fromisoformat(timestamp_str)
+        except ValueError:
+            continue
+        commits.append(CommitInfo(commit_id=commit_id, timestamp=timestamp))
+    return commits
+
+
+def get_time_slot(hour: int) -> str:
+    for name, start, end in TIME_SLOTS:
+        if start <= hour <= end:
+            return name
+    return "Night"
+
+
+def compute_time_slot_distribution(commits: list[CommitInfo]) -> Counter[str]:
+    return Counter(get_time_slot(c.timestamp.hour) for c in commits)
+
+
+def render_bar(count: int, max_count: int, width: int = 20) -> str:
+    if max_count == 0:
+        return " " * width
+    filled = round(count / max_count * width)
+    return "█" * filled + " " * (width - filled)
+
+
+def print_summary(repo_stats: list[RepoStats]):
+    total = sum(len(r.commits) for r in repo_stats)
+    print(f"Total commits: {total}")
+    print()
+    print("Commits per repository:")
+    max_name_len = max((len(r.name) for r in repo_stats), default=0)
+    for repo in sorted(repo_stats, key=lambda r: len(r.commits), reverse=True):
+        count = len(repo.commits)
+        print(f"  {repo.name:<{max_name_len}}  {count} commits")
+
+
+def print_time_slot_stats(label: str, commits: list[CommitInfo]):
+    print(f"{label}:")
+    distribution = compute_time_slot_distribution(commits)
+    total = len(commits)
+    max_count = max(distribution.values(), default=0)
+
+    time_slot_name_width = max(len(name) for name, _, _ in TIME_SLOTS)
+    for name, start, end in TIME_SLOTS:
+        count = distribution[name]
+        bar = render_bar(count, max_count)
+        percentage = round(count / total * 100) if total > 0 else 0
+        slot_range = f"({start:02d}-{end:02d})"
+        count_str = str(count)
+        print(
+            f"  {name:<{time_slot_name_width}} {slot_range}: {bar} {count_str:>3} commits ({percentage}%)"
+        )
+
+
+SEPARATOR = "─" * 33
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
+
+parser = argparse.ArgumentParser(
+    description="Compute weekly commit statistics for the current git user"
+)
+parser.add_argument(
+    "repos", metavar="repo-path", nargs="+", help="Path to a git repository"
+)
+parser.add_argument(
+    "--period",
+    choices=list(PERIODS.keys()),
+    default="week",
+    help="Time period for commit statistics (default: week)",
+)
+
+
+def main():
+    args = parser.parse_args()
+
+    repo_paths: list[str] = args.repos
+    author_email = get_git_user_email()
+    now = datetime.now(tz=timezone.utc)
+    since_date = now - timedelta(days=PERIODS[args.period])
+
+    print(f"{args.period.capitalize()}ly Git Commit Statistics")
+    print(f"Period: {since_date.date()} to {now.date()}")
+    print(f"Author: {author_email}")
+    print()
+
+    repo_stats: list[RepoStats] = []
+    for path in repo_paths:
+        name = get_repo_name(path)
+        commits = get_commits(path, author_email, since_date)
+        if commits is None:
+            print(
+                f"Warning: '{path}' is not a valid git repository, skipping.",
+                file=sys.stderr,
+            )
+            continue
+        repo_stats.append(RepoStats(name=name, path=path, commits=commits))
+
+    if not repo_stats:
+        print("No valid repositories found.")
+        sys.exit(0)
+
+    print(f"{BOLD}## SUMMARY{RESET}")
+    print_summary(repo_stats)
+
+    all_commits = [c for r in repo_stats for c in r.commits]
+    print()
+    print(f"{BOLD}## TIME SLOT DISTRIBUTION (all repos){RESET}")
+    print_time_slot_stats(f"All repositories — {len(all_commits)} commits", all_commits)
+
+    print()
+    print(f"{BOLD}## TIME SLOT DISTRIBUTION (per repository){RESET}")
+    for repo in sorted(repo_stats, key=lambda r: len(r.commits), reverse=True):
+        print_time_slot_stats(
+            f"{repo.name} — {len(repo.commits)} commits", repo.commits
+        )
+        print()
+
+
+if __name__ == "__main__":
+    main()
