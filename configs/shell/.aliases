@@ -32,8 +32,10 @@ alias print_fpath='echo -e ${FPATH//:/\\n}'
 alias imgcat="wezterm imgcat"
 alias preview='fzf --preview "bat --color=always --style=numbers {}"'
 
-# apt
+# system package managers
 alias upgradable="apt list --upgradable"
+alias flatpak_update="flatpak update -y --noninteractive"
+alias flatpak_clean="flatpak uninstall --unused --delete-data -y --noninteractive"
 
 # benchmarks
 alias bench_shell="hyperfine --warmup 1 -r 10 'bash -i -c exit' 'zsh -i -c exit'"
