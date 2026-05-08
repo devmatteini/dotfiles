@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+dra download -s nvim-linux-x86_64.appimage -i -o ~/.local/bin/nvim neovim/neovim
