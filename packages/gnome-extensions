@@ -11,7 +11,6 @@ gnome-extensions-cli install user-theme@gnome-shell-extensions.gcampax.github.co
 gnome-extensions-cli install weatherornot@somepaulo.github.io
 gnome-extensions-cli install window-title-is-back@fthx
 gnome-extensions-cli install windowIsReady_Remover@nunofarruca@gmail.com
-gnome-extensions-cli install tactile@lundal.io
 gnome-extensions-cli install space-bar@luchrioh
 gnome-extensions-cli install tophat@fflewddur.github.io
 
