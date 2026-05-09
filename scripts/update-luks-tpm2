@@ -8,6 +8,7 @@ set -euo pipefail
 # - https://github.com/latchset/clevis
 # - https://wiki.archlinux.org/title/Clevis
 # - https://wiki.archlinux.org/title/Trusted_Platform_Module
+# - https://ubuntu.com/server/docs/how-to/security/tpm-backed-luks-decryption-with-clevis/
 
 if ! command -v clevis >/dev/null 2>&1; then
     echo "Missing clevis package"
@@ -20,10 +21,10 @@ if [[ -z "${1:-}" ]]; then
 fi
 
 LUKS_DEVICE=$1
+UBUNTU_VERSION=$(lsb_release -rs)
 
 echo -e "\nList pins for LUKS device $LUKS_DEVICE"
 sudo clevis luks list -d "$LUKS_DEVICE"
-
 
 echo -en "\nSelect pin id to update: "
 read PIN_ID
@@ -31,8 +32,11 @@ read PIN_ID
 echo -n "Enter boot passphrase password: "
 read -s BOOT_PASSPHRASE
 
-sudo clevis luks regen -q -d "$LUKS_DEVICE" -s "$PIN_ID" tpm2  <<< "$BOOT_PASSPHRASE"
+sudo clevis luks regen -q -d "$LUKS_DEVICE" -s "$PIN_ID" tpm2 <<<"$BOOT_PASSPHRASE"
 
 echo -e "\nUpdating initramfs to allow automatic decryption on boot"
-sudo update-initramfs -u -k all
-
+if [[ "$UBUNTU_VERSION" == "24.04" ]]; then
+    sudo update-initramfs -u -k all
+else
+    sudo dracut -f
+fi
