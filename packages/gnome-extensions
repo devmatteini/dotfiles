@@ -69,3 +69,6 @@ gsettings set org.gnome.shell.extensions.tophat mem-display 'numeric'
 gsettings set org.gnome.shell.extensions.tophat show-disk false
 gsettings set org.gnome.shell.extensions.tophat show-fs false
 gsettings set org.gnome.shell.extensions.tophat show-net false
+
+# ubuntu desktop icons ng settings
+gsettings set org.gnome.shell.extensions.ding show-home false
