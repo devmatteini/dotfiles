@@ -23,5 +23,6 @@ symlink_dir "$CONFIGS/atuin" "$HOME/.config"
 symlink_file "$CONFIGS/mpv.conf" "$HOME/.config/mpv"
 symlink_file "$CONFIGS/CLAUDE.md" "$HOME/.claude"
 symlink_file "$CONFIGS/ubuntu-xdg-terminals.list" "$HOME/.config"
+symlink_dir "$CONFIGS/mise" "$HOME/.config"
 
 echo -e "\e[1;32m[✓] Symlinks created succesfully.\e[0m"
