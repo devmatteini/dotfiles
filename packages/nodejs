@@ -5,17 +5,16 @@ if ! command -v mise >/dev/null; then
   exit 1
 fi
 
-DEFAULT_VERSION=node@22
+DEFAULT_VERSION=node@24
 
-mise install node@20 "$DEFAULT_VERSION" node@24
+mise install node@22 "$DEFAULT_VERSION"
 
 # Default version
 mise use -g "$DEFAULT_VERSION"
 
 # Activate node corepack
-mise exec node@20 -- corepack enable
+mise exec node@22 -- corepack enable
 mise exec "$DEFAULT_VERSION" -- corepack enable
-mise exec node@24 -- corepack enable
 
 # Sometimes after running corepack enable the shims are not updated
 mise reshim
