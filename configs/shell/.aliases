@@ -31,6 +31,7 @@ alias print_path='echo -e ${PATH//:/\\n}'
 alias print_fpath='echo -e ${FPATH//:/\\n}'
 alias imgcat="wezterm imgcat"
 alias preview='fzf --preview "bat --color=always --style=numbers {}"'
+alias claude-sandbox="sbx run claude"
 
 # system package managers
 alias upgradable="apt list --upgradable"
