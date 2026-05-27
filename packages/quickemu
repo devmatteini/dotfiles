@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+sudo dra download -s "quickemu_{tag}-1_all.deb" -i quickemu-project/quickemu || sudo apt -y --fix-broken install
