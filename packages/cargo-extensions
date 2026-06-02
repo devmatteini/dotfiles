@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# https://github.com/kbknapp/cargo-outdated
+dra download -a -i -o ~/.local/bin kbknapp/cargo-outdated
+
+# https://github.com/Canop/bacon
+cargo install --locked bacon
