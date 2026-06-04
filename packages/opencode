@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# https://github.com/anomalyco/opencode
+dra download -s opencode-linux-x64.tar.gz -i -o ~/.local/bin anomalyco/opencode
