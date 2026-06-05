@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# https://help.ubuntu.com/community/KVM/Installation
+sudo apt install -y qemu-system-x86 libvirt-daemon-system libvirt-clients bridge-utils
+
+sudo usermod -aG kvm "$USER"
+
+echo "[kvm] Remember to log out and log back in so that kvm group membership is re-evaluated"
