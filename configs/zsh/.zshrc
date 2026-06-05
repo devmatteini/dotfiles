@@ -11,6 +11,8 @@ path=(
     "$HOME/dotfiles/scripts"
     "$HOME/.cargo/bin"
     "$HOME/.local/share/JetBrains/Toolbox/scripts/"
+    "$ANDROID_HOME/platform-tools"
+    "$ANDROID_HOME/cmdline-tools/latest/bin"
     $path
 )
 export PATH

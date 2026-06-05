@@ -11,3 +11,6 @@ export EDITOR="vim"
 export DOCKER_BUILDKIT=1
 
 export FLIX_HOME="$XDG_DATA_HOME/flix"
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
