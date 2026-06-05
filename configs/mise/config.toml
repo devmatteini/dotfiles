@@ -2,5 +2,7 @@
 idiomatic_version_file_enable_tools = ["node"]
 
 [tools]
+java = "24"
+maven = "3.9"
 node = "24"
 usage = "latest"
