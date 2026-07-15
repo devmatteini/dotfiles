@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# DOCS:
+# - https://askubuntu.com/a/1475182
+# - https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/
+# - https://github.com/latchset/clevis
+# - https://wiki.archlinux.org/title/Clevis
+# - https://wiki.archlinux.org/title/Trusted_Platform_Module
+# - https://ubuntu.com/server/docs/how-to/security/tpm-backed-luks-decryption-with-clevis/
+
+info() {
+    echo -e "$1"
+}
+
+error() {
+    echo -e "$1" >&2
+    exit 1
+}
+
+check_command() {
+    if ! command -v "$1" &>/dev/null; then
+        return 1
+    fi
+}
+
+usage() {
+    cat <<EOF
+Manage LUKS automatic decryption on boot with TPM2.
+
+Commands:
+  luks-tpm2 setup </path/to/device>
+  luks-tpm2 remove </path/to/device>
+  luks-tpm2 update </path/to/device>
+
+Options:
+    -h, --help
+EOF
+}
+
+setup() {
+    local luks_device=$1
+    local ubuntu_version
+
+    ubuntu_version=$(lsb_release -rs)
+
+    echo -n "Enter boot passphrase password: "
+    read -r -s boot_passphrase
+
+    # https://wiki.archlinux.org/title/Trusted_Platform_Module
+    # pcr_id 7 - Secure Boot State
+    # If these values changes, the TPM key needs to be regenerated
+    info "\nBinding LUKS device $luks_device to TPM2"
+    sudo clevis luks bind -d "$luks_device" tpm2 '{"pcr_bank":"sha256","pcr_ids":"7"}' <<<"$boot_passphrase"
+
+    info "\nUpdating initramfs to allow automatic decryption on boot"
+
+    if [[ "$ubuntu_version" == "24.04" ]]; then
+        sudo update-initramfs -u -k all
+    else
+        sudo dracut -f
+    fi
+
+    info "\nList pins for LUKS device $luks_device"
+    sudo clevis luks list -d "$luks_device"
+}
+
+remove() {
+    local luks_device=$1
+
+    sudo clevis luks unbind -d "$luks_device" -s 1
+}
+
+main() {
+    local command=${1:-}
+    local luks_device=${2:-}
+
+    case "$command" in
+    setup)
+        check_command clevis || error "Missing 'clevis' package"
+        [[ -n "$luks_device" ]] || error "Missing LUKS device path (e.g /dev/nvme0n1p3)"
+        setup "$luks_device"
+        ;;
+    remove)
+        check_command clevis || error "Missing 'clevis' package"
+        [[ -n "$luks_device" ]] || error "Missing LUKS device path (e.g /dev/nvme0n1p3)"
+        remove "$luks_device"
+        ;;
+    update)
+        check_command clevis || error "Missing 'clevis' package"
+        [[ -n "$luks_device" ]] || error "Missing LUKS device path (e.g /dev/nvme0n1p3)"
+        remove "$luks_device"
+        setup "$luks_device"
+        ;;
+    --help | -h)
+        usage
+        ;;
+    *)
+        usage >&2
+        exit 1
+        ;;
+    esac
+}
+
+main "$@"
