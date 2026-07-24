@@ -21,7 +21,7 @@ symlink_file "$CONFIGS/starship.toml" "$HOME/.config"
 symlink_dir "$CONFIGS/wezterm" "$HOME/.config"
 symlink_dir "$CONFIGS/atuin" "$HOME/.config"
 symlink_file "$CONFIGS/mpv.conf" "$HOME/.config/mpv"
-symlink_file "$CONFIGS/CLAUDE.md" "$HOME/.claude"
+symlink_dir_files "$CONFIGS/claude" "$HOME/.claude"
 symlink_file "$CONFIGS/ubuntu-xdg-terminals.list" "$HOME/.config"
 symlink_dir "$CONFIGS/mise" "$HOME/.config"
 
