@@ -29,6 +29,10 @@
     ]
   },
   "model": "opus",
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/.claude/statusline.sh"
+  },
   "enabledPlugins": {},
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
