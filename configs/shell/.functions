@@ -67,7 +67,11 @@ typetest(){
             yarn typecheck && yarn test
         fi
     elif [[ -e pnpm-lock.yaml ]]; then
-        pnpm typecheck && pnpm test
+        if [[ -n $1 ]]; then
+            pnpm --filter "$1" run typecheck && pnpm --filter "$1" run test
+        else
+            pnpm typecheck && pnpm test
+        fi
     else
         echo "Cannot recognize node package manager (npm or yarn)"
         return 1
