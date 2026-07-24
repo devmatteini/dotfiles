@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(//**/.env)",
+      "Edit(//**/.env)",
+      "Read(//**/.env.*)",
+      "Edit(//**/.env.*)",
+      "Read(//**/.envrc*)",
+      "Edit(//**/.envrc*)",
+      "Read(//**/*.pem)",
+      "Edit(//**/*.pem)",
+      "Read(//**/*.key)",
+      "Edit(//**/*.key)",
+      "Read(//**/.ssh/**)",
+      "Edit(//**/.ssh/**)",
+      "Read(//**/.aws/**)",
+      "Edit(//**/.aws/**)",
+      "Read(//**/.gnupg/**)",
+      "Edit(//**/.gnupg/**)",
+      "Read(//**/.npmrc)",
+      "Edit(//**/.npmrc)",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "NotebookEdit",
+      "Artifact",
+      "PushNotification"
+    ]
+  },
+  "model": "opus",
+  "enabledPlugins": {},
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "autoCompactEnabled": false,
+  "tui": "fullscreen",
+  "disableWorkflows": true,
+  "disableRemoteControl": true,
+  "disableClaudeAiConnectors": true,
+  "disableArtifact": true,
+  "includeGitInstructions": false
+}
