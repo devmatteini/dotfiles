@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# tesseract-ocr-all is needed for non-English languages
+sudo apt install -y tesseract-ocr tesseract-ocr-all
