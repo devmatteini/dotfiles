@@ -47,6 +47,8 @@
   "enabledPlugins": {},
   "sandbox": {
     "enabled": true,
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false,
     "filesystem": {
       "allowWrite": [
         "~/.local/share/pnpm",
