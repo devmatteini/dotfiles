@@ -1,4 +1,10 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "includeGitInstructions": false,
   "permissions": {
     "deny": [
       "Read(//**/.env)",
@@ -29,23 +35,25 @@
     ]
   },
   "model": "opus",
+  "disableClaudeAiConnectors": true,
+  "disableRemoteControl": true,
+  "disableWorkflows": true,
+  "disableArtifact": true,
   "statusLine": {
     "type": "command",
     "command": "$HOME/.claude/statusline.sh"
   },
   "enabledPlugins": {},
+  "sandbox": {
+    "enabled": true
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
-  "autoCompactEnabled": false,
   "tui": "fullscreen",
-  "disableWorkflows": true,
-  "disableRemoteControl": true,
-  "disableClaudeAiConnectors": true,
-  "disableArtifact": true,
-  "includeGitInstructions": false,
-  "attribution": {
-    "commit": "",
-    "pr": "",
-    "sessionUrl": false
+  "autoCompactEnabled": false,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
   }
 }
