@@ -45,7 +45,14 @@
   },
   "enabledPlugins": {},
   "sandbox": {
-    "enabled": true
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": [
+        "~/.local/share/pnpm",
+        "~/.cache/pnpm",
+        "~/.local/state/pnpm"
+      ]
+    }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
