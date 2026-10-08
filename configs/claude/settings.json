@@ -23,7 +23,6 @@
       "Edit(//**/.aws/**)",
       "Read(//**/.gnupg/**)",
       "Edit(//**/.gnupg/**)",
-      "Read(//**/.npmrc)",
       "Edit(//**/.npmrc)",
       "CronCreate",
       "CronDelete",
@@ -51,6 +50,25 @@
         "~/.local/share/pnpm",
         "~/.cache/pnpm",
         "~/.local/state/pnpm"
+      ]
+    },
+    "network": {
+      "tlsTerminate": {},
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "npm.pkg.github.com",
+        "pkg-npm.githubusercontent.com"
+      ]
+    },
+    "credentials": {
+      "envVars": [
+        {
+          "name": "GITHUB_NPM_TOKEN",
+          "mode": "mask",
+          "injectHosts": [
+            "npm.pkg.github.com"
+          ]
+        }
       ]
     }
   },
