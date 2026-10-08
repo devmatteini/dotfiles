@@ -24,6 +24,8 @@
       "Read(//**/.gnupg/**)",
       "Edit(//**/.gnupg/**)",
       "Edit(//**/.npmrc)",
+      "Read(~/.zsh.local)",
+      "Edit(~/.bash.local)",
       "CronCreate",
       "CronDelete",
       "CronList",
