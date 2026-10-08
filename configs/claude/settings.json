@@ -6,6 +6,7 @@
   },
   "includeGitInstructions": false,
   "permissions": {
+    "defaultMode": "auto",
     "deny": [
       "Read(//**/.env)",
       "Edit(//**/.env)",
