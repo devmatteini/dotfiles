@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+sudo apt install -y incus
+sudo groupadd -f incus-admin
+sudo usermod -aG incus-admin "$USER"
+echo "[incusvm] Remember to log out and log back in so that incus group membership is re-incus"
