@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+dra download -a -i -o ~/.local/bin nolabs-ai/nono
+
+nono completion bash > ~/.local/share/bash-completion/completions/nono
+nono completion zsh > ~/.local/share/zsh-completion/_nono
