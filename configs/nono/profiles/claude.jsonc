@@ -1,0 +1,19 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "extends": ["nolabs-ai/claude", "agent-common"],
+  "meta": {
+    "name": "claude",
+    "version": "1.0.0",
+    "description": "Local Claude Code sandbox profile",
+    "author": "devmatteini"
+  },
+  "security": {
+    "capability_elevation": false
+  },
+  "environment": {
+    "set_vars": {
+      // Workaround for https://github.com/nolabs-ai/nono-packs/issues/44
+      "CLAUDE_CODE_TMPDIR": "$HOME/.cache/claude"
+    }
+  }
+}

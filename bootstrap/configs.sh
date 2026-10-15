@@ -24,5 +24,6 @@ symlink_file "$CONFIGS/mpv.conf" "$HOME/.config/mpv"
 symlink_dir_files "$CONFIGS/claude" "$HOME/.claude"
 symlink_file "$CONFIGS/ubuntu-xdg-terminals.list" "$HOME/.config"
 symlink_dir "$CONFIGS/mise" "$HOME/.config"
+symlink_dir_files "$CONFIGS/nono/profiles" "$HOME/.config/nono/profiles"
 
 echo -e "\e[1;32m[✓] Symlinks created succesfully.\e[0m"

@@ -14,3 +14,5 @@ export FLIX_HOME="$XDG_DATA_HOME/flix"
 
 export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+export NONO_NO_UPDATE_CHECK="true"

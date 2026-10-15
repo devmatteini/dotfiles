@@ -1,0 +1,16 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "extends": ["nolabs-ai/opencode-v1", "agent-common"],
+  "meta": {
+    "name": "opencode",
+    "version": "1.0.0",
+    "description": "Local OpenCode v1 sandbox profile",
+    "author": "devmatteini"
+  },
+  "security": {
+    "capability_elevation": false
+  },
+  "network": {
+    "allow_domain": ["chatgpt.com"]
+  }
+}

@@ -2,7 +2,21 @@
 
 set -euo pipefail
 
-dra download -a -i -o ~/.local/bin nolabs-ai/nono
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-nono completion bash > ~/.local/share/bash-completion/completions/nono
-nono completion zsh > ~/.local/share/zsh-completion/_nono
+readonly PACKS=(
+    nolabs-ai/claude@0.1.4
+    nolabs-ai/opencode-v1@0.1.0
+)
+readonly NONO_SCHEMA="$BASEDIR/configs/nono/nono-profile.schema.json"
+
+dra download -a -i -o "$HOME/.local/bin" nolabs-ai/nono
+
+nono completion bash >"$HOME/.local/share/bash-completion/completions/nono"
+nono completion zsh >"$HOME/.local/share/zsh-completion/_nono"
+
+nono profile schema >"$NONO_SCHEMA"
+
+for pack in "${PACKS[@]}"; do
+    nono pull "$pack"
+done

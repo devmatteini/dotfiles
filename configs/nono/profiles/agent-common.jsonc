@@ -1,0 +1,110 @@
+{
+  "$schema": "../nono-profile.schema.json",
+  "extends": "default",
+  "meta": {
+    "name": "agent-common",
+    "version": "1.0.0",
+    "description": "Shared local policy for coding agents",
+    "author": "devmatteini"
+  },
+  "groups": {
+    "include": [
+      "mise_manager",
+      "java_runtime"
+    ]
+  },
+  "security": {
+    "capability_elevation": false
+  },
+  "workdir": {
+    "access": "readwrite"
+  },
+  "filesystem": {
+    "allow": [
+      "$HOME/.local/share/pnpm",
+      "$HOME/.cache/pnpm",
+      "$HOME/.local/state/pnpm"
+    ],
+    "read": [
+      "$HOME/.cache/node"
+    ],
+    "read_file": [
+      "$HOME/.npmrc"
+    ],
+    "deny": [
+      "$HOME/.bash.local",
+      "$HOME/.zsh.local"
+    ],
+    "bypass_protection": [
+      "$HOME/.npmrc"
+    ],
+    "suppress_save_prompt": [
+      "$HOME/.bash.local",
+      "$HOME/.zsh.local"
+    ]
+  },
+  "environment": {
+    "deny_vars": [
+      "AWS_*",
+      "AZURE_*",
+      "ARM_*",
+      "GCP_*",
+      "GCLOUD_*",
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "SSH_*",
+      "GPG_*",
+      "GNUPG*",
+      "*_TOKEN",
+      "*SECRET*",
+      "*_PASSWORD*",
+      "*_PRIVATE_KEY*"
+    ],
+    "case_insensitive_vars": true
+  },
+  "diagnostics": {
+    "redaction": {
+      "extra_env_vars": [
+        "AWS_*",
+        "AZURE_*",
+        "ARM_*",
+        "GCP_*",
+        "GCLOUD_*",
+        "SSH_*",
+        "GPG_*",
+        "GNUPG*",
+        "*_TOKEN",
+        "*SECRET*",
+        "*_PASSWORD*",
+        "*_PRIVATE_KEY*"
+      ]
+    }
+  },
+  "network": {
+    "network_profile": "developer",
+    "allow_domain": [
+      "registry.npmjs.org",
+      "npm.pkg.github.com",
+      "pkg-npm.githubusercontent.com"
+    ],
+    "open_port": [
+      3000,
+      3001,
+      4321,
+      8000,
+      8080
+    ],
+    "credentials": [
+      "github_npm"
+    ],
+    "custom_credentials": {
+      "github_npm": {
+        "upstream": "https://npm.pkg.github.com",
+        "credential_key": "env://GITHUB_NPM_TOKEN",
+        "env_var": "GITHUB_NPM_TOKEN",
+        "inject_mode": "header",
+        "inject_header": "Authorization",
+        "credential_format": "Bearer {}"
+      }
+    }
+  }
+}

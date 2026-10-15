@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2016 # Single-quoted snippets expand only inside the sandbox.
+
+set -euo pipefail
+
+unset GITHUB_NPM_TOKEN
+
+WHITE="\e[1;37m"
+RED="\e[1;31m"
+GREEN="\e[1;32m"
+UNDERLINE="\e[4m"
+RESET="\e[0m"
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fixture=$(mktemp -d "$BASEDIR/.nono-test.XXXXXX")
+readonly fixture
+
+fail() {
+    echo -e "$1: ${RED}FAIL${RESET}"
+    exit 1
+}
+
+describe() {
+    local name=$1
+    echo -e "$WHITE\n## $name\n$RESET"
+}
+
+run_test() {
+    local profile=$1 scenario=$2 current_test parameter
+    shift 2
+    current_test=$scenario
+    if (($# > 0)); then
+        parameter=${!#}
+        if [[ $parameter == "$HOME"/* ]]; then
+            parameter="~${parameter#"$HOME"}"
+        fi
+        current_test="$scenario $UNDERLINE$parameter$RESET"
+    fi
+    if "$scenario" "$profile" "$@" >/dev/null 2>&1; then
+        echo -e "$current_test: ${GREEN}PASS${RESET}"
+    else
+        fail "$current_test"
+    fi
+}
+
+json_status_is() {
+    local expected=$1
+    python3 -c 'import json, sys; raise SystemExit(0 if json.load(sys.stdin).get("status") == sys.argv[1] else 1)' "$expected"
+}
+
+validate_profile() {
+    nono profile validate "$1"
+}
+
+deny_read_path() {
+    local profile=$1 path=$2
+    nono why --json --profile "$profile" --path "$path" --op read | json_status_is denied
+}
+
+deny_write_path() {
+    local profile=$1 path=$2
+    nono why --json --profile "$profile" --path "$path" --op write | json_status_is denied
+}
+
+allow_read_path() {
+    local profile=$1 path=$2
+    nono why --json --profile "$profile" --path "$path" --op read | json_status_is allowed
+}
+
+allow_cwd_read_write() {
+    local profile=$1
+    nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        bash -c '[[ $(<seed) == seed ]] && printf changed > created && [[ $(<created) == changed ]] && rm created'
+}
+
+deny_sibling_read_write() {
+    local profile=$1
+    nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        bash -c '! cat "$1/secret" >/dev/null && ! printf blocked > "$1/created"' -- "$fixture/sibling"
+}
+
+allow_node_and_pnpm() {
+    local profile=$1
+    nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        bash -c 'node --version >/dev/null && pnpm --version >/dev/null'
+}
+
+deny_apt_startup() {
+    local profile=$1
+    ! nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        apt --version
+}
+
+allow_nono_why_self() {
+    local profile=$1 output
+    output=$(nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        zsh -c 'nono why --self --path "$HOME/.zsh.local" --op read')
+    [[ $output == *DENIED* ]]
+}
+
+allow_claude_temp_dir() {
+    local profile=$1
+    nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        bash -c '[[ $CLAUDE_CODE_TMPDIR == "$HOME/.cache/claude" ]] && [[ -r $CLAUDE_CODE_TMPDIR && -w $CLAUDE_CODE_TMPDIR && -x $CLAUDE_CODE_TMPDIR ]]'
+}
+
+mask_npm_token() {
+    local profile=$1 output
+    output=$(GITHUB_NPM_TOKEN=nono_test_fake_token \
+        nono run -s --profile "$profile" --allow-cwd --workdir "$fixture/cwd" -- \
+        bash -c 'printf %s "$GITHUB_NPM_TOKEN"')
+    [[ $output != nono_test_fake_token && $output =~ ^[0-9a-f]{64}$ ]]
+}
+
+setup_test_env() {
+    trap 'rm -rf -- "$fixture"' EXIT
+    chmod 700 "$fixture"
+    mkdir "$fixture/cwd" "$fixture/sibling"
+    printf seed >"$fixture/cwd/seed"
+    printf secret >"$fixture/sibling/secret"
+}
+
+# --- TESTS ---
+
+setup_test_env
+
+describe agent-common
+run_test agent-common validate_profile
+
+for profile in claude opencode; do
+    describe "$profile"
+    run_test "$profile" validate_profile
+    run_test "$profile" deny_read_path "$HOME/.aws"
+    run_test "$profile" deny_write_path "$HOME/.aws"
+    run_test "$profile" deny_read_path "$HOME/.zsh.local"
+    run_test "$profile" deny_write_path "$HOME/.zsh.local"
+    run_test "$profile" allow_cwd_read_write
+    run_test "$profile" deny_sibling_read_write
+    run_test "$profile" allow_node_and_pnpm
+    run_test "$profile" deny_apt_startup
+    run_test "$profile" allow_nono_why_self
+    run_test "$profile" mask_npm_token
+    if [[ $profile == claude ]]; then
+        run_test "$profile" allow_read_path "$HOME/.claude"
+        run_test "$profile" allow_claude_temp_dir
+    else
+        run_test "$profile" allow_read_path "$HOME/.config/opencode"
+    fi
+done
