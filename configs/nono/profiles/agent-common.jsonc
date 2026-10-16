@@ -11,6 +11,9 @@
     "include": [
       "mise_manager",
       "java_runtime"
+    ],
+    "exclude": [
+      "vscode_linux"
     ]
   },
   "security": {
