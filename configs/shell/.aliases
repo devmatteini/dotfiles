@@ -31,8 +31,8 @@ alias print_path='echo -e ${PATH//:/\\n}'
 alias print_fpath='echo -e ${FPATH//:/\\n}'
 alias imgcat="wezterm imgcat"
 alias preview='fzf --preview "bat --color=always --style=numbers {}"'
-alias claude-sandbox="nono run --profile claude --allow-cwd -- claude"
-alias opencode-sandbox="nono run --profile opencode --allow-cwd -- opencode"
+alias claude-sandbox="sb claude"
+alias opencode-sandbox="sb opencode"
 
 # system package managers
 alias upgradable="apt list --upgradable"

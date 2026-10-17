@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+
+DOTFILES_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(DOTFILES_ROOT))
+
+from scripts import sb_lib  # noqa: E402
+
+
+class SbUnitTests(unittest.TestCase):
+    def test_finds_env_files_once(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            nested = root / "nested"
+            nested.mkdir()
+            for relative in (".env", ".envrc", "nested/.env.local", "config.env"):
+                (root / relative).write_text(relative)
+
+            found = sb_lib.find_env_files(
+                [
+                    sb_lib.Directory.try_from_path(root),
+                    sb_lib.Directory.try_from_path(nested),
+                ],
+                [],
+            )
+
+            self.assertEqual(
+                set(found), {root / ".env", root / ".envrc", nested / ".env.local"}
+            )
+
+    def test_skips_dependency_and_generated_directories(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            expected = root / "src" / ".env"
+            expected.parent.mkdir()
+            expected.write_text("source")
+            for name in sb_lib.EXCLUDED_SCAN_DIRECTORIES:
+                excluded = root / name
+                excluded.mkdir()
+                (excluded / ".env").write_text("excluded")
+
+            found = sb_lib.find_env_files([sb_lib.Directory.try_from_path(root)], [])
+
+            self.assertEqual(found, [expected])
+
+    def test_rejects_unsafe_env_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            target = root / "target"
+            target.write_text("sentinel")
+            unsafe = [root / ".env.symlink", root / ".env.hardlink", root / ".env.dir"]
+            unsafe[0].symlink_to(target)
+            unsafe[1].hardlink_to(target)
+            unsafe[2].mkdir()
+            fifo = root / ".env.fifo"
+            os.mkfifo(fifo)
+            unsafe.append(fifo)
+
+            for path in unsafe:
+                with self.subTest(path=path.name), self.assertRaises(ValueError):
+                    sb_lib.validate_env_file(path, path.lstat())
+
+    def test_rejects_unsafe_options(self) -> None:
+        invalid = (
+            ([], {}),
+            (["other"], {}),
+            (["claude", "--workdir=/tmp"], {}),
+            (["claude", "-pother"], {}),
+            (["claude", "--allow-unix-socket-subtree", "/tmp"], {}),
+            (["claude", "--"], {}),
+            (["claude"], {"NONO_ALLOW": "/tmp"}),
+            (["opencode"], {"NONO_PROFILE": "other"}),
+        )
+        for argv, environment in invalid:
+            with self.subTest(argv=argv), self.assertRaises(ValueError):
+                sb_lib.parse_args(argv, environment)
+
+
+class SbEndToEndTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+
+    def make_workdir(self) -> Path:
+        workdir = self.root / "cwd"
+        workdir.mkdir()
+        test_bin = workdir / "test-bin"
+        test_bin.mkdir()
+        for harness in sb_lib.HARNESSES:
+            shutil.copy(DOTFILES_ROOT / "tests/sb_harness", test_bin / harness)
+        return workdir
+
+    def run_sb(
+        self, workdir: Path, harness: str, *options: str, **test_environment: str
+    ) -> subprocess.CompletedProcess[str]:
+        environment = os.environ.copy()
+        environment.pop("NONO_ALLOW", None)
+        environment.pop("NONO_PROFILE", None)
+        environment.update(test_environment)
+        environment["PATH"] = f"{workdir / 'test-bin'}:{environment['PATH']}"
+        return subprocess.run(
+            [str(DOTFILES_ROOT / "scripts/sb"), harness, *options],
+            cwd=workdir,
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+
+    def assert_success(self, completed: subprocess.CompletedProcess[str]) -> None:
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+
+    def test_masks_cwd(self) -> None:
+        workdir = self.make_workdir()
+        nested = workdir / "nested"
+        nested.mkdir()
+        sentinels = {
+            workdir / ".env": "cwd-env",
+            workdir / ".envrc": "cwd-envrc",
+            nested / ".env.local": "nested-env",
+        }
+        for path, value in sentinels.items():
+            path.write_text(value)
+        (workdir / "visible").write_text("visible")
+        (workdir / "config.env").write_text("config")
+
+        completed = self.run_sb(workdir, "claude", SB_TEST_SCENARIO="cwd")
+
+        self.assert_success(completed)
+        self.assertEqual((workdir / "result").read_text(), "ok")
+        self.assertEqual((workdir / "visible").read_text(), "changed")
+        self.assertEqual((workdir / "config.env").read_text(), "changed")
+        self.assertEqual((workdir / ".env.generated").read_text(), "generated")
+        for path, value in sentinels.items():
+            self.assertEqual(path.read_text(), value)
+
+    def test_masks_external_grants(self) -> None:
+        workdir = self.make_workdir()
+        read_dir = self.root / "read"
+        write_dir = self.root / "write"
+        read_dir.mkdir()
+        write_dir.mkdir()
+        (read_dir / "visible").write_text("visible")
+        sentinels = {
+            read_dir / ".env.read": "read-env",
+            write_dir / ".env.write": "write-env",
+            self.root / ".env.file": "file-env",
+        }
+        for path, value in sentinels.items():
+            path.write_text(value)
+
+        completed = self.run_sb(
+            workdir,
+            "opencode",
+            "--read",
+            str(read_dir),
+            "--write",
+            str(write_dir),
+            "--read-file",
+            str(self.root / ".env.file"),
+            SB_TEST_SCENARIO="grants",
+            SB_TEST_READ_DIR=str(read_dir),
+            SB_TEST_WRITE_DIR=str(write_dir),
+            SB_TEST_GRANTED_FILE=str(self.root / ".env.file"),
+        )
+
+        self.assert_success(completed)
+        self.assertEqual((write_dir / "created").read_text(), "created")
+        for path, value in sentinels.items():
+            self.assertEqual(path.read_text(), value)
+
+    def test_rejects_symlink_before_starting_harness(self) -> None:
+        workdir = self.make_workdir()
+        marker = self.root / "marker"
+        target = workdir / "target"
+        target.write_text("sentinel")
+        (workdir / ".env").symlink_to(target)
+
+        completed = self.run_sb(
+            workdir,
+            "opencode",
+            SB_TEST_SCENARIO="cwd",
+            SB_TEST_MARKER=str(marker),
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertFalse(marker.exists())
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
