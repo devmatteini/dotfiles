@@ -5,12 +5,14 @@ import stat
 import tempfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 
 HARNESSES = ("claude", "opencode")
 USAGE = "usage: sb <claude|opencode> [NONO_OPTIONS]"
 RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--profile", "--config", "--extends")
+SECRET_FILE_PATTERNS = (".env*", "signing.properties")
 EXCLUDED_SCAN_DIRECTORIES = frozenset(
     {
         # Version control and workspaces
@@ -55,6 +57,10 @@ EXCLUDED_SCAN_DIRECTORIES = frozenset(
 )
 
 
+def is_secret_file(path: Path) -> bool:
+    return any(fnmatchcase(path.name, pattern) for pattern in SECRET_FILE_PATTERNS)
+
+
 class GrantParser(argparse.ArgumentParser):
     def error(self, message: str):
         raise ValueError(message)
@@ -69,8 +75,8 @@ class Directory:
         metadata = path.lstat()
         if not stat.S_ISDIR(metadata.st_mode):
             raise ValueError(f"scan path is not a directory: {path}")
-        if path.name.startswith(".env"):
-            raise ValueError(f"unsafe .env path (directory): {path}")
+        if is_secret_file(path):
+            raise ValueError(f"unsafe secret path (directory): {path}")
         return cls(path)
 
 
@@ -116,18 +122,18 @@ def resolve(path: str, workdir: Path) -> Path:
     return candidate.resolve(strict=True)
 
 
-def validate_env_file(path: Path, metadata: os.stat_result) -> None:
+def validate_secret_file(path: Path, metadata: os.stat_result) -> None:
     if stat.S_ISLNK(metadata.st_mode):
-        raise ValueError(f"unsafe .env path (symlink): {path}")
+        raise ValueError(f"unsafe secret path (symlink): {path}")
     if stat.S_ISDIR(metadata.st_mode):
-        raise ValueError(f"unsafe .env path (directory): {path}")
+        raise ValueError(f"unsafe secret path (directory): {path}")
     if not stat.S_ISREG(metadata.st_mode):
-        raise ValueError(f"unsafe .env path (special file): {path}")
+        raise ValueError(f"unsafe secret path (special file): {path}")
     if metadata.st_nlink != 1:
-        raise ValueError(f"unsafe .env path (hard-linked file): {path}")
+        raise ValueError(f"unsafe secret path (hard-linked file): {path}")
 
 
-def find_env_files(
+def find_secret_files(
     directories: Sequence[Directory], files: Sequence[Path]
 ) -> list[Path]:
     found: list[Path] = []
@@ -137,8 +143,8 @@ def find_env_files(
             for entry in entries:
                 path = Path(entry.path)
                 metadata = entry.stat(follow_symlinks=False)
-                if path.name.startswith(".env"):
-                    validate_env_file(path, metadata)
+                if is_secret_file(path):
+                    validate_secret_file(path, metadata)
                     if path not in found:
                         found.append(path)
                 elif (
@@ -150,8 +156,8 @@ def find_env_files(
     for directory in directories:
         scan(directory.path)
     for path in files:
-        if path.name.startswith(".env"):
-            validate_env_file(path, path.lstat())
+        if is_secret_file(path):
+            validate_secret_file(path, path.lstat())
             if path not in found:
                 found.append(path)
     return found
@@ -171,8 +177,8 @@ def sandbox_fs_context(
         unresolved = Path(grant)
         if not unresolved.is_absolute():
             unresolved = workdir / unresolved
-        if unresolved.name.startswith(".env"):
-            validate_env_file(unresolved, unresolved.lstat())
+        if is_secret_file(unresolved):
+            validate_secret_file(unresolved, unresolved.lstat())
         path = resolve(grant, workdir)
         if not path.is_file():
             raise ValueError(f"file grant is not a regular file: {path}")
@@ -196,7 +202,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
     bwrap, nono = check_installed_tools()
 
     directories, files = sandbox_fs_context(workdir, directory_grants, file_grants)
-    env_files = find_env_files(directories, files)
+    secret_files = find_secret_files(directories, files)
 
     with tempfile.TemporaryFile() as placeholder:
         fd = placeholder.fileno()
@@ -210,7 +216,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
             str(workdir),
             "--die-with-parent",
         ]
-        for path in env_files:
+        for path in secret_files:
             command.extend(("--perms", "000", "--ro-bind-data", str(fd), str(path)))
         command.extend(
             (

@@ -16,7 +16,22 @@ from scripts import sb_lib  # noqa: E402
 
 
 class SbUnitTests(unittest.TestCase):
-    def test_finds_env_files_once(self) -> None:
+    def test_matches_secret_file_names(self) -> None:
+        cases = {
+            ".env": True,
+            ".envrc": True,
+            ".env.local": True,
+            "signing.properties": True,
+            "env": False,
+            "config.env": False,
+            "signing.properties.bak": False,
+            "SIGNING.PROPERTIES": False,
+        }
+        for name, expected in cases.items():
+            with self.subTest(name=name):
+                self.assertEqual(sb_lib.is_secret_file(Path(name)), expected)
+
+    def test_finds_secret_files_once(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             nested = root / "nested"
@@ -24,7 +39,7 @@ class SbUnitTests(unittest.TestCase):
             for relative in (".env", ".envrc", "nested/.env.local", "config.env"):
                 (root / relative).write_text(relative)
 
-            found = sb_lib.find_env_files(
+            found = sb_lib.find_secret_files(
                 [
                     sb_lib.Directory.try_from_path(root),
                     sb_lib.Directory.try_from_path(nested),
@@ -47,11 +62,11 @@ class SbUnitTests(unittest.TestCase):
                 excluded.mkdir()
                 (excluded / ".env").write_text("excluded")
 
-            found = sb_lib.find_env_files([sb_lib.Directory.try_from_path(root)], [])
+            found = sb_lib.find_secret_files([sb_lib.Directory.try_from_path(root)], [])
 
             self.assertEqual(found, [expected])
 
-    def test_rejects_unsafe_env_files(self) -> None:
+    def test_rejects_unsafe_secret_files(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             target = root / "target"
@@ -66,7 +81,7 @@ class SbUnitTests(unittest.TestCase):
 
             for path in unsafe:
                 with self.subTest(path=path.name), self.assertRaises(ValueError):
-                    sb_lib.validate_env_file(path, path.lstat())
+                    sb_lib.validate_secret_file(path, path.lstat())
 
     def test_rejects_unsafe_options(self) -> None:
         invalid = (
