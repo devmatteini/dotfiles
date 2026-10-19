@@ -101,7 +101,9 @@
             "path": "/chrome-for-testing-public/**"
           }
         ]
-      }
+      },
+      // mongodb
+      "fastdl.mongodb.org"
     ],
     "open_port": [
       3000,
