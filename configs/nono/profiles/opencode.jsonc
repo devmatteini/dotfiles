@@ -1,6 +1,9 @@
 {
   "$schema": "../nono-profile.schema.json",
-  "extends": ["nolabs-ai/opencode-v1", "agent-common"],
+  "extends": [
+    "nolabs-ai/opencode-v1",
+    "agent-common"
+  ],
   "meta": {
     "name": "opencode",
     "version": "1.0.0",
@@ -11,6 +14,9 @@
     "capability_elevation": false
   },
   "network": {
-    "allow_domain": ["chatgpt.com"]
+    "allow_domain": [
+      "chatgpt.com",
+      "models.opencode.ai"
+    ]
   }
 }
