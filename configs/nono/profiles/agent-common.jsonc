@@ -10,7 +10,8 @@
   "groups": {
     "include": [
       "mise_manager",
-      "java_runtime"
+      "java_runtime",
+      "user_caches_linux"
     ],
     "exclude": [
       "vscode_linux"
@@ -87,12 +88,25 @@
     "allow_domain": [
       "registry.npmjs.org",
       "npm.pkg.github.com",
-      "pkg-npm.githubusercontent.com"
+      "pkg-npm.githubusercontent.com",
+      // Playwright
+      "cdn.playwright.dev",
+      "playwright.download.prss.microsoft.com",
+      {
+        "domain": "storage.googleapis.com",
+        "endpoints": [
+          {
+            "method": "*",
+            "path": "/chrome-for-testing-public/**"
+          }
+        ]
+      }
     ],
     "open_port": [
       3000,
       3001,
       4321,
+      5678,
       8000,
       8080
     ],
