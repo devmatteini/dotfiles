@@ -105,13 +105,14 @@
       // mongodb
       "fastdl.mongodb.org"
     ],
-    "open_port": [
-      3000,
-      3001,
-      4321,
-      5678,
-      8000,
-      8080
+    "open_port_range": [
+      [
+        1,
+        65535
+      ]
+    ],
+    "listen_port": [
+      0
     ],
     "credentials": [
       "github_npm"
