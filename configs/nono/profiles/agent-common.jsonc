@@ -27,7 +27,8 @@
     "allow": [
       "$HOME/.local/share/pnpm",
       "$HOME/.cache/pnpm",
-      "$HOME/.local/state/pnpm"
+      "$HOME/.local/state/pnpm",
+      "$HOME/.dts" // https://github.com/Microsoft/dtslint
     ],
     "read": [
       "$HOME/.cache/node"
