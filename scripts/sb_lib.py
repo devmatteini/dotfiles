@@ -10,8 +10,12 @@ from pathlib import Path
 
 
 HARNESSES = ("claude", "opencode")
-USAGE = "usage: sb <claude|opencode> [NONO_OPTIONS]"
 RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--profile", "--config", "--extends")
+SANDBOX_TYPE_OPTIONS = {
+    # https://github.com/nolabs-ai/nono/issues/1640
+    # https://github.com/nolabs-ai/nono/issues/1792
+    "android": ("--sandbox-policy", "landlock"),
+}
 SECRET_FILE_PATTERNS = (".env*", "signing.properties")
 EXCLUDED_SCAN_DIRECTORIES = frozenset(
     {
@@ -61,9 +65,23 @@ def is_secret_file(path: Path) -> bool:
     return any(fnmatchcase(path.name, pattern) for pattern in SECRET_FILE_PATTERNS)
 
 
-class GrantParser(argparse.ArgumentParser):
-    def error(self, message: str):
-        raise ValueError(message)
+def create_parser(
+    *, add_help: bool = True, usage: str | None = None
+) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="sb",
+        usage=usage,
+        allow_abbrev=False,
+        add_help=add_help,
+    )
+    parser.add_argument("harness", choices=HARNESSES)
+    parser.add_argument(
+        "-t",
+        "--type",
+        choices=SANDBOX_TYPE_OPTIONS,
+        help="Sandbox type to customize configuration",
+    )
+    return parser
 
 
 @dataclass(frozen=True)
@@ -83,13 +101,23 @@ class Directory:
 def parse_args(
     argv: Sequence[str], environment: Mapping[str, str]
 ) -> tuple[str, list[str], list[str], list[str]]:
-    if not argv or argv[0] not in HARNESSES:
-        raise ValueError(USAGE)
+    if "--" in argv:
+        raise ValueError("the -- separator is reserved by sb")
 
-    options = list(argv[1:])
+    parser = create_parser(usage="%(prog)s [-h] <claude|opencode> [NONO_OPTIONS]")
+    for flags in (("-a", "--allow"), ("-r", "--read"), ("-w", "--write")):
+        parser.add_argument(*flags, action="append", dest="directories")
+    for flag in ("--allow-file", "--read-file", "--write-file"):
+        parser.add_argument(flag, action="append", dest="files")
+    arguments, _ = parser.parse_known_args(argv)
+
+    passthrough_parser = create_parser(add_help=False)
+    _, options = passthrough_parser.parse_known_args(argv)
+
+    if arguments.type:
+        options[:0] = SANDBOX_TYPE_OPTIONS[arguments.type]
+
     for option in options:
-        if option == "--":
-            raise ValueError("the -- separator is reserved by sb")
         if option.startswith("--allow-unix-socket"):
             raise ValueError(f"unsupported filesystem grant: {option}")
         if any(
@@ -102,17 +130,12 @@ def parse_args(
         if environment.get(variable):
             raise ValueError(f"{variable} is unsupported; use explicit CLI options")
 
-    parser = GrantParser(add_help=False, allow_abbrev=False, exit_on_error=False)
-    for flags in (("-a", "--allow"), ("-r", "--read"), ("-w", "--write")):
-        parser.add_argument(*flags, action="append", dest="directories")
-    for flag in ("--allow-file", "--read-file", "--write-file"):
-        parser.add_argument(flag, action="append", dest="files")
-    try:
-        grants, _ = parser.parse_known_args(options)
-    except argparse.ArgumentError as error:
-        raise ValueError(str(error)) from error
-
-    return argv[0], options, grants.directories or [], grants.files or []
+    return (
+        arguments.harness,
+        options,
+        arguments.directories or [],
+        arguments.files or [],
+    )
 
 
 def resolve(path: str, workdir: Path) -> Path:

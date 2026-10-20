@@ -6,6 +6,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr
+from io import StringIO
 from pathlib import Path
 
 
@@ -85,8 +87,6 @@ class SbUnitTests(unittest.TestCase):
 
     def test_rejects_unsafe_options(self) -> None:
         invalid = (
-            ([], {}),
-            (["other"], {}),
             (["claude", "--workdir=/tmp"], {}),
             (["claude", "-pother"], {}),
             (["claude", "--allow-unix-socket-subtree", "/tmp"], {}),
@@ -97,6 +97,25 @@ class SbUnitTests(unittest.TestCase):
         for argv, environment in invalid:
             with self.subTest(argv=argv), self.assertRaises(ValueError):
                 sb_lib.parse_args(argv, environment)
+
+    def test_rejects_invalid_harness(self) -> None:
+        for argv in ([], ["other"]):
+            with (
+                self.subTest(argv=argv),
+                redirect_stderr(StringIO()),
+                self.assertRaises(SystemExit) as raised,
+            ):
+                sb_lib.parse_args(argv, {})
+            self.assertEqual(raised.exception.code, 2)
+
+    def test_translates_sandbox_type_to_nono_options(self) -> None:
+        _, options, _, _ = sb_lib.parse_args(
+            ["claude", "--type", "android", "-a", "/tmp", "--verbose"], {}
+        )
+        self.assertEqual(
+            options,
+            ["--sandbox-policy", "landlock", "-a", "/tmp", "--verbose"],
+        )
 
 
 class SbEndToEndTests(unittest.TestCase):
