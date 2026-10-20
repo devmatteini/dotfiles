@@ -28,13 +28,16 @@
       "$HOME/.local/share/pnpm",
       "$HOME/.cache/pnpm",
       "$HOME/.local/state/pnpm",
-      "$HOME/.dts" // https://github.com/Microsoft/dtslint
+      "$HOME/.dts", // https://github.com/Microsoft/dtslint
+      "$HOME/.gradle"
     ],
     "write": [
       "$HOME/.cargo/registry"
     ],
     "read": [
       "$HOME/.cache/node",
+      "$HOME/.android",
+      "$HOME/Android/Sdk",
       "/usr/libexec", // support binaries for user tools (e.g. linking in rust)
       "/usr/include" // system header files
     ],
@@ -110,7 +113,13 @@
       // mongodb
       "fastdl.mongodb.org",
       // github (in addition to nono github group)
-      "release-assets.githubusercontent.com"
+      "release-assets.githubusercontent.com",
+      // Gradle and Android
+      "services.gradle.org",
+      "downloads.gradle.org",
+      "plugins-artifacts.gradle.org",
+      "dl.google.com",
+      "maven.google.com"
     ],
     "open_port_range": [
       [
