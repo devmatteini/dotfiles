@@ -109,20 +109,20 @@ class SbUnitTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, 2)
 
     def test_translates_sandbox_type_to_nono_options(self) -> None:
-        _, _, options, _, _ = sb_lib.parse_args(
+        args = sb_lib.parse_args(
             ["claude", "--type", "android", "-a", "/tmp", "--verbose"], {}
         )
         self.assertEqual(
-            options,
+            args.nono_options,
             ["--sandbox-policy", "landlock", "-a", "/tmp", "--verbose"],
         )
 
     def test_parses_dry_run_without_passing_it_to_nono(self) -> None:
-        _, dry_run, options, _, _ = sb_lib.parse_args(
+        args = sb_lib.parse_args(
             ["claude", "--dry-run", "--verbose"], {}
         )
-        self.assertTrue(dry_run)
-        self.assertEqual(options, ["--verbose"])
+        self.assertTrue(args.dry_run)
+        self.assertEqual(args.nono_options, ["--verbose"])
 
 
 class SbEndToEndTests(unittest.TestCase):

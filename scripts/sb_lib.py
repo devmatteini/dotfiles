@@ -94,6 +94,15 @@ def create_parser(
 
 
 @dataclass(frozen=True)
+class CliArgs:
+    harness: str
+    dry_run: bool
+    nono_options: list[str]
+    directory_grants: list[str]
+    file_grants: list[str]
+
+
+@dataclass(frozen=True)
 class Directory:
     path: Path
 
@@ -109,7 +118,7 @@ class Directory:
 
 def parse_args(
     argv: Sequence[str], environment: Mapping[str, str]
-) -> tuple[str, bool, list[str], list[str], list[str]]:
+) -> CliArgs:
     if "--" in argv:
         raise ValueError("the -- separator is reserved by sb")
 
@@ -139,12 +148,12 @@ def parse_args(
         if environment.get(variable):
             raise ValueError(f"{variable} is unsupported; use explicit CLI options")
 
-    return (
-        arguments.harness,
-        arguments.dry_run,
-        options,
-        arguments.directories or [],
-        arguments.files or [],
+    return CliArgs(
+        harness=arguments.harness,
+        dry_run=arguments.dry_run,
+        nono_options=options,
+        directory_grants=arguments.directories or [],
+        file_grants=arguments.files or [],
     )
 
 
@@ -241,13 +250,13 @@ def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
 
 
 def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> None:
-    harness, dry_run, nono_options, directory_grants, file_grants = parse_args(
-        argv, environment
-    )
+    args = parse_args(argv, environment)
 
     bwrap, nono = check_installed_tools()
 
-    directories, files = sandbox_fs_context(workdir, directory_grants, file_grants)
+    directories, files = sandbox_fs_context(
+        workdir, args.directory_grants, args.file_grants
+    )
     secret_files = find_secret_files(directories, files)
 
     with tempfile.TemporaryFile() as placeholder:
@@ -270,14 +279,14 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 nono,
                 "run",
                 "--profile",
-                harness,
+                args.harness,
                 "--allow-cwd",
-                *nono_options,
+                *args.nono_options,
                 "--",
-                harness,
+                args.harness,
             )
         )
-        if dry_run:
+        if args.dry_run:
             report(secret_files, command, workdir)
             return
         os.execvp(bwrap, command)
