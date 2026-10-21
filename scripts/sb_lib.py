@@ -1,5 +1,6 @@
 import argparse
 import os
+import shlex
 import shutil
 import stat
 import tempfile
@@ -60,6 +61,9 @@ EXCLUDED_SCAN_DIRECTORIES = frozenset(
     }
 )
 
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
 
 def is_secret_file(path: Path) -> bool:
     return any(fnmatchcase(path.name, pattern) for pattern in SECRET_FILE_PATTERNS)
@@ -81,6 +85,11 @@ def create_parser(
         choices=SANDBOX_TYPE_OPTIONS,
         help="Sandbox type to customize configuration",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Report blocked secrets and bwrap command without executing it",
+    )
     return parser
 
 
@@ -100,7 +109,7 @@ class Directory:
 
 def parse_args(
     argv: Sequence[str], environment: Mapping[str, str]
-) -> tuple[str, list[str], list[str], list[str]]:
+) -> tuple[str, bool, list[str], list[str], list[str]]:
     if "--" in argv:
         raise ValueError("the -- separator is reserved by sb")
 
@@ -132,6 +141,7 @@ def parse_args(
 
     return (
         arguments.harness,
+        arguments.dry_run,
         options,
         arguments.directories or [],
         arguments.files or [],
@@ -219,8 +229,21 @@ def check_installed_tools():
     return bwrap, nono
 
 
+def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
+    print(f"{BOLD}Blocked secret paths:{RESET}")
+    if secret_files:
+        for path in secret_files:
+            print(f" {os.path.relpath(path, workdir)}")
+    else:
+        print(" none")
+    print(f"\n{BOLD}Bubblewrap command:{RESET}")
+    print(shlex.join(bwrap_command))
+
+
 def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> None:
-    harness, nono_options, directory_grants, file_grants = parse_args(argv, environment)
+    harness, dry_run, nono_options, directory_grants, file_grants = parse_args(
+        argv, environment
+    )
 
     bwrap, nono = check_installed_tools()
 
@@ -254,4 +277,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 harness,
             )
         )
+        if dry_run:
+            report(secret_files, command, workdir)
+            return
         os.execvp(bwrap, command)

@@ -109,13 +109,20 @@ class SbUnitTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, 2)
 
     def test_translates_sandbox_type_to_nono_options(self) -> None:
-        _, options, _, _ = sb_lib.parse_args(
+        _, _, options, _, _ = sb_lib.parse_args(
             ["claude", "--type", "android", "-a", "/tmp", "--verbose"], {}
         )
         self.assertEqual(
             options,
             ["--sandbox-policy", "landlock", "-a", "/tmp", "--verbose"],
         )
+
+    def test_parses_dry_run_without_passing_it_to_nono(self) -> None:
+        _, dry_run, options, _, _ = sb_lib.parse_args(
+            ["claude", "--dry-run", "--verbose"], {}
+        )
+        self.assertTrue(dry_run)
+        self.assertEqual(options, ["--verbose"])
 
 
 class SbEndToEndTests(unittest.TestCase):
@@ -229,6 +236,23 @@ class SbEndToEndTests(unittest.TestCase):
 
         self.assertNotEqual(completed.returncode, 0)
         self.assertFalse(marker.exists())
+
+    def test_dry_run_(self) -> None:
+        workdir = self.make_workdir()
+        secret = workdir / ".env"
+        secret.write_text("secret")
+
+        completed = self.run_sb(workdir, "claude", "--dry-run", "--verbose")
+
+        self.assert_success(completed)
+        self.assertFalse((workdir / "result").exists())
+        self.assertIn("Blocked secret paths:", completed.stdout)
+        self.assertIn(" .env\n", completed.stdout)
+        self.assertIn("Bubblewrap command:", completed.stdout)
+        self.assertIn("--ro-bind-data", completed.stdout)
+        self.assertIn(
+            "nono run --profile claude --allow-cwd --verbose", completed.stdout
+        )
 
 
 if __name__ == "__main__":
