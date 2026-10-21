@@ -253,6 +253,11 @@ class SbEndToEndTests(unittest.TestCase):
         self.assertIn(
             "nono run --profile claude --allow-cwd --verbose", completed.stdout
         )
+        self.assertIn(
+            f"-- claude --settings {Path.home()}/.claude/settings-nono.json "
+            "--setting-sources project,local",
+            completed.stdout,
+        )
 
 
 if __name__ == "__main__":

@@ -116,9 +116,7 @@ class Directory:
         return cls(path)
 
 
-def parse_args(
-    argv: Sequence[str], environment: Mapping[str, str]
-) -> CliArgs:
+def parse_args(argv: Sequence[str], environment: Mapping[str, str]) -> CliArgs:
     if "--" in argv:
         raise ValueError("the -- separator is reserved by sb")
 
@@ -249,6 +247,23 @@ def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
     print(shlex.join(bwrap_command))
 
 
+def build_harness_command(harness: str, environment: Mapping[str, str]) -> list[str]:
+    command = [harness]
+    if harness == "claude":
+        home = environment.get("HOME")
+        if not home:
+            raise RuntimeError("HOME is not set")
+        command.extend(
+            (
+                "--settings",
+                str(Path(home) / ".claude/settings-nono.json"),
+                "--setting-sources",
+                "project,local",
+            )
+        )
+    return command
+
+
 def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> None:
     args = parse_args(argv, environment)
 
@@ -258,6 +273,8 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
         workdir, args.directory_grants, args.file_grants
     )
     secret_files = find_secret_files(directories, files)
+
+    harness_command = build_harness_command(args.harness, environment)
 
     with tempfile.TemporaryFile() as placeholder:
         fd = placeholder.fileno()
@@ -283,7 +300,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 "--allow-cwd",
                 *args.nono_options,
                 "--",
-                args.harness,
+                *harness_command,
             )
         )
         if args.dry_run:
