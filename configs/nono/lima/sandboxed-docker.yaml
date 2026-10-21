@@ -1,0 +1,21 @@
+minimumLimaVersion: 2.0.0
+
+base:
+- template:docker
+
+cpus: 2
+memory: 2GiB
+disk: 20GiB
+
+portForwards:
+- guestSocket: "/run/user/{{.UID}}/docker.sock"
+  hostSocket: "{{.Param.DockerSocket}}"
+
+provision:
+- mode: user
+  script: |
+    : "{{.Param.ProjectPath}}"
+
+param:
+  DockerSocket: ""
+  ProjectPath: ""

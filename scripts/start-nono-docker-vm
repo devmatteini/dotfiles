@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+[[ -n ${NONO_ENV_FILE:-} ]] || {
+    echo "start-nono-docker-vm: NONO_ENV_FILE is not set" >&2
+    exit 1
+}
+
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+readonly SCRIPT_DIR
+
+command -v limactl >/dev/null || exit 0
+
+environment=$("$SCRIPT_DIR/nono-docker-vm" start-and-print-env)
+if [[ -n $environment ]]; then
+    printf '%s\n' "$environment" >>"$NONO_ENV_FILE"
+fi

@@ -54,7 +54,16 @@
     "suppress_save_prompt": [
       "$HOME/.bash.local",
       "$HOME/.zsh.local"
+    ],
+    "unix_socket_dir": [
+      "$XDG_RUNTIME_DIR/nono-docker"
     ]
+  },
+  "session_hooks": {
+    "before": {
+      "script": "$HOME/dotfiles/scripts/start-nono-docker-vm",
+      "timeout_secs": 30
+    }
   },
   "environment": {
     "deny_vars": [

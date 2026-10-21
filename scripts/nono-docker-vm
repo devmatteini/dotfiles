@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+readonly SCRIPT_DIR
+readonly TEMPLATE="$SCRIPT_DIR/../configs/nono/lima/sandboxed-docker.yaml"
+
+die() {
+    echo "nono-docker-vm: error: $*" >&2
+    exit 1
+}
+
+log_to_terminal() {
+    { printf '%s\n' "$*" >/dev/tty; } 2>/dev/null || true
+}
+
+require_command() {
+    command -v "$1" >/dev/null || die "$1 not found in PATH"
+}
+
+prepare_runtime_dir() {
+    [[ -n ${XDG_RUNTIME_DIR:-} ]] || die "XDG_RUNTIME_DIR is not set"
+    [[ $XDG_RUNTIME_DIR == /* ]] || die "XDG_RUNTIME_DIR must be absolute"
+
+    RUNTIME_DIR="$XDG_RUNTIME_DIR/nono-docker"
+    if [[ -L $RUNTIME_DIR ]]; then
+        die "runtime directory is a symlink: $RUNTIME_DIR"
+    fi
+    if [[ -e $RUNTIME_DIR ]]; then
+        [[ -d $RUNTIME_DIR ]] || die "runtime path is not a directory: $RUNTIME_DIR"
+        [[ $(stat -c %u "$RUNTIME_DIR") == $(id -u) ]] ||
+            die "runtime directory belongs to another user: $RUNTIME_DIR"
+        chmod 700 "$RUNTIME_DIR"
+    else
+        mkdir -m 700 "$RUNTIME_DIR"
+    fi
+}
+
+project_context() {
+    PROJECT=$(realpath -e -- "${NONO_DOCKER_PROJECT:-$PWD}")
+    [[ -d $PROJECT ]] || die "project is not a directory: $PROJECT"
+
+    PROJECT_HASH=$(printf %s "$PROJECT" | sha256sum | cut -c1-12)
+    local slug
+    slug=$(basename "$PROJECT" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9-' '-')
+    slug=${slug#-}
+    slug=${slug%-}
+    [[ -n $slug ]] || slug=project
+    slug=${slug:0:32}
+
+    VM_NAME="nono-${slug}-${PROJECT_HASH}"
+    SOCKET="$RUNTIME_DIR/${PROJECT_HASH}.sock"
+}
+
+vm_exists() {
+    local instance
+    while IFS= read -r instance; do
+        [[ $instance == "$VM_NAME" ]] && return 0
+    done < <(limactl list --quiet 2>/dev/null)
+    return 1
+}
+
+vm_status() {
+    limactl list "$VM_NAME" --format '{{.Status}}'
+}
+
+verify_vm() {
+    python3 - "$PROJECT" "$SOCKET" \
+        3< <(limactl list "$VM_NAME" --all-fields --format json) <<'PY'
+import json
+import os
+import sys
+
+project, socket = sys.argv[1:]
+instance = json.load(os.fdopen(3))
+config = instance[0] if isinstance(instance, list) else instance
+mounts = [mount["location"] for mount in config["config"]["mounts"]]
+docker_socket = config["param"].get("DockerSocket")
+
+if mounts != [project]:
+    raise SystemExit(f"unexpected Lima mounts: {mounts!r}; expected [{project!r}]")
+if docker_socket != socket:
+    raise SystemExit(
+        f"unexpected DockerSocket parameter: {docker_socket!r}; expected {socket!r}"
+    )
+PY
+}
+
+create_vm() {
+    [[ -f $TEMPLATE ]] || die "missing Lima template: $TEMPLATE"
+    rm -f -- "$SOCKET"
+    limactl create --yes \
+        --name "$VM_NAME" \
+        --mount-only "$PROJECT:w" \
+        --param "DockerSocket=$SOCKET" \
+        "$TEMPLATE"
+    verify_vm
+}
+
+enable_vm() {
+    if vm_exists; then
+        verify_vm
+        echo "$VM_NAME is already enabled"
+        return
+    fi
+    create_vm
+    limactl start "$VM_NAME"
+    limactl stop "$VM_NAME"
+    echo "$VM_NAME enabled"
+}
+
+start_if_exists() {
+    vm_exists || return 0
+    verify_vm
+    if [[ $(vm_status) != Running ]]; then
+        rm -f -- "$SOCKET"
+        limactl start "$VM_NAME"
+    fi
+}
+
+start_and_print_env() {
+    vm_exists || return 0
+    verify_vm
+    if [[ $(vm_status) != Running ]]; then
+        log_to_terminal "Starting Docker VM $VM_NAME..."
+        rm -f -- "$SOCKET"
+        limactl start "$VM_NAME"
+    fi
+    emit_env
+}
+
+stop_vm() {
+    vm_exists || return 0
+    [[ $(vm_status) == Stopped ]] || limactl stop "$VM_NAME"
+}
+
+show_status() {
+    if ! vm_exists; then
+        printf 'Name: %s\nStatus: Not enabled\nMount: %s\nSocket: %s\n' \
+            "$VM_NAME" "$PROJECT" "$SOCKET"
+        return
+    fi
+    verify_vm
+    printf 'Name: %s\nStatus: %s\nMount: %s\nSocket: %s\n' \
+        "$VM_NAME" "$(vm_status)" "$PROJECT" "$SOCKET"
+}
+
+recreate_vm() {
+    if vm_exists; then
+        [[ $(vm_status) == Stopped ]] || limactl stop "$VM_NAME"
+        limactl delete --force "$VM_NAME"
+    fi
+    create_vm
+    limactl start "$VM_NAME"
+    limactl stop "$VM_NAME"
+    echo "$VM_NAME recreated"
+}
+
+print_env() {
+    vm_exists || return 0
+    verify_vm
+    [[ $(vm_status) == Running ]] || return 0
+    emit_env
+}
+
+emit_env() {
+    printf 'DOCKER_HOST=unix://%s\n' "$SOCKET"
+    printf 'DOCKER_AUTH_CONFIG={}\n'
+    printf 'DOCKER_CONFIG=/tmp/nono-docker-config-%s\n' "$PROJECT_HASH"
+    printf 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/run/user/%s/docker.sock\n' "$(id -u)"
+    printf 'TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1\n'
+}
+
+usage() {
+    echo "Usage: nono-docker-vm <enable|start-if-exists|stop|status|recreate|print-env>" >&2
+    exit 2
+}
+
+[[ $# == 1 ]] || usage
+require_command limactl
+require_command realpath
+require_command sha256sum
+prepare_runtime_dir
+project_context
+
+case $1 in
+    enable) enable_vm ;;
+    start-if-exists) start_if_exists ;;
+    start-and-print-env) start_and_print_env ;;
+    stop) stop_vm ;;
+    status) show_status ;;
+    recreate) recreate_vm ;;
+    print-env) print_env ;;
+    *) usage ;;
+esac

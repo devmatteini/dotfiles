@@ -60,6 +60,7 @@ EXCLUDED_SCAN_DIRECTORIES = frozenset(
         "target",
     }
 )
+HOST_DOCKER_SOCKET_PATHS = (Path("/run/docker.sock"), Path("/var/run/docker.sock"))
 
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -236,6 +237,46 @@ def check_installed_tools():
     return bwrap, nono
 
 
+def prepare_nono_docker_runtime(environment: Mapping[str, str]) -> Path:
+    xdg_runtime = environment.get("XDG_RUNTIME_DIR")
+    if not xdg_runtime:
+        raise RuntimeError("XDG_RUNTIME_DIR is not set")
+    runtime_root = Path(xdg_runtime)
+    if not runtime_root.is_absolute():
+        raise RuntimeError("XDG_RUNTIME_DIR must be absolute")
+
+    runtime_dir = runtime_root / "nono-docker"
+    try:
+        metadata = runtime_dir.lstat()
+    except FileNotFoundError:
+        runtime_dir.mkdir(mode=0o700)
+        metadata = runtime_dir.lstat()
+
+    if stat.S_ISLNK(metadata.st_mode):
+        raise RuntimeError(f"nono Docker runtime directory is a symlink: {runtime_dir}")
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise RuntimeError(
+            f"nono Docker runtime path is not a directory: {runtime_dir}"
+        )
+    if metadata.st_uid != os.getuid():
+        raise RuntimeError(
+            f"nono Docker runtime directory belongs to another user: {runtime_dir}"
+        )
+    runtime_dir.chmod(0o700)
+    return runtime_dir
+
+
+def existing_host_docker_sockets() -> list[Path]:
+    sockets: list[Path] = []
+    for path in HOST_DOCKER_SOCKET_PATHS:
+        if not path.exists():
+            continue
+        target = path.resolve(strict=True)
+        if target not in sockets:
+            sockets.append(target)
+    return sockets
+
+
 def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
     print(f"{BOLD}Blocked secret paths:{RESET}")
     if secret_files:
@@ -268,6 +309,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
     args = parse_args(argv, environment)
 
     bwrap, nono = check_installed_tools()
+    prepare_nono_docker_runtime(environment)
 
     directories, files = sandbox_fs_context(
         workdir, args.directory_grants, args.file_grants
@@ -289,6 +331,8 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
             "--die-with-parent",
         ]
         for path in secret_files:
+            command.extend(("--perms", "000", "--ro-bind-data", str(fd), str(path)))
+        for path in existing_host_docker_sockets():
             command.extend(("--perms", "000", "--ro-bind-data", str(fd), str(path)))
         command.extend(
             (

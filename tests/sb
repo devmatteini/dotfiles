@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -124,6 +125,35 @@ class SbUnitTests(unittest.TestCase):
         self.assertTrue(args.dry_run)
         self.assertEqual(args.nono_options, ["--verbose"])
 
+    def test_prepares_private_nono_docker_runtime(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            runtime = sb_lib.prepare_nono_docker_runtime(
+                {"XDG_RUNTIME_DIR": temporary}
+            )
+            self.assertEqual(runtime, Path(temporary) / "nono-docker")
+            self.assertEqual(stat.S_IMODE(runtime.stat().st_mode), 0o700)
+
+    def test_rejects_symlink_nono_docker_runtime(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "target").mkdir()
+            (root / "nono-docker").symlink_to(root / "target")
+            with self.assertRaises(RuntimeError):
+                sb_lib.prepare_nono_docker_runtime({"XDG_RUNTIME_DIR": temporary})
+
+    def test_resolves_host_docker_socket_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            socket = root / "docker.sock"
+            alias = root / "alias.sock"
+            socket.touch()
+            alias.symlink_to(socket)
+            original = sb_lib.HOST_DOCKER_SOCKET_PATHS
+            self.addCleanup(setattr, sb_lib, "HOST_DOCKER_SOCKET_PATHS", original)
+            sb_lib.HOST_DOCKER_SOCKET_PATHS = (alias,)
+
+            self.assertEqual(sb_lib.existing_host_docker_sockets(), [socket])
+
 
 class SbEndToEndTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -219,6 +249,15 @@ class SbEndToEndTests(unittest.TestCase):
         self.assertEqual((write_dir / "created").read_text(), "created")
         for path, value in sentinels.items():
             self.assertEqual(path.read_text(), value)
+
+    def test_masks_host_docker_sockets(self) -> None:
+        workdir = self.make_workdir()
+
+        completed = self.run_sb(
+            workdir, "opencode", SB_TEST_SCENARIO="docker"
+        )
+
+        self.assert_success(completed)
 
     def test_rejects_symlink_before_starting_harness(self) -> None:
         workdir = self.make_workdir()

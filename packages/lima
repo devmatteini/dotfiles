@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# https://github.com/lima-vm/lima
+
+set -euo pipefail
+
+archive=$(mktemp --suffix=.tar.gz)
+
+dra download -a -o "$archive" lima-vm/lima
+sudo tar -xzf "$archive" -C /usr/local

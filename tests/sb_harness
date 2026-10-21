@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import socket
 from pathlib import Path
 
 
@@ -16,7 +17,8 @@ cwd = Path.cwd()
 if marker := os.environ.get("SB_TEST_MARKER"):
     Path(marker).write_text("executed")
 
-if os.environ["SB_TEST_SCENARIO"] == "cwd":
+scenario = os.environ["SB_TEST_SCENARIO"]
+if scenario == "cwd":
     for relative in (".env", ".envrc", "nested/.env.local"):
         path = cwd / relative
         must_fail(path.read_text)
@@ -26,7 +28,7 @@ if os.environ["SB_TEST_SCENARIO"] == "cwd":
     (cwd / "visible").write_text("changed")
     (cwd / "config.env").write_text("changed")
     (cwd / ".env.generated").write_text("generated")
-else:
+elif scenario == "grants":
     read_dir = Path(os.environ["SB_TEST_READ_DIR"])
     write_dir = Path(os.environ["SB_TEST_WRITE_DIR"])
     granted_file = Path(os.environ["SB_TEST_GRANTED_FILE"])
@@ -35,5 +37,10 @@ else:
     (write_dir / "created").write_text("created")
     must_fail(lambda: (write_dir / ".env.write").write_text("changed"))
     must_fail(granted_file.read_text)
+else:
+    for docker_socket in ("/run/docker.sock", "/var/run/docker.sock"):
+        client = socket.socket(socket.AF_UNIX)
+        must_fail(lambda path=docker_socket: client.connect(path))
+        client.close()
 
 (cwd / "result").write_text("ok")
