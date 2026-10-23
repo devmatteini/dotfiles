@@ -1,6 +1,9 @@
 {
   "$schema": "../nono-profile.schema.json",
-  "extends": ["nolabs-ai/claude", "agent-common"],
+  "extends": [
+    "nolabs-ai/claude",
+    "agent-common"
+  ],
   "meta": {
     "name": "claude",
     "version": "1.0.0",
@@ -9,6 +12,11 @@
   },
   "security": {
     "capability_elevation": false
+  },
+  "filesystem": {
+    "read_file": [
+      "$HOME/dotfiles/configs/claude/settings-nono.json"
+    ]
   },
   "environment": {
     "set_vars": {

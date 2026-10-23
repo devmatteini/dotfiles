@@ -23,5 +23,8 @@
     "claude-opus-5-5": {
       "effortLevel": "xhigh"
     }
+  },
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
   }
 }
