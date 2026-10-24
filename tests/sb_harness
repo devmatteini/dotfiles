@@ -2,6 +2,7 @@
 
 import os
 import socket
+import subprocess
 from pathlib import Path
 
 
@@ -37,6 +38,24 @@ elif scenario == "grants":
     (write_dir / "created").write_text("created")
     must_fail(lambda: (write_dir / ".env.write").write_text("changed"))
     must_fail(granted_file.read_text)
+elif scenario == "tmpdir":
+    completed = subprocess.run(
+        [
+            "nono",
+            "why",
+            "--self",
+            "--path",
+            os.environ["TMPDIR"],
+            "--op",
+            "readwrite",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.stdout.startswith("ALLOWED"), (
+        completed.stdout + completed.stderr
+    )
 else:
     for docker_socket in ("/run/docker.sock", "/var/run/docker.sock"):
         client = socket.socket(socket.AF_UNIX)

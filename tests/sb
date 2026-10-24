@@ -125,6 +125,16 @@ class SbUnitTests(unittest.TestCase):
         self.assertTrue(args.dry_run)
         self.assertEqual(args.nono_options, ["--verbose"])
 
+    def test_sets_tmpdir_in_child_environment(self) -> None:
+        environment = {"TMPDIR": "/tmp/inherited", "HOME": "/home/test"}
+
+        child_environment = sb_lib.build_child_environment(
+            environment, Path("/tmp/sb-claude-1000")
+        )
+
+        self.assertEqual(child_environment["TMPDIR"], "/tmp/sb-claude-1000")
+        self.assertEqual(environment["TMPDIR"], "/tmp/inherited")
+
     def test_prepares_private_nono_docker_runtime(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             runtime = sb_lib.prepare_nono_docker_runtime(
@@ -259,6 +269,16 @@ class SbEndToEndTests(unittest.TestCase):
 
         self.assert_success(completed)
 
+    def test_grants_tmpdir(self) -> None:
+        workdir = self.make_workdir()
+
+        for harness in sb_lib.HARNESSES:
+            with self.subTest(harness=harness):
+                completed = self.run_sb(
+                    workdir, harness, SB_TEST_SCENARIO="tmpdir"
+                )
+                self.assert_success(completed)
+
     def test_rejects_symlink_before_starting_harness(self) -> None:
         workdir = self.make_workdir()
         marker = self.root / "marker"
@@ -290,7 +310,9 @@ class SbEndToEndTests(unittest.TestCase):
         self.assertIn("Bubblewrap command:", completed.stdout)
         self.assertIn("--ro-bind-data", completed.stdout)
         self.assertIn(
-            "nono run --profile claude --allow-cwd --verbose", completed.stdout
+            f"nono run --profile claude --allow-cwd --allow "
+            f"/tmp/sb-claude-{os.getuid()} --verbose",
+            completed.stdout,
         )
         self.assertIn(
             f"-- claude --settings {Path.home()}/.claude/settings-nono.json "

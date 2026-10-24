@@ -61,6 +61,7 @@ EXCLUDED_SCAN_DIRECTORIES = frozenset(
     }
 )
 HOST_DOCKER_SOCKET_PATHS = (Path("/run/docker.sock"), Path("/var/run/docker.sock"))
+TEMP_ROOT = Path("/tmp")
 
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -237,6 +238,33 @@ def check_installed_tools():
     return bwrap, nono
 
 
+def prepare_temp_dir(harness: str) -> Path:
+    temp_dir = TEMP_ROOT / f"sb-{harness}-{os.getuid()}"
+    try:
+        temp_dir.mkdir(mode=0o700)
+    except FileExistsError:
+        pass
+
+    metadata = temp_dir.lstat()
+    if stat.S_ISLNK(metadata.st_mode):
+        raise RuntimeError(f"temporary directory is a symlink: {temp_dir}")
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise RuntimeError(f"temporary path is not a directory: {temp_dir}")
+    if metadata.st_uid != os.getuid():
+        raise RuntimeError(f"temporary directory belongs to another user: {temp_dir}")
+    if stat.S_IMODE(metadata.st_mode) != 0o700:
+        raise RuntimeError(f"temporary directory permissions are not 0700: {temp_dir}")
+    return temp_dir
+
+
+def build_child_environment(
+    environment: Mapping[str, str], temp_dir: Path
+) -> dict[str, str]:
+    child_environment = dict(environment)
+    child_environment["TMPDIR"] = str(temp_dir)
+    return child_environment
+
+
 def prepare_nono_docker_runtime(environment: Mapping[str, str]) -> Path:
     xdg_runtime = environment.get("XDG_RUNTIME_DIR")
     if not xdg_runtime:
@@ -309,14 +337,16 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
     args = parse_args(argv, environment)
 
     bwrap, nono = check_installed_tools()
-    prepare_nono_docker_runtime(environment)
+    temp_dir = prepare_temp_dir(args.harness)
+    child_environment = build_child_environment(environment, temp_dir)
+    prepare_nono_docker_runtime(child_environment)
 
     directories, files = sandbox_fs_context(
         workdir, args.directory_grants, args.file_grants
     )
     secret_files = find_secret_files(directories, files)
 
-    harness_command = build_harness_command(args.harness, environment)
+    harness_command = build_harness_command(args.harness, child_environment)
 
     with tempfile.TemporaryFile() as placeholder:
         fd = placeholder.fileno()
@@ -342,6 +372,8 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 "--profile",
                 args.harness,
                 "--allow-cwd",
+                "--allow",
+                str(temp_dir),
                 *args.nono_options,
                 "--",
                 *harness_command,
@@ -350,4 +382,4 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
         if args.dry_run:
             report(secret_files, command, workdir)
             return
-        os.execvp(bwrap, command)
+        os.execvpe(bwrap, command, child_environment)
