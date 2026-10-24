@@ -10,7 +10,7 @@ readonly PACKS=(
 )
 readonly NONO_SCHEMA="$BASEDIR/configs/nono/nono-profile.schema.json"
 
-dra download -a -i -o "$HOME/.local/bin" nolabs-ai/nono
+dra download -t v0.80.0 -a -i -o "$HOME/.local/bin" nolabs-ai/nono
 
 nono completion bash >"$HOME/.local/share/bash-completion/completions/nono"
 nono completion zsh >"$HOME/.local/share/zsh-completion/_nono"
