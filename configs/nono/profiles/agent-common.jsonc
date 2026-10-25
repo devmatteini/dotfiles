@@ -38,6 +38,9 @@
       "$HOME/.cache/node",
       "$HOME/.android",
       "$HOME/Android/Sdk",
+      "$HOME/dotfiles/configs/claude",
+      "$HOME/dotfiles/configs/opencode",
+      "$HOME/dotfiles/configs/nono",
       "/usr/libexec", // support binaries for user tools (e.g. linking in rust)
       "/usr/include" // system header files
     ],
