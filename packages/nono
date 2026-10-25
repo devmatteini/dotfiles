@@ -6,7 +6,7 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 readonly PACKS=(
     nolabs-ai/claude@0.1.4
-    nolabs-ai/opencode-v1@0.1.0
+    nolabs-ai/opencode@0.4.1
 )
 readonly NONO_SCHEMA="$BASEDIR/configs/nono/nono-profile.schema.json"
 

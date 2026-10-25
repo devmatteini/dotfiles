@@ -3,4 +3,11 @@
 set -euo pipefail
 
 # https://github.com/anomalyco/opencode
-dra download -s opencode-linux-x64.tar.gz -i -o ~/.local/bin anomalyco/opencode
+
+tmp=$(mktemp -d)
+archive="$tmp/opencode.tar.gz"
+
+curl -fL -o "$archive" https://opencode.ai/update/api/latest/cli/opencode/opencode-linux-x64.tar.gz
+tar xf "$archive" -C "$tmp"
+
+mv "$tmp/opencode" "$HOME/.local/bin/opencode"

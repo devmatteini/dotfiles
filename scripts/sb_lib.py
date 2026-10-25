@@ -330,6 +330,8 @@ def build_harness_command(harness: str, environment: Mapping[str, str]) -> list[
                 "project,local",
             )
         )
+    if harness == "opencode":
+        command.append("--standalone")
     return command
 
 

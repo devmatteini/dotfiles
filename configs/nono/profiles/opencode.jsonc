@@ -1,13 +1,13 @@
 {
   "$schema": "../nono-profile.schema.json",
   "extends": [
-    "nolabs-ai/opencode-v1",
+    "nolabs-ai/opencode",
     "agent-common"
   ],
   "meta": {
     "name": "opencode",
-    "version": "1.0.0",
-    "description": "Local OpenCode v1 sandbox profile",
+    "version": "2.0.0",
+    "description": "Local OpenCode v2 sandbox profile",
     "author": "devmatteini"
   },
   "security": {
@@ -18,5 +18,11 @@
       "chatgpt.com",
       "models.opencode.ai"
     ]
+  },
+  "session_hooks": {
+    "before": {
+      "script": "$HOME/dotfiles/configs/nono/hooks/opencode-before.sh",
+      "timeout_secs": 40
+    }
   }
 }
