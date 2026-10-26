@@ -26,5 +26,8 @@
   },
   "env": {
     "DISABLE_AUTOUPDATER": "1"
+  },
+  "sandbox": {
+    "enabled": false
   }
 }
