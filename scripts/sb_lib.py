@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 HARNESSES = ("claude", "opencode")
-RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--profile", "--config", "--extends")
+RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--config", "--extends")
 SANDBOX_TYPE_OPTIONS = {
     # https://github.com/nolabs-ai/nono/issues/1640
     # https://github.com/nolabs-ai/nono/issues/1792
@@ -82,6 +82,11 @@ def create_parser(
     )
     parser.add_argument("harness", choices=HARNESSES)
     parser.add_argument(
+        "-p",
+        "--profile",
+        help="nono profile to use (default: harness name)",
+    )
+    parser.add_argument(
         "-t",
         "--type",
         choices=SANDBOX_TYPE_OPTIONS,
@@ -98,6 +103,7 @@ def create_parser(
 @dataclass(frozen=True)
 class CliArgs:
     harness: str
+    profile: str
     dry_run: bool
     nono_options: list[str]
     directory_grants: list[str]
@@ -122,7 +128,9 @@ def parse_args(argv: Sequence[str], environment: Mapping[str, str]) -> CliArgs:
     if "--" in argv:
         raise ValueError("the -- separator is reserved by sb")
 
-    parser = create_parser(usage="%(prog)s [-h] <claude|opencode> [NONO_OPTIONS]")
+    parser = create_parser(
+        usage="%(prog)s [-h] <claude|opencode> [-p PROFILE] [NONO_OPTIONS]"
+    )
     for flags in (("-a", "--allow"), ("-r", "--read"), ("-w", "--write")):
         parser.add_argument(*flags, action="append", dest="directories")
     for flag in ("--allow-file", "--read-file", "--write-file"):
@@ -141,7 +149,7 @@ def parse_args(argv: Sequence[str], environment: Mapping[str, str]) -> CliArgs:
         if any(
             option == reserved or option.startswith(f"{reserved}=")
             for reserved in RESERVED_OPTIONS
-        ) or option.startswith(("-p", "-c")):
+        ) or option.startswith("-c"):
             raise ValueError(f"option reserved by sb: {option}")
 
     for variable in ("NONO_ALLOW", "NONO_PROFILE"):
@@ -150,6 +158,7 @@ def parse_args(argv: Sequence[str], environment: Mapping[str, str]) -> CliArgs:
 
     return CliArgs(
         harness=arguments.harness,
+        profile=arguments.profile or arguments.harness,
         dry_run=arguments.dry_run,
         nono_options=options,
         directory_grants=arguments.directories or [],
@@ -372,7 +381,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 nono,
                 "run",
                 "--profile",
-                args.harness,
+                args.profile,
                 "--allow-cwd",
                 "--allow",
                 str(temp_dir),
