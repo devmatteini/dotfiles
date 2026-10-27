@@ -56,6 +56,15 @@ elif scenario == "tmpdir":
     assert completed.stdout.startswith("ALLOWED"), (
         completed.stdout + completed.stderr
     )
+    for shell in ("bash", "zsh"):
+        completed = subprocess.run(
+            [shell, "-c", "cat - <<'EOL'\nhere document\nEOL"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert completed.returncode == 0, completed.stdout + completed.stderr
+        assert completed.stdout == "here document\n"
 else:
     for docker_socket in ("/run/docker.sock", "/var/run/docker.sock"):
         client = socket.socket(socket.AF_UNIX)

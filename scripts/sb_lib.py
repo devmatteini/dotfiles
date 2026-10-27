@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import Path
 
-
 HARNESSES = ("claude", "opencode")
 RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--config", "--extends")
 SANDBOX_TYPE_OPTIONS = {
@@ -271,6 +270,8 @@ def build_child_environment(
 ) -> dict[str, str]:
     child_environment = dict(environment)
     child_environment["TMPDIR"] = str(temp_dir)
+    # https://zsh.sourceforge.io/Doc/Release/Parameters.html
+    child_environment["TMPPREFIX"] = str(temp_dir / "zsh")
     return child_environment
 
 

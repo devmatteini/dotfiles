@@ -125,15 +125,23 @@ class SbUnitTests(unittest.TestCase):
         self.assertTrue(args.dry_run)
         self.assertEqual(args.nono_options, ["--verbose"])
 
-    def test_sets_tmpdir_in_child_environment(self) -> None:
-        environment = {"TMPDIR": "/tmp/inherited", "HOME": "/home/test"}
+    def test_sets_temp_paths_in_child_environment(self) -> None:
+        environment = {
+            "TMPDIR": "/tmp/inherited",
+            "TMPPREFIX": "/tmp/inherited-zsh",
+            "HOME": "/home/test",
+        }
 
         child_environment = sb_lib.build_child_environment(
             environment, Path("/tmp/sb-claude-1000")
         )
 
         self.assertEqual(child_environment["TMPDIR"], "/tmp/sb-claude-1000")
+        self.assertEqual(
+            child_environment["TMPPREFIX"], "/tmp/sb-claude-1000/zsh"
+        )
         self.assertEqual(environment["TMPDIR"], "/tmp/inherited")
+        self.assertEqual(environment["TMPPREFIX"], "/tmp/inherited-zsh")
 
     def test_prepares_private_nono_docker_runtime(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
