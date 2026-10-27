@@ -16,7 +16,8 @@
   "network": {
     "allow_domain": [
       "chatgpt.com",
-      "models.opencode.ai"
+      "models.opencode.ai",
+      "auth.openai.com"
     ]
   },
   "session_hooks": {
