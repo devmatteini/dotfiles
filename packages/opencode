@@ -11,3 +11,6 @@ curl -fL -o "$archive" https://opencode.ai/update/api/latest/cli/opencode/openco
 tar xf "$archive" -C "$tmp"
 
 mv "$tmp/opencode" "$HOME/.local/bin/opencode"
+
+opencode --completions bash >~/.local/share/bash-completion/completions/opencode
+opencode --completions zsh >~/.local/share/zsh-completion/_opencode
