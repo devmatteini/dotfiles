@@ -66,6 +66,7 @@ oem:
   install: "auto"
 packages:
   - "git"
+  - "language-pack-it"
 timezone: "Europe/Rome"
 updates: "all"
 shutdown: "reboot"

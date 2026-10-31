@@ -9,6 +9,9 @@ gsettings set org.gnome.desktop.interface clock-show-seconds false
 gsettings set org.gnome.desktop.interface clock-show-weekday true
 gsettings set org.gnome.desktop.interface toolkit-accessibility false
 
+# Regional formats
+gsettings set org.gnome.system.locale region 'it_IT.UTF-8'
+
 # Power
 gsettings set org.gnome.desktop.interface show-battery-percentage true
 gsettings set org.gnome.settings-daemon.plugins.power idle-dim false
