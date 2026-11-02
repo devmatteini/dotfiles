@@ -9,6 +9,9 @@ from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import Path
 
+import argcomplete
+from argcomplete.completers import DirectoriesCompleter, FilesCompleter
+
 HARNESSES = ("claude", "opencode")
 RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--config", "--extends")
 SANDBOX_TYPE_OPTIONS = {
@@ -131,9 +134,12 @@ def parse_args(argv: Sequence[str], environment: Mapping[str, str]) -> CliArgs:
         usage="%(prog)s [-h] <claude|opencode> [-p PROFILE] [NONO_OPTIONS]"
     )
     for flags in (("-a", "--allow"), ("-r", "--read"), ("-w", "--write")):
-        parser.add_argument(*flags, action="append", dest="directories")
+        argument = parser.add_argument(*flags, action="append", dest="directories")
+        argument.completer = DirectoriesCompleter()  # pyright: ignore[reportAttributeAccessIssue]
     for flag in ("--allow-file", "--read-file", "--write-file"):
-        parser.add_argument(flag, action="append", dest="files")
+        argument = parser.add_argument(flag, action="append", dest="files")
+        argument.completer = FilesCompleter()  # pyright: ignore[reportAttributeAccessIssue]
+    argcomplete.autocomplete(parser)
     arguments, _ = parser.parse_known_args(argv)
 
     passthrough_parser = create_parser(add_help=False)

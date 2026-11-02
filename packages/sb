@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+register-python-argcomplete --shell bash sb >"$HOME/.local/share/bash-completion/completions/sb"
+register-python-argcomplete --shell zsh sb >"$HOME/.local/share/zsh-completion/_sb"
