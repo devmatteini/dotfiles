@@ -1,3 +1,12 @@
 #!/usr/bin/env bash
 
-sudo snap install spotify
+# official package:
+# sudo snap install spotify
+
+# https://github.com/crmne/spotifast
+
+FLATPAK=$(mktemp --suffix=.flatpak)
+
+dra download -s "spotifast-v{tag}-x86_64.flatpak" -o "$FLATPAK" crmne/spotifast
+
+flatpak install -y --user "$FLATPAK"
