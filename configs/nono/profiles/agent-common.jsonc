@@ -131,7 +131,9 @@
       "downloads.gradle.org",
       "plugins-artifacts.gradle.org",
       "dl.google.com",
-      "maven.google.com"
+      "maven.google.com",
+      // Security stuff
+      "security.snyk.io"
     ],
     "open_port_range": [
       [
