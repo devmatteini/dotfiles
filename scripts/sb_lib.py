@@ -2,7 +2,10 @@ import argparse
 import os
 import shlex
 import shutil
+import socket
 import stat
+import subprocess
+import sys
 import tempfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -64,6 +67,10 @@ EXCLUDED_SCAN_DIRECTORIES = frozenset(
 )
 HOST_DOCKER_SOCKET_PATHS = (Path("/run/docker.sock"), Path("/var/run/docker.sock"))
 TEMP_ROOT = Path("/tmp")
+CLIPBOARD_HELPER = Path(__file__).resolve().with_name("sb_clipboard.py")
+CLIPBOARD_SHIMS_DIR = Path(__file__).resolve().parent.parent / "configs/nono/shims"
+# Not from PATH: it runs outside the sandbox and PATH may include project directories
+XCLIP = "/usr/bin/xclip"
 
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -281,6 +288,63 @@ def build_child_environment(
     return child_environment
 
 
+def should_start_clipboard_helper(environment: Mapping[str, str]) -> bool:
+    return bool(
+        environment.get("DISPLAY")
+        and not environment.get("WAYLAND_DISPLAY")
+        and os.access(XCLIP, os.X_OK)
+    )
+
+
+def start_clipboard_helper(
+    harness: str, temp_dir: Path, environment: Mapping[str, str]
+) -> Path:
+    # The PID keeps parallel sessions apart: they share temp_dir
+    socket_path = temp_dir / f"clipboard-{os.getpid()}.sock"
+    socket_path.unlink(missing_ok=True)
+    with socket.socket(socket.AF_UNIX) as listener:
+        # Listen before starting the helper, so the harness can't beat the socket
+        listener.bind(str(socket_path))
+        listener.listen()
+        subprocess.Popen(
+            [
+                sys.executable,
+                "-I",
+                str(CLIPBOARD_HELPER),
+                str(listener.fileno()),
+                str(os.getpid()),
+                harness,
+                XCLIP,
+            ],
+            cwd="/",
+            # Original environment: the child one has TMPDIR writable by the agent
+            env=environment,
+            pass_fds=(listener.fileno(),),
+            start_new_session=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    return socket_path
+
+
+def enable_clipboard(
+    harness: str,
+    temp_dir: Path,
+    environment: Mapping[str, str],
+    child_environment: dict[str, str],
+) -> None:
+    if not should_start_clipboard_helper(environment):
+        return
+    try:
+        socket_path = start_clipboard_helper(harness, temp_dir, environment)
+    except OSError as error:
+        print(f"sb: warning: clipboard paste disabled: {error}", file=sys.stderr)
+        return
+    child_environment["PATH"] = f"{CLIPBOARD_SHIMS_DIR}:{child_environment['PATH']}"
+    child_environment["SB_CLIPBOARD_SOCKET"] = str(socket_path)
+
+
 def prepare_nono_docker_runtime(environment: Mapping[str, str]) -> Path:
     xdg_runtime = environment.get("XDG_RUNTIME_DIR")
     if not xdg_runtime:
@@ -400,4 +464,5 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
         if args.dry_run:
             report(secret_files, command, workdir)
             return
+        enable_clipboard(args.harness, temp_dir, environment, child_environment)
         os.execvpe(bwrap, command, child_environment)

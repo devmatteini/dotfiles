@@ -2,20 +2,45 @@
 
 import os
 import shutil
+import socket
 import stat
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from contextlib import redirect_stderr
 from io import StringIO
 from pathlib import Path
+from unittest import mock
 
 
 DOTFILES_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(DOTFILES_ROOT))
 
-from scripts import sb_lib  # noqa: E402
+from scripts import sb_clipboard, sb_lib  # noqa: E402
+
+FAKE_XCLIP = """#!/usr/bin/env bash
+case "$*" in
+"-selection clipboard -t TARGETS -o")
+    printf 'TARGETS\\ntext/plain\\nimage/png\\nimage/svg+xml\\nimage/bmp\\n' ;;
+"-selection clipboard -t image/png -o") printf 'fake-image' ;;
+"-selection clipboard -t text/plain -o") printf 'fake-text' ;;
+*) exit 1 ;;
+esac
+"""
+# Same as scripts/sb, with the fake in place of the fixed xclip path.
+SB_WITH_FAKE_XCLIP = """
+import os, sys
+from pathlib import Path
+
+root, xclip, *argv = sys.argv[1:]
+sys.path.insert(0, root)
+from scripts import sb_lib
+
+sb_lib.XCLIP = xclip
+sb_lib.run(argv, os.environ, Path.cwd().resolve(strict=True))
+"""
 
 
 class SbUnitTests(unittest.TestCase):
@@ -173,6 +198,83 @@ class SbUnitTests(unittest.TestCase):
             self.assertEqual(sb_lib.existing_host_docker_sockets(), [socket])
 
 
+class SbClipboardTests(unittest.TestCase):
+    @staticmethod
+    def send_request(request: bytes) -> bytes:
+        server, client = socket.socketpair()
+        with server, client:
+            client.sendall(request)
+            sb_clipboard.serve_connection(server, "/unused/xclip")
+            return client.recv(1)
+
+    def test_starts_only_on_x11_with_xclip(self) -> None:
+        cases = (
+            ("/bin/sh", {"DISPLAY": ":0"}, True),
+            ("/bin/sh", {"DISPLAY": ":0", "WAYLAND_DISPLAY": "wayland-0"}, False),
+            ("/bin/sh", {}, False),
+            ("/missing/xclip", {"DISPLAY": ":0"}, False),
+        )
+        for xclip, environment, expected in cases:
+            with (
+                self.subTest(xclip=xclip, environment=environment),
+                mock.patch.object(sb_lib, "XCLIP", xclip),
+            ):
+                self.assertEqual(
+                    sb_lib.should_start_clipboard_helper(environment), expected
+                )
+
+    def test_rejects_non_image_requests_without_calling_xclip(self) -> None:
+        with mock.patch.object(sb_clipboard, "read_clipboard") as read_clipboard:
+            for request in (
+                b"text/plain\n",
+                b"image/svg+xml\n",
+                b"image/png\nimage/png\n",
+                b" image/png\n",
+            ):
+                with self.subTest(request=request):
+                    self.assertEqual(
+                        self.send_request(request), sb_clipboard.STATUS_ERROR
+                    )
+        read_clipboard.assert_not_called()
+
+    def test_logs_request_metadata_without_content(self) -> None:
+        with (
+            mock.patch.object(
+                sb_clipboard, "read_clipboard", return_value=b"secret-image"
+            ),
+            self.assertLogs(level="INFO") as logs,
+        ):
+            self.send_request(b"image/png\n")
+            self.send_request(b"forged\nline\n")
+
+        self.assertEqual(
+            [record.getMessage() for record in logs.records],
+            [
+                "request=b'image/png' result=ok bytes=12",
+                r"request=b'forged\nline' result=error bytes=0",
+            ],
+        )
+
+    def test_read_clipboard_enforces_limits(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            xclip = Path(temporary) / "xclip"
+            xclip.write_text(
+                '#!/usr/bin/env bash\ncase "$4" in\n'
+                "fits) head -c 10 /dev/zero ;;\n"
+                "large) head -c 100 /dev/zero ;;\n"
+                "slow) exec sleep 30 ;;\n"
+                "esac\n"
+            )
+            xclip.chmod(0o755)
+            read = sb_clipboard.read_clipboard
+            with mock.patch.multiple(
+                sb_clipboard, TIMEOUT_SECONDS=1, MAX_OUTPUT_BYTES=10
+            ):
+                self.assertEqual(read(str(xclip), "fits"), b"\0" * 10)
+                self.assertIsNone(read(str(xclip), "large"))
+                self.assertIsNone(read(str(xclip), "slow"))
+
+
 class SbEndToEndTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -189,7 +291,12 @@ class SbEndToEndTests(unittest.TestCase):
         return workdir
 
     def run_sb(
-        self, workdir: Path, harness: str, *options: str, **test_environment: str
+        self,
+        workdir: Path,
+        harness: str,
+        *options: str,
+        sb_command: list[str] | None = None,
+        **test_environment: str,
     ) -> subprocess.CompletedProcess[str]:
         environment = os.environ.copy()
         environment.pop("NONO_ALLOW", None)
@@ -197,7 +304,7 @@ class SbEndToEndTests(unittest.TestCase):
         environment.update(test_environment)
         environment["PATH"] = f"{workdir / 'test-bin'}:{environment['PATH']}"
         return subprocess.run(
-            [str(DOTFILES_ROOT / "scripts/sb"), harness, *options],
+            [*(sb_command or [str(DOTFILES_ROOT / "scripts/sb")]), harness, *options],
             cwd=workdir,
             env=environment,
             capture_output=True,
@@ -286,6 +393,34 @@ class SbEndToEndTests(unittest.TestCase):
                     workdir, harness, SB_TEST_SCENARIO="tmpdir"
                 )
                 self.assert_success(completed)
+
+    def test_serves_clipboard_images_inside_sandbox(self) -> None:
+        workdir = self.make_workdir()
+        xclip = self.root / "fake-xclip"
+        xclip.write_text(FAKE_XCLIP)
+        xclip.chmod(0o755)
+
+        completed = self.run_sb(
+            workdir,
+            "claude",
+            sb_command=[
+                sys.executable,
+                "-c",
+                SB_WITH_FAKE_XCLIP,
+                str(DOTFILES_ROOT),
+                str(xclip),
+            ],
+            SB_TEST_SCENARIO="clipboard",
+            DISPLAY=":99",
+            WAYLAND_DISPLAY="",
+        )
+
+        self.assert_success(completed)
+        socket_path = Path((workdir / "clipboard-socket").read_text())
+        deadline = time.monotonic() + 5
+        while socket_path.exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        self.assertFalse(socket_path.exists())
 
     def test_rejects_symlink_before_starting_harness(self) -> None:
         workdir = self.make_workdir()

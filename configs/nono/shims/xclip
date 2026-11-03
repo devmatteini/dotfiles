@@ -1,0 +1,45 @@
+#!/usr/bin/python3 -I
+"""xclip for the sb sandbox: reads clipboard images through scripts/sb_clipboard.py.
+
+Not a security boundary: the agent can talk to the socket directly, the checks
+live in the helper. Absolute python: a project's python must not break paste.
+"""
+
+import os
+import socket
+import sys
+
+STATUS_OK = b"\x00"
+TIMEOUT_SECONDS = 30
+READ_CHUNK_BYTES = 64 * 1024
+
+
+def fail(message: str) -> int:
+    print(f"xclip (sb shim): {message}", file=sys.stderr)
+    return 1
+
+
+def main(arguments: list[str]) -> int:
+    match arguments:
+        case ["-selection", "clipboard", "-t", target, "-o"]:
+            pass
+        case _:
+            return fail("only -selection clipboard -t <target> -o is supported")
+
+    try:
+        with socket.socket(socket.AF_UNIX) as client:
+            client.settimeout(TIMEOUT_SECONDS)
+            client.connect(os.environ["SB_CLIPBOARD_SOCKET"])
+            client.sendall(os.fsencode(f"{target}\n"))
+            if client.recv(1) != STATUS_OK:
+                return fail(f"target not available: {target}")
+            while chunk := client.recv(READ_CHUNK_BYTES):
+                sys.stdout.buffer.write(chunk)
+            sys.stdout.buffer.flush()
+    except (OSError, KeyError) as error:
+        return fail(repr(error))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

@@ -65,6 +65,25 @@ elif scenario == "tmpdir":
         )
         assert completed.returncode == 0, completed.stdout + completed.stderr
         assert completed.stdout == "here document\n"
+elif scenario == "clipboard":
+    def xclip(*arguments: str) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.run(
+            ["xclip", "-selection", "clipboard", *arguments],
+            capture_output=True,
+            check=False,
+        )
+
+    targets = xclip("-t", "TARGETS", "-o")
+    assert targets.stdout == b"image/png\nimage/bmp\n", targets
+    image = xclip("-t", "image/png", "-o")
+    assert image.stdout == b"fake-image", image
+    for denied in (("-t", "text/plain", "-o"), ("-o",)):
+        completed = xclip(*denied)
+        assert (completed.returncode, completed.stdout) == (1, b""), completed
+    log = Path.home() / ".local/state/sb/clipboard.log"
+    must_fail(log.read_text)
+    must_fail(lambda: log.open("a").close())
+    (cwd / "clipboard-socket").write_text(os.environ["SB_CLIPBOARD_SOCKET"])
 else:
     for docker_socket in ("/run/docker.sock", "/var/run/docker.sock"):
         client = socket.socket(socket.AF_UNIX)
