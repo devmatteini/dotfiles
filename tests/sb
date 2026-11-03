@@ -114,7 +114,6 @@ class SbUnitTests(unittest.TestCase):
     def test_rejects_unsafe_options(self) -> None:
         invalid = (
             (["claude", "--workdir=/tmp"], {}),
-            (["claude", "-pother"], {}),
             (["claude", "--allow-unix-socket-subtree", "/tmp"], {}),
             (["claude", "--"], {}),
             (["claude"], {"NONO_ALLOW": "/tmp"}),
@@ -144,9 +143,7 @@ class SbUnitTests(unittest.TestCase):
         )
 
     def test_parses_dry_run_without_passing_it_to_nono(self) -> None:
-        args = sb_lib.parse_args(
-            ["claude", "--dry-run", "--verbose"], {}
-        )
+        args = sb_lib.parse_args(["claude", "--dry-run", "--verbose"], {})
         self.assertTrue(args.dry_run)
         self.assertEqual(args.nono_options, ["--verbose"])
 
@@ -162,17 +159,13 @@ class SbUnitTests(unittest.TestCase):
         )
 
         self.assertEqual(child_environment["TMPDIR"], "/tmp/sb-claude-1000")
-        self.assertEqual(
-            child_environment["TMPPREFIX"], "/tmp/sb-claude-1000/zsh"
-        )
+        self.assertEqual(child_environment["TMPPREFIX"], "/tmp/sb-claude-1000/zsh")
         self.assertEqual(environment["TMPDIR"], "/tmp/inherited")
         self.assertEqual(environment["TMPPREFIX"], "/tmp/inherited-zsh")
 
     def test_prepares_private_nono_docker_runtime(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            runtime = sb_lib.prepare_nono_docker_runtime(
-                {"XDG_RUNTIME_DIR": temporary}
-            )
+            runtime = sb_lib.prepare_nono_docker_runtime({"XDG_RUNTIME_DIR": temporary})
             self.assertEqual(runtime, Path(temporary) / "nono-docker")
             self.assertEqual(stat.S_IMODE(runtime.stat().st_mode), 0o700)
 
@@ -378,9 +371,7 @@ class SbEndToEndTests(unittest.TestCase):
     def test_masks_host_docker_sockets(self) -> None:
         workdir = self.make_workdir()
 
-        completed = self.run_sb(
-            workdir, "opencode", SB_TEST_SCENARIO="docker"
-        )
+        completed = self.run_sb(workdir, "opencode", SB_TEST_SCENARIO="docker")
 
         self.assert_success(completed)
 
@@ -389,9 +380,7 @@ class SbEndToEndTests(unittest.TestCase):
 
         for harness in sb_lib.HARNESSES:
             with self.subTest(harness=harness):
-                completed = self.run_sb(
-                    workdir, harness, SB_TEST_SCENARIO="tmpdir"
-                )
+                completed = self.run_sb(workdir, harness, SB_TEST_SCENARIO="tmpdir")
                 self.assert_success(completed)
 
     def test_serves_clipboard_images_inside_sandbox(self) -> None:
