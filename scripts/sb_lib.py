@@ -11,11 +11,14 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import Path
+from typing import Literal
 
 import argcomplete
 from argcomplete.completers import DirectoriesCompleter, FilesCompleter
 
-HARNESSES = ("claude", "opencode")
+Harness = Literal["claude", "opencode"]
+
+HARNESSES: tuple[Harness, ...] = ("claude", "opencode")
 RESERVED_OPTIONS = ("--workdir", "--allow-cwd", "--config", "--extends")
 SANDBOX_TYPE_OPTIONS = {
     # https://github.com/nolabs-ai/nono/issues/1640
@@ -111,7 +114,7 @@ def create_parser(
 
 @dataclass(frozen=True)
 class CliArgs:
-    harness: str
+    harness: Harness
     profile: str
     dry_run: bool
     nono_options: list[str]
@@ -259,7 +262,7 @@ def check_installed_tools():
     return bwrap, nono
 
 
-def prepare_temp_dir(harness: str) -> Path:
+def prepare_temp_dir(harness: Harness) -> Path:
     temp_dir = TEMP_ROOT / f"sb-{harness}-{os.getuid()}"
     try:
         temp_dir.mkdir(mode=0o700)
@@ -289,7 +292,7 @@ def build_child_environment(
 
 
 def harness_nono_options(
-    harness: str, environment: Mapping[str, str]
+    harness: Harness, environment: Mapping[str, str]
 ) -> list[str]:
     if (
         harness != "opencode"
@@ -336,7 +339,7 @@ def should_start_clipboard_helper(environment: Mapping[str, str]) -> bool:
 
 
 def start_clipboard_helper(
-    harness: str, temp_dir: Path, environment: Mapping[str, str]
+    harness: Harness, temp_dir: Path, environment: Mapping[str, str]
 ) -> Path:
     # The PID keeps parallel sessions apart: they share temp_dir
     socket_path = temp_dir / f"clipboard-{os.getpid()}.sock"
@@ -368,7 +371,7 @@ def start_clipboard_helper(
 
 
 def enable_clipboard(
-    harness: str,
+    harness: Harness,
     temp_dir: Path,
     environment: Mapping[str, str],
     child_environment: dict[str, str],
@@ -435,7 +438,9 @@ def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
     print(shlex.join(bwrap_command))
 
 
-def build_harness_command(harness: str, environment: Mapping[str, str]) -> list[str]:
+def build_harness_command(
+    harness: Harness, environment: Mapping[str, str]
+) -> list[str]:
     command = [harness]
     if harness == "claude":
         home = environment.get("HOME")
