@@ -83,6 +83,7 @@
   "effortLevel": "xhigh",
   "tui": "fullscreen",
   "autoCompactEnabled": false,
+  "awaySummaryEnabled": false,
   "modelSettings": {
     "claude-opus-5-5": {
       "effortLevel": "xhigh"
