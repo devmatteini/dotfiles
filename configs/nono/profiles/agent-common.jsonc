@@ -133,7 +133,8 @@
       "dl.google.com",
       "maven.google.com",
       // Security stuff
-      "security.snyk.io"
+      "security.snyk.io",
+      "api.snyk.io"
     ],
     "open_port_range": [
       [
