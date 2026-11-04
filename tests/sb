@@ -163,6 +163,50 @@ class SbUnitTests(unittest.TestCase):
         self.assertEqual(environment["TMPDIR"], "/tmp/inherited")
         self.assertEqual(environment["TMPPREFIX"], "/tmp/inherited-zsh")
 
+    def test_grants_valid_xauthority_only_to_opencode_on_wayland(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            authority = Path(temporary) / "Xauthority"
+            authority.write_text("cookie")
+            environment = {
+                "DISPLAY": ":0",
+                "WAYLAND_DISPLAY": "wayland-0",
+                "XAUTHORITY": str(authority),
+            }
+
+            self.assertEqual(
+                sb_lib.harness_nono_options("opencode", environment),
+                ["--read-file", str(authority)],
+            )
+            self.assertEqual(sb_lib.harness_nono_options("claude", environment), [])
+            self.assertEqual(
+                sb_lib.harness_nono_options(
+                    "opencode", {"DISPLAY": ":0", "XAUTHORITY": str(authority)}
+                ),
+                [],
+            )
+
+    def test_rejects_unsafe_xauthority(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            target = root / "target"
+            target.write_text("cookie")
+            symlink = root / "symlink"
+            symlink.symlink_to(target)
+            directory = root / "directory"
+            directory.mkdir()
+            paths = ("relative", symlink, directory)
+
+            for path in paths:
+                environment = {
+                    "DISPLAY": ":0",
+                    "WAYLAND_DISPLAY": "wayland-0",
+                    "XAUTHORITY": str(path),
+                }
+                with self.subTest(path=path), redirect_stderr(StringIO()):
+                    self.assertEqual(
+                        sb_lib.harness_nono_options("opencode", environment), []
+                    )
+
     def test_prepares_private_nono_docker_runtime(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             runtime = sb_lib.prepare_nono_docker_runtime({"XDG_RUNTIME_DIR": temporary})
@@ -383,6 +427,22 @@ class SbEndToEndTests(unittest.TestCase):
                 completed = self.run_sb(workdir, harness, SB_TEST_SCENARIO="tmpdir")
                 self.assert_success(completed)
 
+    def test_grants_xauthority_to_opencode(self) -> None:
+        workdir = self.make_workdir()
+        authority = self.root / "Xauthority"
+        authority.write_text("cookie")
+
+        completed = self.run_sb(
+            workdir,
+            "opencode",
+            SB_TEST_SCENARIO="xauthority",
+            DISPLAY=":99",
+            WAYLAND_DISPLAY="wayland-0",
+            XAUTHORITY=str(authority),
+        )
+
+        self.assert_success(completed)
+
     def test_serves_clipboard_images_inside_sandbox(self) -> None:
         workdir = self.make_workdir()
         xclip = self.root / "fake-xclip"
@@ -451,6 +511,24 @@ class SbEndToEndTests(unittest.TestCase):
             "--setting-sources project,local",
             completed.stdout,
         )
+
+    def test_wayland_opencode_dry_run_shows_xauthority_grant(self) -> None:
+        workdir = self.make_workdir()
+        authority = self.root / "Xauthority"
+        authority.write_text("cookie")
+
+        completed = self.run_sb(
+            workdir,
+            "opencode",
+            "--dry-run",
+            DISPLAY=":99",
+            WAYLAND_DISPLAY="wayland-0",
+            XAUTHORITY=str(authority),
+        )
+
+        self.assert_success(completed)
+        self.assertIn(f"--read-file {authority}", completed.stdout)
+        self.assertFalse((workdir / "result").exists())
 
 
 if __name__ == "__main__":

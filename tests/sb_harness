@@ -65,6 +65,8 @@ elif scenario == "tmpdir":
         )
         assert completed.returncode == 0, completed.stdout + completed.stderr
         assert completed.stdout == "here document\n"
+elif scenario == "xauthority":
+    assert Path(os.environ["XAUTHORITY"]).read_text() == "cookie"
 elif scenario == "clipboard":
     def xclip(*arguments: str) -> subprocess.CompletedProcess[bytes]:
         return subprocess.run(

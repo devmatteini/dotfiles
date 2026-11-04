@@ -288,6 +288,45 @@ def build_child_environment(
     return child_environment
 
 
+def harness_nono_options(
+    harness: str, environment: Mapping[str, str]
+) -> list[str]:
+    if (
+        harness != "opencode"
+        or not environment.get("WAYLAND_DISPLAY")
+        or not environment.get("DISPLAY")
+    ):
+        return []
+
+    # GNOME lacks OpenTUI's native Wayland clipboard protocol, so OpenCode 2.1.4
+    # falls back to Xwayland. Remove once OpenTUI supports GNOME https://github.com/anomalyco/opentui/issues/1913.
+    def reject(reason: str) -> list[str]:
+        print(f"sb: warning: Xwayland clipboard unavailable: {reason}", file=sys.stderr)
+        return []
+
+    value = environment.get("XAUTHORITY")
+    if not value:
+        return reject("XAUTHORITY is not set")
+
+    path = Path(value)
+    if not path.is_absolute():
+        return reject("XAUTHORITY is not absolute")
+
+    try:
+        metadata = path.lstat()
+    except OSError as error:
+        return reject(str(error))
+
+    if stat.S_ISLNK(metadata.st_mode):
+        return reject("XAUTHORITY is a symlink")
+    if not stat.S_ISREG(metadata.st_mode):
+        return reject("XAUTHORITY is not a regular file")
+    if not os.access(path, os.R_OK):
+        return reject("XAUTHORITY is not readable")
+
+    return ["--read-file", str(path)]
+
+
 def should_start_clipboard_helper(environment: Mapping[str, str]) -> bool:
     return bool(
         environment.get("DISPLAY")
@@ -429,6 +468,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
     secret_files = find_secret_files(directories, files)
 
     harness_command = build_harness_command(args.harness, child_environment)
+    harness_options = harness_nono_options(args.harness, environment)
 
     with tempfile.TemporaryFile() as placeholder:
         fd = placeholder.fileno()
@@ -456,6 +496,7 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
                 "--allow-cwd",
                 "--allow",
                 str(temp_dir),
+                *harness_options,
                 *args.nono_options,
                 "--",
                 *harness_command,
