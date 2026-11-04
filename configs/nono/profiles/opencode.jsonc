@@ -10,6 +10,11 @@
     "description": "Local OpenCode v2 sandbox profile",
     "author": "devmatteini"
   },
+  "groups": {
+    "include": [
+      "claude_code_linux"
+    ]
+  },
   "security": {
     "capability_elevation": false
   },
