@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+main() {
+	if [[ -z "$1" ]]; then
+		echo "usage: pkgver <package|@scope>" >&2
+		exit 1
+	fi
+
+	local name="${1//./\\.}"
+	local bare="${name#@}"
+	rg -g 'package.json' "\"(@$bare/[^\"]+|$name)\":" . |
+		awk -F'"' '$4 != "" {print $2, $4}' |
+		sort -u
+}
+
+main "$@"
