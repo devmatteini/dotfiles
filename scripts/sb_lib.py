@@ -26,6 +26,8 @@ SANDBOX_TYPE_OPTIONS = {
     "android": ("--sandbox-policy", "landlock"),
 }
 SECRET_FILE_PATTERNS = (".env*", "signing.properties")
+READ_ONLY_PERMS = "444"
+NO_ACCESS_PERMS = "000"
 EXCLUDED_SCAN_DIRECTORIES = frozenset(
     {
         # Version control and workspaces
@@ -488,9 +490,13 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
             "--die-with-parent",
         ]
         for path in secret_files:
-            command.extend(("--perms", "000", "--ro-bind-data", str(fd), str(path)))
+            command.extend(
+                ("--perms", READ_ONLY_PERMS, "--ro-bind-data", str(fd), str(path))
+            )
         for path in existing_host_docker_sockets():
-            command.extend(("--perms", "000", "--ro-bind-data", str(fd), str(path)))
+            command.extend(
+                ("--perms", NO_ACCESS_PERMS, "--ro-bind-data", str(fd), str(path))
+            )
         command.extend(
             (
                 "--",

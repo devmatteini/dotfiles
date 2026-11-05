@@ -22,7 +22,7 @@ scenario = os.environ["SB_TEST_SCENARIO"]
 if scenario == "cwd":
     for relative in (".env", ".envrc", "nested/.env.local"):
         path = cwd / relative
-        must_fail(path.read_text)
+        assert path.read_text() == ""
         must_fail(lambda path=path: path.write_text("changed"))
         must_fail(path.unlink)
         must_fail(lambda path=path: path.rename(path.with_name("renamed")))
@@ -34,10 +34,10 @@ elif scenario == "grants":
     write_dir = Path(os.environ["SB_TEST_WRITE_DIR"])
     granted_file = Path(os.environ["SB_TEST_GRANTED_FILE"])
     assert (read_dir / "visible").read_text() == "visible"
-    must_fail((read_dir / ".env.read").read_text)
+    assert (read_dir / ".env.read").read_text() == ""
     (write_dir / "created").write_text("created")
     must_fail(lambda: (write_dir / ".env.write").write_text("changed"))
-    must_fail(granted_file.read_text)
+    assert granted_file.read_text() == ""
 elif scenario == "tmpdir":
     completed = subprocess.run(
         [
