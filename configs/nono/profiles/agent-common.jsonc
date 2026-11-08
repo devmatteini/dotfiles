@@ -47,6 +47,9 @@
     "read_file": [
       "$HOME/.npmrc"
     ],
+    "allow_file": [
+      "~/.config/astro/config.json" // astro telemetry (even if disabled)
+    ],
     "deny": [
       "$HOME/.bash.local",
       "$HOME/.zsh.local"
