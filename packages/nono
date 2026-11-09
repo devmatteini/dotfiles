@@ -5,12 +5,12 @@ set -euo pipefail
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 readonly PACKS=(
-    nolabs-ai/claude@0.1.4
-    nolabs-ai/opencode@0.4.1
+    nolabs-ai/claude@0.1.5
+    nolabs-ai/opencode@0.4.2
 )
 readonly NONO_SCHEMA="$BASEDIR/configs/nono/nono-profile.schema.json"
 
-dra download -t v0.80.0 -a -i -o "$HOME/.local/bin" nolabs-ai/nono
+dra download -t v0.81.0 -a -i -o "$HOME/.local/bin" nolabs-ai/nono
 
 nono completion bash >"$HOME/.local/share/bash-completion/completions/nono"
 nono completion zsh >"$HOME/.local/share/zsh-completion/_nono"

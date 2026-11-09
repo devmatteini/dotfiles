@@ -39,6 +39,20 @@ elif scenario == "grants":
     must_fail(lambda: (write_dir / ".env.write").write_text("changed"))
     assert granted_file.read_text() == ""
 elif scenario == "tmpdir":
+    harness = Path(__file__).name
+    expected_tmpdir = Path(f"/tmp/sb-{harness}-{os.getuid()}")
+    assert os.environ["TMPDIR"] == str(expected_tmpdir), os.environ["TMPDIR"]
+    assert os.environ["TMPPREFIX"] == str(expected_tmpdir / "zsh")
+    if harness == "opencode":
+        assert os.environ["BUN_TMPDIR"] == str(expected_tmpdir)
+    else:
+        assert os.environ["CLAUDE_CODE_TMPDIR"] == str(Path.home() / ".cache/claude")
+    temporary = expected_tmpdir / f"sb-test-{os.getpid()}"
+    try:
+        temporary.write_text("temporary")
+        assert temporary.read_text() == "temporary"
+    finally:
+        temporary.unlink(missing_ok=True)
     completed = subprocess.run(
         [
             "nono",
@@ -65,6 +79,19 @@ elif scenario == "tmpdir":
         )
         assert completed.returncode == 0, completed.stdout + completed.stderr
         assert completed.stdout == "here document\n"
+elif scenario == "localhost":
+    with socket.create_connection(
+        ("127.0.0.1", int(os.environ["SB_TEST_HOST_PORT"])), timeout=10
+    ) as host, socket.socket() as listener:
+        listener.bind(("0.0.0.0", 0))
+        listener.listen()
+        listener.settimeout(10)
+        host.sendall(f"{listener.getsockname()[1]}\n".encode())
+        connection, _ = listener.accept()
+        with connection:
+            connection.settimeout(10)
+            assert connection.recv(64) == b"host-to-sandbox"
+            connection.sendall(b"sandbox-to-host")
 elif scenario == "xauthority":
     assert Path(os.environ["XAUTHORITY"]).read_text() == "cookie"
 elif scenario == "clipboard":

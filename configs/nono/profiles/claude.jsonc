@@ -20,8 +20,14 @@
   },
   "environment": {
     "set_vars": {
-      // Workaround for https://github.com/nolabs-ai/nono-packs/issues/44
+      // Keep Claude runtime files in the existing cache; tool TMPDIR comes from sb.
       "CLAUDE_CODE_TMPDIR": "$HOME/.cache/claude"
+    }
+  },
+  "session_hooks": {
+    "before": {
+      "script": "$HOME/dotfiles/configs/nono/hooks/claude-before.sh",
+      "timeout_secs": 40
     }
   }
 }

@@ -72,6 +72,10 @@
     }
   },
   "environment": {
+    "set_vars": {
+      // Preserve the private temporary directory prepared and granted by sb.
+      "TMPDIR": "$TMPDIR"
+    },
     "deny_vars": [
       "AWS_*",
       "AZURE_*",

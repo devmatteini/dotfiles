@@ -9,6 +9,7 @@ import sys
 import tempfile
 import time
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stderr
 from io import StringIO
 from pathlib import Path
@@ -426,6 +427,35 @@ class SbEndToEndTests(unittest.TestCase):
             with self.subTest(harness=harness):
                 completed = self.run_sb(workdir, harness, SB_TEST_SCENARIO="tmpdir")
                 self.assert_success(completed)
+
+    def test_preserves_host_sandbox_tcp(self) -> None:
+        workdir = self.make_workdir()
+
+        def exchange(listener: socket.socket) -> None:
+            connection, _ = listener.accept()
+            with connection:
+                connection.settimeout(10)
+                with connection.makefile("rb") as stream:
+                    port = int(stream.readline())
+                with socket.create_connection(("127.0.0.1", port), timeout=10) as child:
+                    child.sendall(b"host-to-sandbox")
+                    self.assertEqual(child.recv(64), b"sandbox-to-host")
+
+        for harness in sb_lib.HARNESSES:
+            with self.subTest(harness=harness), socket.socket() as listener:
+                listener.bind(("127.0.0.1", 0))
+                listener.listen()
+                listener.settimeout(10)
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    exchanged = executor.submit(exchange, listener)
+                    completed = self.run_sb(
+                        workdir,
+                        harness,
+                        SB_TEST_SCENARIO="localhost",
+                        SB_TEST_HOST_PORT=str(listener.getsockname()[1]),
+                    )
+                    self.assert_success(completed)
+                    exchanged.result(timeout=15)
 
     def test_grants_xauthority_to_opencode(self) -> None:
         workdir = self.make_workdir()

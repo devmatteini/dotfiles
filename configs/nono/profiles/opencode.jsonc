@@ -18,6 +18,11 @@
   "security": {
     "capability_elevation": false
   },
+  "environment": {
+    "set_vars": {
+      "BUN_TMPDIR": "$TMPDIR"
+    }
+  },
   "network": {
     "allow_domain": [
       "chatgpt.com",
