@@ -79,6 +79,15 @@ elif scenario == "tmpdir":
         )
         assert completed.returncode == 0, completed.stdout + completed.stderr
         assert completed.stdout == "here document\n"
+elif scenario == "java-tmpdir":
+    completed = subprocess.run(
+        ["java", "SbJavaTemp.java"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=20,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
 elif scenario == "localhost":
     with socket.create_connection(
         ("127.0.0.1", int(os.environ["SB_TEST_HOST_PORT"])), timeout=10

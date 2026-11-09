@@ -29,7 +29,8 @@
       "$HOME/.cache/pnpm",
       "$HOME/.local/state/pnpm",
       "$HOME/.dts", // https://github.com/Microsoft/dtslint
-      "$HOME/.gradle"
+      "$HOME/.gradle",
+      "$HOME/.local/share/kotlin/daemon"
     ],
     "write": [
       "$HOME/.cargo/registry"
@@ -48,6 +49,9 @@
       "$HOME/.npmrc"
     ],
     "allow_file": [
+      "$HOME/.android/analytics.settings",
+      "$HOME/.config/.android/debug.keystore",
+      "$HOME/.config/.android/debug.keystore.lock",
       "~/.config/astro/config.json" // astro telemetry (even if disabled)
     ],
     "deny": [
@@ -74,7 +78,9 @@
   "environment": {
     "set_vars": {
       // Preserve the private temporary directory prepared and granted by sb.
-      "TMPDIR": "$TMPDIR"
+      "TMPDIR": "$TMPDIR",
+      // The JVM ignores TMPDIR; native loaders (e.g. Room/SQLite) need readback.
+      "JAVA_TOOL_OPTIONS": "-Djava.io.tmpdir=$TMPDIR"
     },
     "deny_vars": [
       "AWS_*",

@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import redirect_stderr
 from io import StringIO
 from pathlib import Path
+from textwrap import dedent
 from unittest import mock
 
 
@@ -426,6 +427,36 @@ class SbEndToEndTests(unittest.TestCase):
         for harness in sb_lib.HARNESSES:
             with self.subTest(harness=harness):
                 completed = self.run_sb(workdir, harness, SB_TEST_SCENARIO="tmpdir")
+                self.assert_success(completed)
+
+    @unittest.skipUnless(shutil.which("java"), "java not installed")
+    def test_java_uses_private_tmpdir(self) -> None:
+        workdir = self.make_workdir()
+        (workdir / "SbJavaTemp.java").write_text(
+            dedent("""\
+                import java.nio.file.*;
+                class SbJavaTemp {
+                  public static void main(String[] args) throws Exception {
+                    Path expected = Path.of(System.getenv("TMPDIR"));
+                    if (!Path.of(System.getProperty("java.io.tmpdir")).equals(expected))
+                      throw new AssertionError("JVM ignores private TMPDIR");
+                    Path file = Files.createTempFile("sb-java-", ".tmp");
+                    try {
+                      if (!file.getParent().equals(expected)) throw new AssertionError(file);
+                      Files.writeString(file, "temporary");
+                      if (!Files.readString(file).equals("temporary"))
+                        throw new AssertionError("Temporary file readback failed");
+                      try (var paths = Files.list(expected)) {
+                        if (paths.noneMatch(file::equals)) throw new AssertionError(file);
+                      }
+                    } finally { Files.deleteIfExists(file); }
+                  }
+                }
+                """)
+        )
+        for harness in sb_lib.HARNESSES:
+            with self.subTest(harness=harness):
+                completed = self.run_sb(workdir, harness, SB_TEST_SCENARIO="java-tmpdir")
                 self.assert_success(completed)
 
     def test_preserves_host_sandbox_tcp(self) -> None:
