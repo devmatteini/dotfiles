@@ -25,7 +25,7 @@ SANDBOX_TYPE_OPTIONS = {
     # https://github.com/nolabs-ai/nono/issues/1792
     "android": ("--sandbox-policy", "landlock"),
 }
-SECRET_FILE_PATTERNS = (".env*", "signing.properties")
+SECRET_FILE_PATTERNS = (".env*", "signing.properties", "http-client.private.env.json")
 READ_ONLY_PERMS = "444"
 NO_ACCESS_PERMS = "000"
 EXCLUDED_SCAN_DIRECTORIES = frozenset(
