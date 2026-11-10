@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# https://www.mongodb.com/try/download/database-tools
+
+set -euo pipefail
+
+curl -o mongodb-tools.deb -L https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.20.1.deb
+
+sudo apt install -y ./mongodb-tools.deb
+
+rm -rf ./mongodb-tools.deb
+
