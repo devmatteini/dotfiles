@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import os
 import shutil
 import socket
@@ -124,6 +125,65 @@ class SbUnitTests(unittest.TestCase):
         for argv, environment in invalid:
             with self.subTest(argv=argv), self.assertRaises(ValueError):
                 sb_lib.parse_args(argv, environment)
+
+    def test_expands_profile_grant_variables(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in ("home", "workdir", "tmp", "config"):
+                (root / name / "a").mkdir(parents=True)
+            variables = {
+                "HOME": str(root / "home"),
+                "WORKDIR": str(root / "workdir"),
+                "TMPDIR": str(root / "tmp"),
+                "XDG_CONFIG_HOME": str(root / "config"),
+            }
+            cases = {
+                "~": root / "home",
+                "~/a": root / "home/a",
+                "$HOME/a": root / "home/a",
+                "${HOME}/a": root / "home/a",
+                "$WORKDIR/a": root / "workdir/a",
+                "$TMPDIR/a": root / "tmp/a",
+                "$XDG_CONFIG_HOME/a": root / "config/a",
+                str(root / "home/a"): root / "home/a",
+            }
+            for path, expected in cases.items():
+                with self.subTest(path=path):
+                    self.assertEqual(
+                        sb_lib.expand_profile_path(path, variables), str(expected)
+                    )
+
+    def test_rejects_unsupported_profile_grants(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            variables = {"HOME": temporary}
+            for path in (
+                "$NONO_CONFIG/profiles",
+                "$XDG_DATA_HOME/a",
+                "~/*",
+                "~/**/.env",
+                "~other/a",
+                "relative/a",
+                "~/missing",
+            ):
+                with self.subTest(path=path), self.assertRaises(ValueError):
+                    sb_lib.expand_profile_path(path, variables)
+
+    def test_parses_added_profile_grants(self) -> None:
+        grants = {
+            key: {"added": [], "removed": []}
+            for key in (*sb_lib.PROFILE_DIRECTORY_GRANTS, *sb_lib.PROFILE_FILE_GRANTS)
+        }
+        grants["allow"]["added"] = ["~/allow"]
+        grants["read"] = {"added": ["~/read"], "removed": ["~/removed"]}
+        grants["write_file"]["added"] = ["~/file"]
+        output = json.dumps({"filesystem": grants})
+
+        self.assertEqual(
+            sb_lib.parse_profile_diff(output), (["~/allow", "~/read"], ["~/file"])
+        )
+        for invalid in ("not json", "{}", '{"filesystem": {"allow": []}}'):
+            with self.subTest(output=invalid), self.assertRaises(RuntimeError):
+                sb_lib.parse_profile_diff(invalid)
 
     def test_rejects_invalid_harness(self) -> None:
         for argv in ([], ["other"]):
@@ -414,6 +474,75 @@ class SbEndToEndTests(unittest.TestCase):
         for path, value in sentinels.items():
             self.assertEqual(path.read_text(), value)
 
+    def write_profile(self, filesystem: dict[str, list[str]]) -> Path:
+        profile = self.root / "profile.json"
+        profile.write_text(
+            json.dumps(
+                {
+                    "meta": {"name": "sb-test"},
+                    "extends": ["claude"],
+                    "filesystem": filesystem,
+                }
+            )
+        )
+        return profile
+
+    def test_masks_profile_grants(self) -> None:
+        workdir = self.make_workdir()
+        read_dir = self.root / "read"
+        write_dir = self.root / "write"
+        read_dir.mkdir()
+        write_dir.mkdir()
+        (read_dir / "visible").write_text("visible")
+        sentinels = {
+            read_dir / ".env.read": "read-env",
+            write_dir / ".env.write": "write-env",
+            self.root / ".env.file": "file-env",
+        }
+        for path, value in sentinels.items():
+            path.write_text(value)
+        profile = self.write_profile(
+            {
+                "read": [str(read_dir)],
+                "write": [str(write_dir)],
+                "read_file": [str(self.root / ".env.file")],
+            }
+        )
+
+        completed = self.run_sb(
+            workdir,
+            "claude",
+            "--profile",
+            str(profile),
+            SB_TEST_SCENARIO="grants",
+            SB_TEST_READ_DIR=str(read_dir),
+            SB_TEST_WRITE_DIR=str(write_dir),
+            SB_TEST_GRANTED_FILE=str(self.root / ".env.file"),
+        )
+
+        self.assert_success(completed)
+        self.assertEqual((write_dir / "created").read_text(), "created")
+        for path, value in sentinels.items():
+            self.assertEqual(path.read_text(), value)
+
+    def test_rejects_missing_profile_grant_before_starting_harness(self) -> None:
+        workdir = self.make_workdir()
+        marker = self.root / "marker"
+        profile = self.write_profile({"allow": [str(self.root / "missing")]})
+
+        completed = self.run_sb(
+            workdir,
+            "claude",
+            "--profile",
+            str(profile),
+            SB_TEST_SCENARIO="cwd",
+            SB_TEST_MARKER=str(marker),
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertIn("profile grant not found", completed.stderr)
+        self.assertFalse(marker.exists())
+
     def test_masks_host_docker_sockets(self) -> None:
         workdir = self.make_workdir()
 
@@ -558,6 +687,7 @@ class SbEndToEndTests(unittest.TestCase):
 
         self.assert_success(completed)
         self.assertFalse((workdir / "result").exists())
+        self.assertIn(f"Scanned paths:\x1b[0m\n {workdir}\n", completed.stdout)
         self.assertIn("Blocked secret paths:", completed.stdout)
         self.assertIn(" .env\n", completed.stdout)
         self.assertIn("Bubblewrap command:", completed.stdout)

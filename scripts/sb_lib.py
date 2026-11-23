@@ -1,5 +1,7 @@
 import argparse
+import json
 import os
+import re
 import shlex
 import shutil
 import socket
@@ -25,6 +27,9 @@ SANDBOX_TYPE_OPTIONS = {
     # https://github.com/nolabs-ai/nono/issues/1792
     "android": ("--sandbox-policy", "landlock"),
 }
+PROFILE_DIRECTORY_GRANTS = ("allow", "read", "write")
+PROFILE_FILE_GRANTS = ("allow_file", "read_file", "write_file")
+PROFILE_VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
 SECRET_FILE_PATTERNS = (".env*", "signing.properties", "http-client.private.env.json")
 READ_ONLY_PERMS = "444"
 NO_ACCESS_PERMS = "000"
@@ -256,6 +261,66 @@ def sandbox_fs_context(
     return directories, files
 
 
+def expand_profile_path(path: str, variables: Mapping[str, str]) -> str:
+    # Subset of nono expansion; anything else fails rather than scanning the wrong path
+    if "*" in path:
+        raise ValueError(f"unsupported profile grant (glob): {path}")
+
+    def replace(match: re.Match[str]) -> str:
+        name = match.group(1) or match.group(2)
+        if name not in ("HOME", "WORKDIR", "TMPDIR") and not name.startswith("XDG_"):
+            raise ValueError(f"unsupported profile grant (variable ${name}): {path}")
+        value = variables.get(name)
+        if not value:
+            raise ValueError(f"unsupported profile grant (${name} is not set): {path}")
+        return value
+
+    expanded = path
+    if expanded == "~" or expanded.startswith("~/"):
+        expanded = "$HOME" + expanded[1:]
+    expanded = PROFILE_VARIABLE.sub(replace, expanded)
+    if not os.path.isabs(expanded):
+        raise ValueError(f"unsupported profile grant (relative): {path}")
+    if not os.path.exists(expanded):
+        raise ValueError(f"profile grant not found: {path}")
+    return expanded
+
+
+def parse_profile_diff(output: str) -> tuple[list[str], list[str]]:
+    try:
+        filesystem = json.loads(output)["filesystem"]
+
+        def added(keys: Sequence[str]) -> list[str]:
+            return [path for key in keys for path in filesystem[key]["added"]]
+
+        return added(PROFILE_DIRECTORY_GRANTS), added(PROFILE_FILE_GRANTS)
+    except (KeyError, TypeError, ValueError) as error:
+        raise RuntimeError(f"unexpected nono profile diff output: {error!r}") from error
+
+
+def profile_grants(
+    nono: str, args: CliArgs, environment: Mapping[str, str], workdir: Path
+) -> tuple[list[str], list[str]]:
+    # Only grants added on top of the harness profile: base ones are tool caches
+    if args.profile == args.harness:
+        return [], []
+    completed = subprocess.run(
+        [nono, "profile", "diff", args.harness, args.profile, "--json"],
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(f"nono profile diff failed: {completed.stderr.strip()}")
+    directories, files = parse_profile_diff(completed.stdout)
+    variables = {**environment, "WORKDIR": str(workdir)}
+    return (
+        [expand_profile_path(path, variables) for path in directories],
+        [expand_profile_path(path, variables) for path in files],
+    )
+
+
 def check_installed_tools():
     bwrap = shutil.which("bwrap")
     nono = shutil.which("nono")
@@ -293,9 +358,7 @@ def build_child_environment(
     return child_environment
 
 
-def harness_nono_options(
-    harness: Harness, environment: Mapping[str, str]
-) -> list[str]:
+def harness_nono_options(harness: Harness, environment: Mapping[str, str]) -> list[str]:
     if (
         harness != "opencode"
         or not environment.get("WAYLAND_DISPLAY")
@@ -429,8 +492,16 @@ def existing_host_docker_sockets() -> list[Path]:
     return sockets
 
 
-def report(secret_files: list[Path], bwrap_command: list[str], workdir: Path):
-    print(f"{BOLD}Blocked secret paths:{RESET}")
+def report(
+    scanned: Sequence[Path],
+    secret_files: list[Path],
+    bwrap_command: list[str],
+    workdir: Path,
+):
+    print(f"{BOLD}Scanned paths:{RESET}")
+    for path in scanned:
+        print(f" {path}")
+    print(f"\n{BOLD}Blocked secret paths:{RESET}")
     if secret_files:
         for path in secret_files:
             print(f" {os.path.relpath(path, workdir)}")
@@ -469,8 +540,13 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
     child_environment = build_child_environment(environment, temp_dir)
     prepare_nono_docker_runtime(child_environment)
 
+    profile_directories, profile_files = profile_grants(
+        nono, args, child_environment, workdir
+    )
     directories, files = sandbox_fs_context(
-        workdir, args.directory_grants, args.file_grants
+        workdir,
+        [*args.directory_grants, *profile_directories],
+        [*args.file_grants, *profile_files],
     )
     secret_files = find_secret_files(directories, files)
 
@@ -514,7 +590,8 @@ def run(argv: Sequence[str], environment: Mapping[str, str], workdir: Path) -> N
             )
         )
         if args.dry_run:
-            report(secret_files, command, workdir)
+            scanned = [directory.path for directory in directories] + files
+            report(scanned, secret_files, command, workdir)
             return
         enable_clipboard(args.harness, temp_dir, environment, child_environment)
         os.execvpe(bwrap, command, child_environment)
